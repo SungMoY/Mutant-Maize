@@ -27,5 +27,5 @@ jobs:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_DEPLOY_TEST_71E2D }}
           channelId: live
-          projectId: deploy-test-71e2d
+          projectId: mutant-maize
 

@@ -1,5 +1,2 @@
 # CSE 380 Final Project
-
-Current codebase is the Homework 3 assignment
-
-Repository name and codebase will change as our game is created.
+Mutant Maize: a 2D side-scroller/jumper game about a sentient corn escaping a farm

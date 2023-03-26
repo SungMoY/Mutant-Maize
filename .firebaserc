@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "deploy-test-71e2d"
-  }
+    "mutant-maize": "mutant-maize",
+    "default": "mutant-maize"
+  },
+  "targets": {},
+  "etags": {}
 }
