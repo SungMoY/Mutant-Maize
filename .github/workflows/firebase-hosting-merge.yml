@@ -18,8 +18,8 @@ jobs:
       - name: Install dependencies
         run: npm install
       
-      - name: Build with Gulp
-        run: gulp    
+      - name: Build with Gulp for 10 seconds
+        run: timeout 10s gulp
           
       - name: Deploy to Firebase Hosting
         uses: FirebaseExtended/action-hosting-deploy@v0
