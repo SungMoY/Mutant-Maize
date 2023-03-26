@@ -14,8 +14,8 @@ export default class Level1 extends HW3Level {
     public static readonly PLAYER_SPAWN = new Vec2(32, 32);
     public static readonly PLAYER_SPRITE_KEY = "PLAYER_SPRITE_KEY";
     // CHANGED TO LOAD CUSTOM CHARACTER
-    // public static readonly PLAYER_SPRITE_PATH = "hw4_assets/spritesheets/Hero.json";
-    public static readonly PLAYER_SPRITE_PATH = "hw4_assets/spritesheets/UFO_alien.json";
+    public static readonly PLAYER_SPRITE_PATH = "hw4_assets/spritesheets/Hero.json";
+    // public static readonly PLAYER_SPRITE_PATH = "hw4_assets/spritesheets/UFO_alien.json";
 
     public static readonly TILEMAP_KEY = "LEVEL1";
     public static readonly TILEMAP_PATH = "hw4_assets/tilemaps/HW4Level1.json";
