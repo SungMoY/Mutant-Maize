@@ -18,8 +18,8 @@ jobs:
       - name: Install dependencies
         run: npm install
       
-      - name: Build with Gulp for 10 seconds
-        run: timeout 10s gulp
+      - name: Build with Gulp for 20 seconds
+        run: gulp & sleep 20 && kill $(jobs -p)
           
       - name: Deploy to Firebase Hosting
         uses: FirebaseExtended/action-hosting-deploy@v0
@@ -28,3 +28,4 @@ jobs:
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_DEPLOY_TEST_71E2D }}
           channelId: live
           projectId: deploy-test-71e2d
+
