@@ -2,7 +2,8 @@
 # https://github.com/firebase/firebase-tools
 
 name: Deploy to Firebase Hosting on merge
-'on':
+
+on:
   push:
     branches:
       - main
@@ -18,7 +19,7 @@ jobs:
         run: npm install
       
       - name: Build with Gulp
-      - run: gulp    
+        run: gulp    
           
       - name: Deploy to Firebase Hosting
         uses: FirebaseExtended/action-hosting-deploy@v0
