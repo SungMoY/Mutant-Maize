@@ -1,15 +1,15 @@
 import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
-import HW3Level from "./HW3Level";
+import Level from "./Level";
 import RenderingManager from "../../Wolfie2D/Rendering/RenderingManager";
 import SceneManager from "../../Wolfie2D/Scene/SceneManager";
 import Viewport from "../../Wolfie2D/SceneGraph/Viewport";
-import HW4Level2 from "./HW3Level2";
+import HW4Level2 from "./Level2";
 
 /**
  * The first level for HW4 - should be the one with the grass and the clouds.
  */
-export default class Level1 extends HW3Level {
+export default class Level1 extends Level {
 
     public static readonly PLAYER_SPAWN = new Vec2(32, 32);
     public static readonly PLAYER_SPRITE_KEY = "PLAYER_SPRITE_KEY";

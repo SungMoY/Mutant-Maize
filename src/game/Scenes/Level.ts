@@ -42,7 +42,7 @@ export type HW3Layer = typeof HW3Layers[keyof typeof HW3Layers]
 /**
  * An abstract HW4 scene class.
  */
-export default abstract class HW3Level extends Scene {
+export default abstract class Level extends Scene {
 
     /** Overrride the factory manager */
     public add: HW3FactoryManager;
@@ -146,9 +146,9 @@ export default abstract class HW3Level extends Scene {
 
         // Start the black screen fade out
         this.levelTransitionScreen.tweens.play("fadeOut");
-
+        
         // Start playing the level music for the HW4 level
-        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: this.levelMusicKey, loop: true, holdReference: true});
+        this.emitter.fireEvent(GameEventType.PLAY_MUSIC, {key: this.levelMusicKey, loop: true, holdReference: true});
     }
 
     /* Update method for the scene */

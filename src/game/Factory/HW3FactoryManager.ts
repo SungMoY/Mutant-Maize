@@ -4,7 +4,7 @@ import Tilemap from "../../Wolfie2D/Nodes/Tilemap";
 import UIElement from "../../Wolfie2D/Nodes/UIElement";
 import FactoryManager from "../../Wolfie2D/Scene/Factories/FactoryManager";
 import HW3AnimatedSprite from "../Nodes/HW3AnimatedSprite";
-import HW3Level, { HW3Layer } from "../Scenes/HW3Level";
+import HW3Level, { HW3Layer } from "../Scenes/Level";
 import HW4CanvasNodeFactory from "./HW3CanvasNodeFactory";
 
 /**

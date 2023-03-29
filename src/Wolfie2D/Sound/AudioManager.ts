@@ -206,7 +206,6 @@ export default class AudioManager {
                 } else if(event.data.has("channel")){
                     channel = event.data.get("channel");
                 }
-
                 this.playSound(soundKey, loop, holdReference, channel, event.data);
             }
 

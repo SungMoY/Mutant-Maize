@@ -1,6 +1,6 @@
 import CanvasNodeFactory from "../../Wolfie2D/Scene/Factories/CanvasNodeFactory";
 import HW3AnimatedSprite from "../Nodes/HW3AnimatedSprite";
-import HW3Level from "../Scenes/HW3Level";
+import HW3Level from "../Scenes/Level";
 
 /**
  * An extension of Wolfie2ds CanvasNodeFactory. The purpose of the class is to add functionality for adding custom

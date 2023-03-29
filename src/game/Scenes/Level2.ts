@@ -1,6 +1,6 @@
 import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
-import HW3Level from "./HW3Level";
+import HW3Level from "./Level";
 import MainMenu from "./MainMenu";
 
 import Viewport from "../../Wolfie2D/SceneGraph/Viewport";

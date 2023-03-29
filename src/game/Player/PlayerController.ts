@@ -10,7 +10,7 @@ import Walk from "./PlayerStates/Walk";
 import PlayerWeapon from "./PlayerWeapon";
 import Input from "../../Wolfie2D/Input/Input";
 
-import { HW3Controls } from "../HW3Controls";
+import { GameControls } from "../GameControls";
 import HW3AnimatedSprite from "../Nodes/HW3AnimatedSprite";
 import MathUtils from "../../Wolfie2D/Utils/MathUtils";
 import { HW3Events } from "../HW3Events";
@@ -107,8 +107,8 @@ export default class PlayerController extends StateMachineAI {
 	 */
     public get inputDir(): Vec2 {
         let direction = Vec2.ZERO;
-		direction.x = (Input.isPressed(HW3Controls.MOVE_LEFT) ? -1 : 0) + (Input.isPressed(HW3Controls.MOVE_RIGHT) ? 1 : 0);
-		direction.y = (Input.isJustPressed(HW3Controls.JUMP) ? -1 : 0);
+		direction.x = (Input.isPressed(GameControls.MOVE_LEFT) ? -1 : 0) + (Input.isPressed(GameControls.MOVE_RIGHT) ? 1 : 0);
+		direction.y = (Input.isJustPressed(GameControls.JUMP) ? -1 : 0);
 		return direction;
     }
     /** 
@@ -120,7 +120,7 @@ export default class PlayerController extends StateMachineAI {
 		super.update(deltaT);
 
         // If the player hits the attack button and the weapon system isn't running, restart the system and fire!
-        if (Input.isPressed(HW3Controls.ATTACK) && !this.weapon.isSystemRunning()) {
+        if (Input.isPressed(GameControls.ATTACK) && !this.weapon.isSystemRunning()) {
             // Start the particle system at the player's current position
             this.weapon.startSystem(500, 0, this.owner.position, this.faceDir);
             // get direction and play attacking animation
