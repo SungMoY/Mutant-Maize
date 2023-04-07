@@ -1,5 +1,5 @@
 /**
- * A set of controls for the HW4 keybinding
+ * A set of controls for the game keybinding
  */
 export const GameControls = {
     MOVE_LEFT: "MOVE_LEFT",

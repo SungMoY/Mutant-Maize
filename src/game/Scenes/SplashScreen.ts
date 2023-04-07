@@ -14,7 +14,7 @@ export const MenuLayers = {
 export default class SplashScreen extends Scene {
 
     public static readonly MUSIC_KEY = "MAIN_MENU_MUSIC";
-    public static readonly MUSIC_PATH = "hw4_assets/music/menu.mp3";
+    public static readonly MUSIC_PATH = "game_assets/music/menu.mp3";
 
     public loadScene(): void {
         // Load the menu song

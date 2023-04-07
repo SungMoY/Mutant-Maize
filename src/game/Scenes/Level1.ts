@@ -14,26 +14,26 @@ export default class Level1 extends Level {
     public static readonly PLAYER_SPAWN = new Vec2(32, 32);
     public static readonly PLAYER_SPRITE_KEY = "PLAYER_SPRITE_KEY";
     // CHANGED TO LOAD CUSTOM CHARACTER
-    public static readonly PLAYER_SPRITE_PATH = "hw4_assets/spritesheets/Hero.json";
-    // public static readonly PLAYER_SPRITE_PATH = "hw4_assets/spritesheets/UFO_alien.json";
+    public static readonly PLAYER_SPRITE_PATH = "game_assets/spritesheets/Hero.json";
+    // public static readonly PLAYER_SPRITE_PATH = "game_assets/spritesheets/UFO_alien.json";
 
     public static readonly TILEMAP_KEY = "LEVEL1";
-    public static readonly TILEMAP_PATH = "hw4_assets/tilemaps/HW4Level1.json";
+    public static readonly TILEMAP_PATH = "game_assets/tilemaps/HW4Level1.json";
     public static readonly TILEMAP_SCALE = new Vec2(2, 2);
     public static readonly DESTRUCTIBLE_LAYER_KEY = "Destructable";
     public static readonly WALLS_LAYER_KEY = "Main";
 
     public static readonly LEVEL_MUSIC_KEY = "LEVEL_MUSIC";
-    public static readonly LEVEL_MUSIC_PATH = "hw4_assets/music/hw5_level_music.wav";
+    public static readonly LEVEL_MUSIC_PATH = "game_assets/music/hw5_level_music.wav";
 
     public static readonly JUMP_AUDIO_KEY = "PLAYER_JUMP";
-    public static readonly JUMP_AUDIO_PATH = "hw4_assets/sounds/jump.wav";
+    public static readonly JUMP_AUDIO_PATH = "game_assets/sounds/jump.wav";
 
     public static readonly TILE_DESTROYED_KEY = "TILE_DESTROYED";
-    public static readonly TILE_DESTROYED_PATH = "hw4_assets/sounds/switch.wav";
+    public static readonly TILE_DESTROYED_PATH = "game_assets/sounds/switch.wav";
 
     public static readonly DYING_AUDIO_KEY = "DYING_AUDIO";
-    public static readonly DYING_AUDIO_PATH = "hw4_assets/music/dying.mp3";
+    public static readonly DYING_AUDIO_PATH = "game_assets/music/dying.mp3";
 
     public static readonly LEVEL_END = new AABB(new Vec2(224, 232), new Vec2(24, 16));
 

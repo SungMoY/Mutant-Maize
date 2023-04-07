@@ -1,6 +1,6 @@
 import GameEvent from "../../../Wolfie2D/Events/GameEvent";
 import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
-import { HW3Events } from "../../HW3Events";
+import { GameEvents } from "../../GameEvents";
 import { PlayerTweens } from "../PlayerController";
 import PlayerState from "./PlayerState";
 
@@ -18,7 +18,7 @@ export default class Dead extends PlayerState {
         // Play the dying sound for the player
         this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: dyingAudio, loop: false, holdReference: false});
 
-        this.owner.animation.queue("DEAD", false, HW3Events.PLAYER_DEAD)
+        this.owner.animation.queue("DEAD", false, GameEvents.PLAYER_DEAD)
         //this.owner.tweens.play(PlayerTweens.DEATH);
 
     }
