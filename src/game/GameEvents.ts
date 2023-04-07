@@ -1,10 +1,10 @@
 /**
- * A set of events for HW4
+ * A set of events for the game
  */
-export const HW3Events = {
-    // An event that tells the HW4 level to start. Has data: {}
+export const GameEvents = {
+    // An event that tells the game level to start. Has data: {}
     LEVEL_START: "LEVEL_START",
-    // An event that tells the HW4 level to end. Has data: {}
+    // An event that tells the game level to end. Has data: {}
     LEVEL_END: "LEVEL_END",
 
     // An event triggered when the player enters an area designated as a "level end" location. Had data: {}

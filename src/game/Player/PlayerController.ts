@@ -13,7 +13,7 @@ import Input from "../../Wolfie2D/Input/Input";
 import { GameControls } from "../GameControls";
 import HW3AnimatedSprite from "../Nodes/HW3AnimatedSprite";
 import MathUtils from "../../Wolfie2D/Utils/MathUtils";
-import { HW3Events } from "../HW3Events";
+import { GameEvents } from "../GameEvents";
 import Dead from "./PlayerStates/Dead";
 
 // TODO play your heros animations
@@ -154,14 +154,14 @@ export default class PlayerController extends StateMachineAI {
     public set maxHealth(maxHealth: number) { 
         this._maxHealth = maxHealth; 
         // When the health changes, fire an event up to the scene.
-        this.emitter.fireEvent(HW3Events.HEALTH_CHANGE, {curhp: this.health, maxhp: this.maxHealth});
+        this.emitter.fireEvent(GameEvents.HEALTH_CHANGE, {curhp: this.health, maxhp: this.maxHealth});
     }
 
     public get health(): number { return this._health; }
     public set health(health: number) { 
         this._health = MathUtils.clamp(health, 0, this.maxHealth);
         // When the health changes, fire an event up to the scene.
-        this.emitter.fireEvent(HW3Events.HEALTH_CHANGE, {curhp: this.health, maxhp: this.maxHealth});
+        this.emitter.fireEvent(GameEvents.HEALTH_CHANGE, {curhp: this.health, maxhp: this.maxHealth});
         // If the health hit 0, change the state of the player
         if (this.health === 0) { this.changeState(PlayerStates.DEAD); }
     }

@@ -20,8 +20,8 @@ import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
 import PlayerController, { PlayerTweens } from "../Player/PlayerController";
 import PlayerWeapon from "../Player/PlayerWeapon";
 
-import { HW3Events } from "../HW3Events";
-import { HW3PhysicsGroups } from "../HW3PhysicsGroups";
+import { GameEvents } from "../GameEvents";
+import { GamePhysicsGroups } from "../GamePhysicsGroups";
 import HW3FactoryManager from "../Factory/HW3FactoryManager";
 import MainMenu from "./MainMenu";
 import Particle from "../../Wolfie2D/Nodes/Graphics/Particle";
@@ -97,10 +97,10 @@ export default abstract class Level extends Scene {
         super(viewport, sceneManager, renderingManager, {...options, physics: {
             // TODO configure the collision groups and collision map
             groupNames: [
-                HW3PhysicsGroups.GROUND,
-                HW3PhysicsGroups.PLAYER,
-                HW3PhysicsGroups.PLAYER_WEAPON,
-                HW3PhysicsGroups.DESTRUCTABLE
+                GamePhysicsGroups.GROUND,
+                GamePhysicsGroups.PLAYER,
+                GamePhysicsGroups.PLAYER_WEAPON,
+                GamePhysicsGroups.DESTRUCTABLE
             ],
             collisions: [
                 [0, 1, 1, 0],
@@ -166,30 +166,30 @@ export default abstract class Level extends Scene {
      */
     protected handleEvent(event: GameEvent): void {
         switch (event.type) {
-            case HW3Events.PLAYER_ENTERED_LEVEL_END: {
+            case GameEvents.PLAYER_ENTERED_LEVEL_END: {
                 this.handleEnteredLevelEnd();
                 break;
             }
             // When the level starts, reenable user input
-            case HW3Events.LEVEL_START: {
+            case GameEvents.LEVEL_START: {
                 Input.enableInput();
                 break;
             }
             // When the level ends, change the scene to the next level
-            case HW3Events.LEVEL_END: {
+            case GameEvents.LEVEL_END: {
                 this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: this.levelMusicKey, loop: true, holdReference: true});
                 this.sceneManager.changeToScene(this.nextLevel, {}, this.sceneOptions.physics);
                 break;
             }
-            case HW3Events.HEALTH_CHANGE: {
+            case GameEvents.HEALTH_CHANGE: {
                 this.handleHealthChange(event.data.get("curhp"), event.data.get("maxhp"));
                 break;
             }
-            case HW3Events.PLAYER_DEAD: {
+            case GameEvents.PLAYER_DEAD: {
                 this.sceneManager.changeToScene(MainMenu);
                 break;
             }
-            case HW3Events.DESTROY_TILE: {
+            case GameEvents.DESTROY_TILE: {
                 // handle figuring out which tile to destroy
                 // use handleParticleHit and particleHitTile
                 this.handleParticleHit(event.data.get("node"));
@@ -321,18 +321,18 @@ export default abstract class Level extends Scene {
         this.walls.addPhysics();
         // Add physics to the destructible layer of the tilemap
         this.destructable.addPhysics();
-        this.destructable.setTrigger(HW3PhysicsGroups.PLAYER_WEAPON, HW3Events.DESTROY_TILE, null);
+        this.destructable.setTrigger(GamePhysicsGroups.PLAYER_WEAPON, GameEvents.DESTROY_TILE, null);
     }
     /**
      * Handles all subscriptions to events
      */
     protected subscribeToEvents(): void {
-        this.receiver.subscribe(HW3Events.PLAYER_ENTERED_LEVEL_END);
-        this.receiver.subscribe(HW3Events.LEVEL_START);
-        this.receiver.subscribe(HW3Events.LEVEL_END);
-        this.receiver.subscribe(HW3Events.HEALTH_CHANGE);
-        this.receiver.subscribe(HW3Events.PLAYER_DEAD);
-        this.receiver.subscribe(HW3Events.DESTROY_TILE);
+        this.receiver.subscribe(GameEvents.PLAYER_ENTERED_LEVEL_END);
+        this.receiver.subscribe(GameEvents.LEVEL_START);
+        this.receiver.subscribe(GameEvents.LEVEL_END);
+        this.receiver.subscribe(GameEvents.HEALTH_CHANGE);
+        this.receiver.subscribe(GameEvents.PLAYER_DEAD);
+        this.receiver.subscribe(GameEvents.DESTROY_TILE);
     }
     /**
      * Adds in any necessary UI to the game
@@ -393,7 +393,7 @@ export default abstract class Level extends Scene {
                     ease: EaseFunctionType.IN_OUT_QUAD
                 }
             ],
-            onEnd: HW3Events.LEVEL_END
+            onEnd: GameEvents.LEVEL_END
         });
 
         /*
@@ -411,7 +411,7 @@ export default abstract class Level extends Scene {
                     ease: EaseFunctionType.IN_OUT_QUAD
                 }
             ],
-            onEnd: HW3Events.LEVEL_START
+            onEnd: GameEvents.LEVEL_START
         });
     }
     /**
@@ -442,7 +442,7 @@ export default abstract class Level extends Scene {
         // Give the player physics
         this.player.addPhysics(new AABB(this.player.position.clone(), this.player.boundary.getHalfSize().clone()));
         // Add player to player physics group
-        this.player.setGroup(HW3PhysicsGroups.PLAYER);
+        this.player.setGroup(GamePhysicsGroups.PLAYER);
 
         // TODO - give the player their flip tween
         // this should rotate the sprite 360 degrees over 500 ms
@@ -475,7 +475,7 @@ export default abstract class Level extends Scene {
                     ease: EaseFunctionType.IN_OUT_QUAD
                 }
             ],
-            onEnd: HW3Events.PLAYER_DEAD
+            onEnd: GameEvents.PLAYER_DEAD
         });
 
         // Give the player it's AI
@@ -505,8 +505,8 @@ export default abstract class Level extends Scene {
         
         this.levelEndArea = <Rect>this.add.graphic(GraphicType.RECT, HW3Layers.PRIMARY, { position: this.levelEndPosition, size: this.levelEndHalfSize });
         this.levelEndArea.addPhysics(undefined, undefined, false, true);
-        this.levelEndArea.setGroup(HW3PhysicsGroups.GROUND)
-        this.levelEndArea.setTrigger(HW3PhysicsGroups.PLAYER, HW3Events.PLAYER_ENTERED_LEVEL_END, null);
+        this.levelEndArea.setGroup(GamePhysicsGroups.GROUND)
+        this.levelEndArea.setTrigger(GamePhysicsGroups.PLAYER, GameEvents.PLAYER_ENTERED_LEVEL_END, null);
         this.levelEndArea.color = new Color(255, 0, 255, .20);
         
     }

@@ -5,7 +5,7 @@ import Timer from "../../Wolfie2D/Timing/Timer";
 import Color from "../../Wolfie2D/Utils/Color";
 import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
 import RandUtils from "../../Wolfie2D/Utils/RandUtils";
-import { HW3PhysicsGroups } from "../HW3PhysicsGroups";
+import { GamePhysicsGroups } from "../GamePhysicsGroups";
 
  
 
@@ -66,7 +66,7 @@ export default class PlayerWeapon extends ParticleSystem {
         );
 
         // set each particle's group to physics group
-        particle.setGroup(HW3PhysicsGroups.PLAYER_WEAPON);
+        particle.setGroup(GamePhysicsGroups.PLAYER_WEAPON);
 
         particle.color = Color.RED;
 
