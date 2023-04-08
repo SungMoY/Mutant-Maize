@@ -3,6 +3,7 @@ import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import Input from "../../Wolfie2D/Input/Input";
 import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import Button from "../../Wolfie2D/Nodes/UIElements/Button";
+import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
@@ -32,13 +33,17 @@ export default class SplashScreen extends Scene {
         logo.position = new Vec2(this.getViewport().getHalfSize().x, this.getViewport().getHalfSize().y - 50);
         logo.scale = new Vec2(0.67, 0.67);
 
-        let playButton = <Button>this.add.uiElement(UIElementType.BUTTON, "MAIN", {position: new Vec2(400, 400), text: "CLICK TO START"});
+        let playButton = <Label>this.add.uiElement(UIElementType.LABEL, "MAIN", {position: new Vec2(400, 400), text: "CLICK TO START"});
         playButton.backgroundColor = new Color(0, 0, 0, 0.9)
         playButton.position = new Vec2(this.getViewport().getHalfSize().x, this.getViewport().getHalfSize().y + 250);
         playButton.font = "'handjet_square_doublemedium'";
         playButton.fontSize = 56;
+        playButton.textColor = Color.WHITE;
         playButton.setPadding(new Vec2(50, 5));
-        playButton.onClick = () => {
+    }
+
+    public updateScene(deltaT: number): void {
+        if (Input.isMouseJustPressed()) {
             this.sceneManager.changeToScene(MainMenu);
         }
     }
