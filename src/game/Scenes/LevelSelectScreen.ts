@@ -41,7 +41,7 @@ export default class LevelSelectScreen extends Scene {
         // Create a label named "Level Select"
         let lvlSelectLabel = <Label>this.add.uiElement(UIElementType.LABEL, "MAIN", {position: new Vec2(size.x, size.y - 275), text: "Level Select"});
         lvlSelectLabel.textColor = Color.WHITE;
-        lvlSelectLabel.font = "Handjet";
+        lvlSelectLabel.font = "'handjet_square_doublemedium'";
         lvlSelectLabel.fontSize = 96;
 
         // lvlSelectDiv text
@@ -72,7 +72,7 @@ export default class LevelSelectScreen extends Scene {
             // create text
             let line = <Label>this.add.uiElement(UIElementType.LABEL, "MAIN", {position: new Vec2(size.x-175, size.y-140 + (i*100)), text: lvlSelectTextLines[i].text});
             line.textColor = Color.WHITE;
-            line.font = "Handjet";
+            line.font = "'handjet_square_doublemedium'";
             line.fontSize = 56;
             line.setPadding(new Vec2(10, 10));
             line.backgroundColor = Color.TRANSPARENT
@@ -93,7 +93,7 @@ export default class LevelSelectScreen extends Scene {
             // create text
             let line = <Label>this.add.uiElement(UIElementType.LABEL, "MAIN", {position: new Vec2(size.x+175, size.y-140 + ((i-3)*100)), text: lvlSelectTextLines[i].text});
             line.textColor = Color.WHITE;
-            line.font = "Handjet";
+            line.font = "'handjet_square_doublemedium'";
             line.fontSize = 56;
             line.setPadding(new Vec2(10, 10));
             line.backgroundColor = Color.TRANSPARENT
@@ -104,7 +104,7 @@ export default class LevelSelectScreen extends Scene {
         let backBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "MAIN", {position: new Vec2(size.x, size.y + 275), text: "BACK"});
         backBtn.backgroundColor = new Color(0, 0, 0, 0.9)
         backBtn.setPadding(new Vec2(50, 10));
-        backBtn.font = "Handjet";
+        backBtn.font = "'handjet_square_doublemedium'";
         backBtn.fontSize = 48;
 
         // When the play button is clicked, go to the next scene

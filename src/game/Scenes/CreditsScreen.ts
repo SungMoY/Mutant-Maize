@@ -36,7 +36,7 @@ export default class CreditsScreen extends Scene {
         // Create a label named "ABOUT"
         let controlsLabel = <Label>this.add.uiElement(UIElementType.LABEL, "MAIN", {position: new Vec2(size.x, size.y - 275), text: "ABOUT"});
         controlsLabel.textColor = Color.WHITE;
-        controlsLabel.font = "Handjet";
+        controlsLabel.font = "'handjet_square_doublemedium'";
         controlsLabel.fontSize = 96;
 
         // Create head div
@@ -51,7 +51,7 @@ export default class CreditsScreen extends Scene {
         //developer title
         let developerTitle = <Label>this.add.uiElement(UIElementType.LABEL, "MAIN", {position: new Vec2(size.x, size.y-160), text: "Developers"});
         developerTitle.textColor = Color.WHITE;
-        developerTitle.font = "Handjet";
+        developerTitle.font = "'handjet_square_doublemedium'";
         developerTitle.fontSize = 36;
         //developer text per line
         let developerText = [
@@ -62,7 +62,7 @@ export default class CreditsScreen extends Scene {
         for (let i = 0; i < developerText.length; i++) {
             let developerLine = <Label>this.add.uiElement(UIElementType.LABEL, "MAIN", {position: new Vec2(size.x, size.y-120 + (i*25)), text: developerText[i]});
             developerLine.textColor = Color.WHITE;
-            developerLine.font = "Handjet";
+            developerLine.font = "'handjet_square_doublemedium'";
             developerLine.fontSize = 24;
             developerLine.setPadding(new Vec2(10, 10));
         }
@@ -74,7 +74,7 @@ export default class CreditsScreen extends Scene {
         //engine dev title
         let engineDevTitle = <Label>this.add.uiElement(UIElementType.LABEL, "MAIN", {position: new Vec2(size.x, size.y+35), text: "Wolfie2D Engine By"});
         engineDevTitle.textColor = Color.WHITE;
-        engineDevTitle.font = "Handjet";
+        engineDevTitle.font = "'handjet_square_doublemedium'";
         engineDevTitle.fontSize = 36;
         //engine dev text
         let engineDevText = [
@@ -84,7 +84,7 @@ export default class CreditsScreen extends Scene {
         for (let i = 0; i < engineDevText.length; i++) {
             let engineDevLine = <Label>this.add.uiElement(UIElementType.LABEL, "MAIN", {position: new Vec2(size.x, size.y+70 + (i*25)), text: engineDevText[i]});
             engineDevLine.textColor = Color.WHITE;
-            engineDevLine.font = "Handjet";
+            engineDevLine.font = "'handjet_square_doublemedium'";
             engineDevLine.fontSize = 24;
         }
         
@@ -92,7 +92,7 @@ export default class CreditsScreen extends Scene {
         let backBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "MAIN", {position: new Vec2(size.x, size.y + 275), text: "BACK"});
         backBtn.backgroundColor = new Color(0, 0, 0, 0.9)
         backBtn.setPadding(new Vec2(50, 10));
-        backBtn.font = "Handjet";
+        backBtn.font = "'handjet_square_doublemedium'";
         backBtn.fontSize = 48;
 
         // When the play button is clicked, go to the next scene

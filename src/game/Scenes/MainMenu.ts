@@ -67,7 +67,7 @@ export default class MainMenu extends Scene {
             }
 
             let text = <Label>this.add.uiElement(UIElementType.LABEL, "MAIN", {position: new Vec2(size.x, size.y+(i*60)), text: MenuPanel[i].text});
-            text.font = "Handjet";
+            text.font = "'handjet_square_doublemedium'";
             text.fontSize = 40;
             text.textColor = Color.WHITE;
             text.backgroundColor = Color.TRANSPARENT

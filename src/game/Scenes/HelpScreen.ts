@@ -35,7 +35,7 @@ export default class HelpScreen extends Scene {
         // Create a label named "Cheats"
         let cheatsLabel = <Label>this.add.uiElement(UIElementType.LABEL, "MAIN", {position: new Vec2(size.x, size.y - 275), text: "CHEATS"});
         cheatsLabel.textColor = Color.WHITE;
-        cheatsLabel.font = "Handjet";
+        cheatsLabel.font = "'handjet_square_doublemedium'";
         cheatsLabel.fontSize = 96;
 
         // Create head div
@@ -60,7 +60,7 @@ export default class HelpScreen extends Scene {
         for (let i = 0; i < cheatsTextLine.length; i++) {
             let cheatsLine = <Label>this.add.uiElement(UIElementType.LABEL, "MAIN", {position: new Vec2(size.x, size.y-120 + (i*30)), text: cheatsTextLine[i]});
             cheatsLine.textColor = Color.WHITE;
-            cheatsLine.font = "Handjet";
+            cheatsLine.font = "'handjet_square_doublemedium'";
             cheatsLine.fontSize = 24;
             cheatsLine.setPadding(new Vec2(10, 10));
         }
@@ -68,7 +68,7 @@ export default class HelpScreen extends Scene {
         let backBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "MAIN", {position: new Vec2(size.x, size.y + 275), text: "BACK"});
         backBtn.backgroundColor = new Color(0, 0, 0, 0.9)
         backBtn.setPadding(new Vec2(50, 10));
-        backBtn.font = "Handjet";
+        backBtn.font = "'handjet_square_doublemedium'";
         backBtn.fontSize = 48;
 
         // When the play button is clicked, go to the next scene
