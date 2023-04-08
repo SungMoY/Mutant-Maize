@@ -11,6 +11,7 @@ import AboutScreen from "./AboutScreen";
 import CreditsScreen from "./CreditsScreen";
 import HelpScreen from "./HelpScreen";
 import LevelSelectScreen from "./LevelSelectScreen";
+import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 
 export default class MainMenu extends Scene {
 
@@ -46,26 +47,30 @@ export default class MainMenu extends Scene {
         logo.scale = new Vec2(0.45, 0.45);
 
         let MenuPanel = [
-            {text: "PLAY", goTo: Level1, paddingX: 132},
-            {text: "CONTROLS", goTo: ControlsScreen, paddingX: 100},
-            {text: "ABOUT", goTo: AboutScreen, paddingX: 124},
-            {text: "CREDITS", goTo: CreditsScreen, paddingX: 113},
-            {text: "HELP", goTo: HelpScreen, paddingX: 134},
-            {text: "LEVELS", goTo: LevelSelectScreen, paddingX: 120}
+            {text: "PLAY", goTo: Level1},
+            {text: "CONTROLS", goTo: ControlsScreen},
+            {text: "ABOUT", goTo: AboutScreen},
+            {text: "CREDITS", goTo: CreditsScreen},
+            {text: "HELP", goTo: HelpScreen},
+            {text: "LEVELS", goTo: LevelSelectScreen}
         ]
 
         for (let i = 0; i < MenuPanel.length; i++) {
-            let button = <Button>this.add.uiElement(UIElementType.BUTTON, "MAIN", {position: new Vec2(size.x, size.y+(i*60)), text: MenuPanel[i].text});
-            button.backgroundColor = new Color(0, 0, 0, 0.9)
-            button.font = "Handjet";
-            button.setPadding(new Vec2(MenuPanel[i].paddingX, 5));
-            button.fontSize = 40;
+            let button = <Button>this.add.uiElement(UIElementType.BUTTON, "MAIN", {position: new Vec2(size.x, size.y+(i*60)), text: ""});
+            button.backgroundColor = new Color(0, 0, 0, 0.9);
+            button.setPadding(new Vec2(175, 10));
             button.onClick = () => {
                 if (MenuPanel[i].text == "PLAY") {
                     this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: MainMenu.MUSIC_KEY, holdReference: false});
                 }
                 this.sceneManager.changeToScene(MenuPanel[i].goTo);
             }
+
+            let text = <Label>this.add.uiElement(UIElementType.LABEL, "MAIN", {position: new Vec2(size.x, size.y+(i*60)), text: MenuPanel[i].text});
+            text.font = "Handjet";
+            text.fontSize = 40;
+            text.textColor = Color.WHITE;
+            text.backgroundColor = Color.TRANSPARENT
         }
 
         this.emitter.fireEvent(GameEventType.PLAY_MUSIC, {key: MainMenu.MUSIC_KEY, loop: true, holdReference: true})
