@@ -35,7 +35,7 @@ export default class SplashScreen extends Scene {
         let playButton = <Button>this.add.uiElement(UIElementType.BUTTON, "MAIN", {position: new Vec2(400, 400), text: "CLICK TO START"});
         playButton.backgroundColor = new Color(0, 0, 0, 0.9)
         playButton.position = new Vec2(this.getViewport().getHalfSize().x, this.getViewport().getHalfSize().y + 250);
-        playButton.font = "Handjet";
+        playButton.font = "'handjet_square_doublemedium'";
         playButton.fontSize = 56;
         playButton.setPadding(new Vec2(50, 5));
         playButton.onClick = () => {
