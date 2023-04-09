@@ -25,11 +25,12 @@ import { GamePhysicsGroups } from "../GamePhysicsGroups";
 import HW3FactoryManager from "../Factory/HW3FactoryManager";
 import MainMenu from "./MainMenu";
 import Particle from "../../Wolfie2D/Nodes/Graphics/Particle";
+import Button from "../../Wolfie2D/Nodes/UIElements/Button";
 
 /**
  * A const object for the layer names
  */
-export const HW3Layers = {
+export const LevelLayers = {
     BACKGROUND: "BACKGROUND",
     // The primary layer
     PRIMARY: "PRIMARY",
@@ -40,7 +41,7 @@ export const HW3Layers = {
 } as const;
 
 // The layers as a type
-export type HW3Layer = typeof HW3Layers[keyof typeof HW3Layers]
+export type LevelLayers = typeof LevelLayers[keyof typeof LevelLayers]
 
 /**
  * An abstract HW4 scene class.
@@ -60,9 +61,9 @@ export default abstract class Level extends Scene {
     /** The player's spawn position */
     protected playerSpawn: Vec2;
 
-    private healthLabel: Label;
-	private healthBar: Label;
-	private healthBarBg: Label;
+    private healthBar: Label;
+	private healthBarHealth: Label;
+	private healthBarMissing: Label;
 
 
     /** The end of level stuff */
@@ -81,12 +82,9 @@ export default abstract class Level extends Scene {
 
     /** The keys to the tilemap and different tilemap layers */
     protected tilemapKey: string;
-    protected destructibleLayerKey: string;
     protected wallsLayerKey: string;
     /** The scale for the tilemap */
     protected tilemapScale: Vec2;
-    /** The destrubtable layer of the tilemap */
-    protected destructable: OrthogonalTilemap;
     /** The wall layer of the tilemap */
     protected walls: OrthogonalTilemap;
 
@@ -96,7 +94,6 @@ export default abstract class Level extends Scene {
     /** Sound and music */
     protected levelMusicKey: string;
     protected jumpAudioKey: string;
-    protected tileDestroyedAudioKey: string;
     protected dyingAudioKey: string;
 
     // sets viewport dynamically for each level
@@ -106,15 +103,14 @@ export default abstract class Level extends Scene {
     protected backgroundImagePosition: Vec2;
 
     protected viewportBounds: Vec2;
+    protected pauseButton: Button;
 
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
         super(viewport, sceneManager, renderingManager, {...options, physics: {
-            // TODO configure the collision groups and collision map
             groupNames: [
                 GamePhysicsGroups.GROUND,
                 GamePhysicsGroups.PLAYER,
                 GamePhysicsGroups.PLAYER_WEAPON,
-                GamePhysicsGroups.DESTRUCTABLE
             ],
             collisions: [
                 [0, 1, 1, 0],
@@ -124,32 +120,19 @@ export default abstract class Level extends Scene {
             ]
          }});
         this.add = new HW3FactoryManager(this, this.tilemaps);
+        this.load.image("pauseButton", "game_assets/images/pause_button.png");
+
     }
 
     public startScene(): void {
-        // Initialize the layers
         this.initLayers();
-
-        // Initialize the background
         this.initializeBackground();
-
-        // Initialize the tilemaps
         this.initializeTilemap();
-
-        // Initialize the sprite and particle system for the players weapon 
         this.initializeWeaponSystem();
-
         this.initializeUI();
-
-        // Initialize the player 
         this.initializePlayer(this.playerSpriteKey);
-
-        // Initialize the viewport - this must come after the player has been initialized
         this.initializeViewport();
         this.subscribeToEvents();
-        
-
-        // Initialize the ends of the levels - must be initialized after the primary layer has been added
         this.initializeLevelEnds();
 
         this.levelTransitionTimer = new Timer(500);
@@ -206,10 +189,8 @@ export default abstract class Level extends Scene {
                 this.sceneManager.changeToScene(MainMenu);
                 break;
             }
-            case GameEvents.DESTROY_TILE: {
-                // handle figuring out which tile to destroy
-                // use handleParticleHit and particleHitTile
-                this.handleParticleHit(event.data.get("node"));
+            case GameEvents.PAUSE: {
+                // add a layer of transparency over the screen
                 break;
             }
             // Default: Throw an error! No unhandled events allowed.
@@ -225,38 +206,38 @@ export default abstract class Level extends Scene {
      * Handle particle hit events
      * @param particleId the id of the particle
      */
-    protected handleParticleHit(particleId: number): void {
-        let particles = this.playerWeaponSystem.getPool();
+    // protected handleParticleHit(particleId: number): void {
+    //     let particles = this.playerWeaponSystem.getPool();
 
-        let particle = particles.find(particle => particle.id === particleId);
-        if (particle !== undefined) {
-            // Get the destructable tilemap
-            let tilemap = this.destructable;
+    //     let particle = particles.find(particle => particle.id === particleId);
+    //     if (particle !== undefined) {
+    //         // Get the destructable tilemap
+    //         let tilemap = this.destructable;
 
-            let min = new Vec2(particle.sweptRect.left, particle.sweptRect.top);
-            let max = new Vec2(particle.sweptRect.right, particle.sweptRect.bottom);
+    //         let min = new Vec2(particle.sweptRect.left, particle.sweptRect.top);
+    //         let max = new Vec2(particle.sweptRect.right, particle.sweptRect.bottom);
 
-            // Convert the min/max x/y to the min and max row/col in the tilemap array
-            let minIndex = tilemap.getColRowAt(min);
-            let maxIndex = tilemap.getColRowAt(max);
+    //         // Convert the min/max x/y to the min and max row/col in the tilemap array
+    //         let minIndex = tilemap.getColRowAt(min);
+    //         let maxIndex = tilemap.getColRowAt(max);
 
-            // Loop over all possible tiles the particle could be colliding with 
-            for(let col = minIndex.x; col <= maxIndex.x; col++){
-                for(let row = minIndex.y; row <= maxIndex.y; row++){
-                    // If the tile is collideable -> check if this particle is colliding with the tile
-                    if(tilemap.isTileCollidable(col, row) && this.particleHitTile(tilemap, particle, col, row)){
-                        // TODO Destroy the tile
-                        let rowCol = new Vec2(col, row);
-                        if (tilemap.getTileAtRowCol(rowCol) !== 0) {
-                            tilemap.setTileAtRowCol(rowCol, 0);
-                            this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: this.tileDestroyedAudioKey, loop: false, holdReference: false });
+    //         // Loop over all possible tiles the particle could be colliding with 
+    //         for(let col = minIndex.x; col <= maxIndex.x; col++){
+    //             for(let row = minIndex.y; row <= maxIndex.y; row++){
+    //                 // If the tile is collideable -> check if this particle is colliding with the tile
+    //                 if(tilemap.isTileCollidable(col, row) && this.particleHitTile(tilemap, particle, col, row)){
+    //                     // TODO Destroy the tile
+    //                     let rowCol = new Vec2(col, row);
+    //                     if (tilemap.getTileAtRowCol(rowCol) !== 0) {
+    //                         tilemap.setTileAtRowCol(rowCol, 0);
+    //                         this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: this.tileDestroyedAudioKey, loop: false, holdReference: false });
 
-                        }
-                    }
-                }
-            }
-        }
-    }
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
 
     /**
      * Checks if a particle hit the tile at the (col, row) coordinates in the tilemap.
@@ -277,9 +258,6 @@ export default abstract class Level extends Scene {
         return true;
     }
 
-    /**
-     * Handle the event when the player enters the level end area.
-     */
     protected handleEnteredLevelEnd(): void {
         // If the timer hasn't run yet, start the end level animation
         if (!this.levelEndTimer.hasRun() && this.levelEndTimer.isStopped()) {
@@ -287,49 +265,33 @@ export default abstract class Level extends Scene {
             this.levelEndLabel.tweens.play("slideIn");
         }
     }
-    /**
-     * This is the same healthbar I used for hw2. I've adapted it slightly to account for the zoom factor. Other than that, the
-     * code is basically the same.
-     * 
-     * @param currentHealth the current health of the player
-     * @param maxHealth the maximum health of the player
-     */
+
     protected handleHealthChange(currentHealth: number, maxHealth: number): void {
-		let unit = this.healthBarBg.size.x / maxHealth;
-        
-		this.healthBar.size.set(this.healthBarBg.size.x - unit * (maxHealth - currentHealth), this.healthBarBg.size.y);
-		this.healthBar.position.set(this.healthBarBg.position.x - (unit / 2 / this.getViewScale()) * (maxHealth - currentHealth), this.healthBarBg.position.y);
+		let unit = this.healthBar.size.x / maxHealth;
+        this.healthBarHealth.size = new Vec2(currentHealth * unit, this.healthBarHealth.size.y);
+        this.healthBarHealth.position = new Vec2(this.healthBar.position.x - this.healthBar.size.x / 2 + this.healthBarHealth.size.x / 2, this.healthBarHealth.position.y);
+	
+        this.healthBarMissing.size = new Vec2((maxHealth - currentHealth) * unit, this.healthBarMissing.size.y);
+        this.healthBarMissing.position = new Vec2(this.healthBarHealth.position.x + this.healthBarHealth.size.x / 2 + this.healthBarMissing.size.x / 2, this.healthBarMissing.position.y);
+    
+    }
 
-		this.healthBar.backgroundColor = currentHealth < maxHealth * 1/4 ? Color.RED: currentHealth < maxHealth * 3/4 ? Color.YELLOW : Color.GREEN;
-	}
-
-    /* Initialization methods for everything in the scene */
-
-    /**
-     * Initialzes the layers
-     */
     protected initLayers(): void {
-        this.addParallaxLayer(HW3Layers.BACKGROUND, new Vec2(0.25, 0), -1);
-        // this.addLayer(HW3Layers.BACKGROUND, -1);
+        this.addParallaxLayer(LevelLayers.BACKGROUND, new Vec2(0.25, 0), -1);
+        // this.addLayer(LevelLayers.BACKGROUND, -1);
         // Add a layer for UI
-        this.addUILayer(HW3Layers.UI);
+        this.addUILayer(LevelLayers.UI);
         // Add a layer for players and enemies
-        this.addLayer(HW3Layers.PRIMARY);
+        this.addLayer(LevelLayers.PRIMARY);
         // Add a layer for the background
     }
 
-    // initialize background image
     protected initializeBackground(): void {
         let background = this.add.sprite(this.backgroundKey, "BACKGROUND");
         background.position = this.backgroundImagePosition;
         background.scale = new Vec2(1, 1);
     }
 
-    /**
-     * Initializes the tilemaps
-     * @param key the key for the tilemap data
-     * @param scale the scale factor for the tilemap
-     */
     protected initializeTilemap(): void {
         if (this.tilemapKey === undefined || this.tilemapScale === undefined) {
             throw new Error("Cannot add the homework 4 tilemap unless the tilemap key and scale are set.");
@@ -337,54 +299,51 @@ export default abstract class Level extends Scene {
         // Add the tilemap to the scene
         this.add.tilemap(this.tilemapKey, this.tilemapScale);
 
-        if (this.destructibleLayerKey === undefined || this.wallsLayerKey === undefined) {
-            throw new Error("Make sure the keys for the destuctible layer and wall layer are both set");
+        if (this.wallsLayerKey === undefined) {
+            throw new Error("Make sure the keys for the  wall layer are both set");
         }
 
-        // Get the wall and destructible layers 
+        // Get the wall layers 
         this.walls = this.getTilemap(this.wallsLayerKey) as OrthogonalTilemap;
-        //this.destructable = this.getTilemap(this.destructibleLayerKey) as OrthogonalTilemap;
 
         // Add physicss to the wall layer
         this.walls.addPhysics();
-        // Add physics to the destructible layer of the tilemap
-        //this.destructable.addPhysics();
-        //this.destructable.setTrigger(GamePhysicsGroups.PLAYER_WEAPON, GameEvents.DESTROY_TILE, null);
     }
-    /**
-     * Handles all subscriptions to events
-     */
+
     protected subscribeToEvents(): void {
         this.receiver.subscribe(GameEvents.PLAYER_ENTERED_LEVEL_END);
         this.receiver.subscribe(GameEvents.LEVEL_START);
         this.receiver.subscribe(GameEvents.LEVEL_END);
         this.receiver.subscribe(GameEvents.HEALTH_CHANGE);
         this.receiver.subscribe(GameEvents.PLAYER_DEAD);
-        this.receiver.subscribe(GameEvents.DESTROY_TILE);
+        this.receiver.subscribe(GameEvents.PAUSE);
     }
     /**
      * Adds in any necessary UI to the game
      */
     protected initializeUI(): void {
 
-        // HP Label
-		this.healthLabel = <Label>this.add.uiElement(UIElementType.LABEL, HW3Layers.UI, {position: new Vec2(205, 20), text: "HP "});
-		this.healthLabel.size.set(300, 30);
-		this.healthLabel.fontSize = 24;
-		this.healthLabel.font = "Courier";
+        // Health Bar Background
+        this.healthBar = <Label>this.add.uiElement(UIElementType.LABEL, LevelLayers.UI, {position: new Vec2(260, 48), text: ""});
+        this.healthBar.size = new Vec2(300, 20);
+        this.healthBar.backgroundColor = Color.BLUE;
+        this.healthBar.borderColor = Color.BLACK;
+        this.healthBar.borderRadius = 0;
 
-        // HealthBar
-		this.healthBar = <Label>this.add.uiElement(UIElementType.LABEL, HW3Layers.UI, {position: new Vec2(250, 20), text: ""});
-		this.healthBar.size = new Vec2(300, 25);
-		this.healthBar.backgroundColor = Color.GREEN;
+        // HealthBarHealth
+		this.healthBarHealth = <Label>this.add.uiElement(UIElementType.LABEL, LevelLayers.UI, {position: new Vec2(260, 48), text: ""});
+		this.healthBarHealth.size = new Vec2(300, 20);
+        this.healthBarHealth.backgroundColor = Color.BLUE;
+        this.healthBarHealth.borderRadius = 0;
 
-        // HealthBar Border
-		this.healthBarBg = <Label>this.add.uiElement(UIElementType.LABEL, HW3Layers.UI, {position: new Vec2(250, 20), text: ""});
-		this.healthBarBg.size = new Vec2(300, 25);
-		this.healthBarBg.borderColor = Color.BLACK;
+        // HealthBarMissing
+		this.healthBarMissing = <Label>this.add.uiElement(UIElementType.LABEL, LevelLayers.UI, {position: new Vec2(260, 48), text: ""});
+		this.healthBarMissing.size = new Vec2(300, 20);
+		this.healthBarMissing.backgroundColor = Color.RED;
+        this.healthBarMissing.borderRadius = 0;
 
         // End of level label (start off screen)
-        this.levelEndLabel = <Label>this.add.uiElement(UIElementType.LABEL, HW3Layers.UI, { position: new Vec2(-300, 100), text: "Level Complete" });
+        this.levelEndLabel = <Label>this.add.uiElement(UIElementType.LABEL, LevelLayers.UI, { position: new Vec2(-300, 100), text: "Level Complete" });
         this.levelEndLabel.size.set(1200, 60);
         this.levelEndLabel.borderRadius = 0;
         //this.levelEndLabel.backgroundColor = new Color(34, 32, 52);
@@ -392,6 +351,19 @@ export default abstract class Level extends Scene {
         this.levelEndLabel.textColor = Color.WHITE;
         this.levelEndLabel.fontSize = 48;
         this.levelEndLabel.font = "PixelSimple";
+
+        // Create pause button on top left corner
+        let pauseButtonImage = this.add.sprite("pauseButton", LevelLayers.UI);
+        pauseButtonImage.position = new Vec2(60, 50);
+        pauseButtonImage.scale = new Vec2(0.3, 0.3);
+        this.pauseButton = <Button>this.add.uiElement(UIElementType.BUTTON, LevelLayers.UI, { position: new Vec2(60, 50), text: "" });
+        this.pauseButton.setPadding(new Vec2(20, 10));
+        this.pauseButton.backgroundColor = Color.TRANSPARENT;
+        this.pauseButton.borderColor = Color.TRANSPARENT;
+        this.pauseButton.onClick = () => {
+            console.log("Pause button clicked");
+            this.emitter.fireEvent(GameEvents.PAUSE);
+        }
 
         // Add a tween to move the label on screen
         this.levelEndLabel.tweens.add("slideIn", {
@@ -407,7 +379,7 @@ export default abstract class Level extends Scene {
             ]
         });
 
-        this.levelTransitionScreen = <Rect>this.add.graphic(GraphicType.RECT, HW3Layers.UI, { position: new Vec2(480, 360), size: new Vec2(960, 720) });
+        this.levelTransitionScreen = <Rect>this.add.graphic(GraphicType.RECT, LevelLayers.UI, { position: new Vec2(480, 360), size: new Vec2(960, 720) });
         this.levelTransitionScreen.color = new Color(34, 32, 52);
         this.levelTransitionScreen.alpha = 1;
 
@@ -443,12 +415,10 @@ export default abstract class Level extends Scene {
             onEnd: GameEvents.LEVEL_START
         });
     }
-    /**
-     * Initializes the particles system used by the player's weapon.
-     */
+
     protected initializeWeaponSystem(): void {
         this.playerWeaponSystem = new PlayerWeapon(50, Vec2.ZERO, 1000, 3, 0, 50);
-        this.playerWeaponSystem.initializePool(this, HW3Layers.PRIMARY);
+        this.playerWeaponSystem.initializePool(this, LevelLayers.PRIMARY);
     }
     /**
      * Initializes the player, setting the player's initial position to the given position.
@@ -463,7 +433,7 @@ export default abstract class Level extends Scene {
         }
 
         // Add the player to the scene
-        this.player = this.add.animatedSprite(key, HW3Layers.PRIMARY);
+        this.player = this.add.animatedSprite(key, LevelLayers.PRIMARY);
         // scaling issue: changed from (1, 1) to (1/16, 1/16)
         // my ufo is 256 by 256 pixels. Each tile in our game is 16by16 pixels. The sprite should be 1 tile wide and 2 tiles tall, or 16 by 32 pixels.
         /**
@@ -471,7 +441,7 @@ export default abstract class Level extends Scene {
          * Each tile in our game is 16 by 16 pixels. The tilemap itself was
          * scaled by a factor of 2, so each tile is 32 by 32 pixels.
          */
-        this.player.scale.set(1/4, 1/4);
+        this.player.scale.set(1/8, 1/4);
         this.player.position.copy(this.playerSpawn);
         
         // Give the player physics
@@ -479,49 +449,13 @@ export default abstract class Level extends Scene {
         // Add player to player physics group
         this.player.setGroup(GamePhysicsGroups.PLAYER);
 
-        // TODO - give the player their flip tween
-        // this should rotate the sprite 360 degrees over 500 ms
-        this.player.tweens.add(PlayerTweens.FLIP, {
-            startDelay: 0,
-            duration: 500,
-            effects: [{
-                property: "rotation",
-                start: 0,
-                end: Math.PI * 2,
-                ease: EaseFunctionType.IN_OUT_QUAD
-                }]
-            });
-
-        // Give the player a death animation
-        this.player.tweens.add(PlayerTweens.DEATH, {
-            startDelay: 0,
-            duration: 500,
-            effects: [
-                {
-                    property: "rotation",
-                    start: 0,
-                    end: Math.PI,
-                    ease: EaseFunctionType.IN_OUT_QUAD
-                },
-                {
-                    property: "alpha",
-                    start: 1,
-                    end: 0,
-                    ease: EaseFunctionType.IN_OUT_QUAD
-                }
-            ],
-            onEnd: GameEvents.PLAYER_DEAD
-        });
-
         // Give the player it's AI
         this.player.addAI(PlayerController, { 
             weaponSystem: this.playerWeaponSystem, 
             tilemap: "Destructable" 
         });
     }
-    /**
-     * Initializes the viewport
-     */
+
     protected initializeViewport(): void {
         if (this.player === undefined) {
             throw new Error("Player must be initialized before setting the viewport to folow the player");
@@ -529,25 +463,19 @@ export default abstract class Level extends Scene {
         this.viewport.follow(this.player);
         this.viewport.setZoomLevel(1);
         this.viewport.setBounds(0, 0, this.viewportBounds.x, this.viewportBounds.y);
-        console.log(this.levelxbound);
     }
-    /**
-     * Initializes the level end area
-     */
+
     protected initializeLevelEnds(): void {
-        if (!this.layers.has(HW3Layers.PRIMARY)) {
+        if (!this.layers.has(LevelLayers.PRIMARY)) {
             throw new Error("Can't initialize the level ends until the primary layer has been added to the scene!");
         }
-        
-        this.levelEndArea = <Rect>this.add.graphic(GraphicType.RECT, HW3Layers.PRIMARY, { position: this.levelEndPosition, size: this.levelEndHalfSize });
+        this.levelEndArea = <Rect>this.add.graphic(GraphicType.RECT, LevelLayers.PRIMARY, { position: this.levelEndPosition, size: this.levelEndHalfSize });
         this.levelEndArea.addPhysics(undefined, undefined, false, true);
         this.levelEndArea.setGroup(GamePhysicsGroups.GROUND)
         this.levelEndArea.setTrigger(GamePhysicsGroups.PLAYER, GameEvents.PLAYER_ENTERED_LEVEL_END, null);
         this.levelEndArea.color = new Color(255, 0, 255, .20);
         
     }
-
-    /* Misc methods */
 
     // Get the key of the player's jump audio file
     public getJumpAudioKey(): string {

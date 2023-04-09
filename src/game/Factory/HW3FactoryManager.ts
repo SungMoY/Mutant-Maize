@@ -4,7 +4,7 @@ import Tilemap from "../../Wolfie2D/Nodes/Tilemap";
 import UIElement from "../../Wolfie2D/Nodes/UIElement";
 import FactoryManager from "../../Wolfie2D/Scene/Factories/FactoryManager";
 import HW3AnimatedSprite from "../Nodes/HW3AnimatedSprite";
-import HW3Level, { HW3Layer } from "../Scenes/Level";
+import HW3Level, { LevelLayers } from "../Scenes/Level";
 import HW4CanvasNodeFactory from "./HW3CanvasNodeFactory";
 
 /**
@@ -21,19 +21,19 @@ export default class HW3FactoryManager extends FactoryManager {
         this.hw3CanvasNodeFactory.init(scene);
     }
 
-    public animatedSprite(key: string, layerName: HW3Layer): HW3AnimatedSprite {
+    public animatedSprite(key: string, layerName: LevelLayers): HW3AnimatedSprite {
         return this.hw3CanvasNodeFactory.addAnimatedSprite(key, layerName);
     }
 
-    public uiElement(type: string, layerName: HW3Layer, options?: Record<string, any>): UIElement {
+    public uiElement(type: string, layerName: LevelLayers, options?: Record<string, any>): UIElement {
         return super.uiElement(type, layerName, options);
     }
 
-    public graphic(type: string, layerName: HW3Layer, options?: Record<string, any>): Graphic {
+    public graphic(type: string, layerName: LevelLayers, options?: Record<string, any>): Graphic {
         return super.graphic(type, layerName, options);
     }
 
-    public sprite(key: string, layerName: HW3Layer): Sprite {
+    public sprite(key: string, layerName: LevelLayers): Sprite {
         return super.sprite(key, layerName);
     }
 }

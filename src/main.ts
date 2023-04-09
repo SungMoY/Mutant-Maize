@@ -17,7 +17,8 @@ import SplashScreen from "./game/Scenes/SplashScreen";
             {name: GameControls.MOVE_LEFT, keys: ["a"]},
             {name: GameControls.MOVE_RIGHT, keys: ["d"]},
             {name: GameControls.JUMP, keys: ["w", "space"]},
-            {name: GameControls.ATTACK, keys: ["x"]}
+            {name: GameControls.RIFLE, keys: ["t"]},
+            {name: GameControls.SHOTGUN, keys: ["f"]},
         ],
         useWebGL: false,                        // Tell the game we want to use webgl
         showDebug: false                       // Whether to show debug messages. You can change this to true if you want
@@ -27,5 +28,5 @@ import SplashScreen from "./game/Scenes/SplashScreen";
     const game = new Game(options);
 
     // Start our game
-    game.start(SplashScreen, {});
+    game.start(Level1, {});
 })();
