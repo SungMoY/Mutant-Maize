@@ -1,5 +1,9 @@
 import Game from "./Wolfie2D/Loop/Game";
 import { GameControls } from "./game/GameControls";
+import ControlsScreen from "./game/Scenes/ControlsScreen";
+import Level1 from "./game/Scenes/Level1";
+import Level2 from "./game/Scenes/Level2";
+import MainMenu from "./game/Scenes/MainMenu";
 import SplashScreen from "./game/Scenes/SplashScreen";
 
 // The main function is your entrypoint into Wolfie2D. Specify your first scene and any options here.
