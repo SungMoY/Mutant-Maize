@@ -12,14 +12,13 @@ import MainMenu from "./MainMenu";
  */
 export default class Level1 extends Level {
 
-    public static readonly PLAYER_SPAWN = new Vec2(100, 200);
+    public static readonly PLAYER_SPAWN = new Vec2(75, 608);
     public static readonly PLAYER_SPRITE_KEY = "PLAYER_SPRITE_KEY";
     public static readonly PLAYER_SPRITE_PATH = "game_assets/spritesheets/UFO_alien.json";
 
     public static readonly TILEMAP_KEY = "LEVEL1";
     public static readonly TILEMAP_PATH = "game_assets/tilemaps/level1map.json";
     public static readonly TILEMAP_SCALE = new Vec2(2, 2);
-    public static readonly DESTRUCTIBLE_LAYER_KEY = "Destructable";
     public static readonly WALLS_LAYER_KEY = "Main";
 
     public static readonly LEVEL_MUSIC_KEY = "LEVEL_MUSIC";
@@ -27,9 +26,6 @@ export default class Level1 extends Level {
 
     public static readonly JUMP_AUDIO_KEY = "PLAYER_JUMP";
     public static readonly JUMP_AUDIO_PATH = "game_assets/sounds/jump.wav";
-
-    public static readonly TILE_DESTROYED_KEY = "TILE_DESTROYED";
-    public static readonly TILE_DESTROYED_PATH = "game_assets/sounds/switch.wav";
 
     public static readonly DYING_AUDIO_KEY = "DYING_AUDIO";
     public static readonly DYING_AUDIO_PATH = "game_assets/music/dying.mp3";
@@ -41,13 +37,11 @@ export default class Level1 extends Level {
         super(viewport, sceneManager, renderingManager, options);
         this.tilemapKey = Level1.TILEMAP_KEY;
         this.tilemapScale = Level1.TILEMAP_SCALE;
-        this.destructibleLayerKey = Level1.DESTRUCTIBLE_LAYER_KEY;
         this.wallsLayerKey = Level1.WALLS_LAYER_KEY;
         this.playerSpriteKey = Level1.PLAYER_SPRITE_KEY;
         this.playerSpawn = Level1.PLAYER_SPAWN;
         // this.levelMusicKey = Level1.LEVEL_MUSIC_KEY
         this.jumpAudioKey = Level1.JUMP_AUDIO_KEY;
-        this.tileDestroyedAudioKey = Level1.TILE_DESTROYED_KEY;
         this.dyingAudioKey = Level1.DYING_AUDIO_KEY;
         this.backgroundKey = Level1.LEVEL1_BACKGROUND_KEY;
         this.levelEndPosition = new Vec2(3776, 304).mult(this.tilemapScale);
@@ -74,7 +68,6 @@ export default class Level1 extends Level {
         // By default, resouceManager unloads everything, so just keep what is same for all levels
         this.load.keepSpritesheet(this.playerSpriteKey);
         this.load.keepAudio(this.jumpAudioKey);
-        this.load.keepAudio(this.tileDestroyedAudioKey);
         this.load.keepAudio(this.dyingAudioKey);
 
     }

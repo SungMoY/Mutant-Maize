@@ -21,7 +21,6 @@ export default class Level2 extends HW3Level {
     public static readonly TILEMAP_KEY = "LEVEL2";
     public static readonly TILEMAP_PATH = "game_assets/tilemaps/HW4Level2.json";
     public static readonly TILEMAP_SCALE = new Vec2(2, 2);
-    public static readonly DESTRUCTIBLE_LAYER_KEY = "Destructable";
     public static readonly WALLS_LAYER_KEY = "Main";
 
     public static readonly LEVEL_MUSIC_KEY = "LEVEL_MUSIC";
@@ -29,9 +28,6 @@ export default class Level2 extends HW3Level {
 
     public static readonly JUMP_AUDIO_KEY = "PLAYER_JUMP";
     public static readonly JUMP_AUDIO_PATH = "game_assets/sounds/jump.wav";
-
-    public static readonly TILE_DESTROYED_KEY = "TILE_DESTROYED";
-    public static readonly TILE_DESTROYED_PATH = "game_assets/sounds/switch.wav";
     
     public static readonly DYING_AUDIO_KEY = "DYING_AUDIO";
     public static readonly DYING_AUDIO_PATH = "game_assets/music/dying.mp3";
@@ -44,7 +40,6 @@ export default class Level2 extends HW3Level {
         // Set the keys for the different layers of the tilemap
         this.tilemapKey = Level2.TILEMAP_KEY;
         this.tilemapScale = Level2.TILEMAP_SCALE;
-        this.destructibleLayerKey = Level2.DESTRUCTIBLE_LAYER_KEY;
         this.wallsLayerKey = Level2.WALLS_LAYER_KEY;
 
         // Set the key for the player's sprite
@@ -55,8 +50,6 @@ export default class Level2 extends HW3Level {
         // Music and sound
         this.levelMusicKey = Level2.LEVEL_MUSIC_KEY
         this.jumpAudioKey = Level2.JUMP_AUDIO_KEY;
-        this.tileDestroyedAudioKey = Level2.TILE_DESTROYED_KEY;
-
         this.dyingAudioKey = Level2.DYING_AUDIO_KEY;
 
         // Level end size and position
