@@ -4,20 +4,20 @@ import Level from "./Level";
 import RenderingManager from "../../Wolfie2D/Rendering/RenderingManager";
 import SceneManager from "../../Wolfie2D/Scene/SceneManager";
 import Viewport from "../../Wolfie2D/SceneGraph/Viewport";
-import HW4Level2 from "./Level2";
+
+import MainMenu from "./MainMenu";
 
 /**
  * The first level for HW4 - should be the one with the grass and the clouds.
  */
 export default class Level1 extends Level {
 
-    public static readonly PLAYER_SPAWN = new Vec2(32, 32);
+    public static readonly PLAYER_SPAWN = new Vec2(100, 200);
     public static readonly PLAYER_SPRITE_KEY = "PLAYER_SPRITE_KEY";
-    // CHANGED TO LOAD CUSTOM CHARACTER
     public static readonly PLAYER_SPRITE_PATH = "game_assets/spritesheets/UFO_alien.json";
 
     public static readonly TILEMAP_KEY = "LEVEL1";
-    public static readonly TILEMAP_PATH = "game_assets/tilemaps/HW4Level1.json";
+    public static readonly TILEMAP_PATH = "game_assets/tilemaps/level1map.json";
     public static readonly TILEMAP_SCALE = new Vec2(2, 2);
     public static readonly DESTRUCTIBLE_LAYER_KEY = "Destructable";
     public static readonly WALLS_LAYER_KEY = "Main";
@@ -34,57 +34,43 @@ export default class Level1 extends Level {
     public static readonly DYING_AUDIO_KEY = "DYING_AUDIO";
     public static readonly DYING_AUDIO_PATH = "game_assets/music/dying.mp3";
 
-    public static readonly LEVEL_END = new AABB(new Vec2(224, 232), new Vec2(24, 16));
+    public static readonly LEVEL1_BACKGROUND_KEY = "LEVEL1_BACKGROUND";
+    public static readonly LEVEL1_BACKGROUND_PATH = "game_assets/images/level1_background.png";
 
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
         super(viewport, sceneManager, renderingManager, options);
-
-        // Set the keys for the different layers of the tilemap
         this.tilemapKey = Level1.TILEMAP_KEY;
         this.tilemapScale = Level1.TILEMAP_SCALE;
         this.destructibleLayerKey = Level1.DESTRUCTIBLE_LAYER_KEY;
         this.wallsLayerKey = Level1.WALLS_LAYER_KEY;
-
-        // Set the key for the player's sprite
         this.playerSpriteKey = Level1.PLAYER_SPRITE_KEY;
-        // Set the player's spawn
         this.playerSpawn = Level1.PLAYER_SPAWN;
-
-        // Music and sound
-        this.levelMusicKey = Level1.LEVEL_MUSIC_KEY
+        // this.levelMusicKey = Level1.LEVEL_MUSIC_KEY
         this.jumpAudioKey = Level1.JUMP_AUDIO_KEY;
         this.tileDestroyedAudioKey = Level1.TILE_DESTROYED_KEY;
-
         this.dyingAudioKey = Level1.DYING_AUDIO_KEY;
-
-        // Level end size and position
-        this.levelEndPosition = new Vec2(128, 232).mult(this.tilemapScale);
+        this.backgroundKey = Level1.LEVEL1_BACKGROUND_KEY;
+        this.levelEndPosition = new Vec2(3776, 304).mult(this.tilemapScale);
         this.levelEndHalfSize = new Vec2(32, 32).mult(this.tilemapScale);
+        this.levelxbound = 3840
+        this.levelybound = 720
+        // due to parallax of the background image, levelxbound does not equal viewport size
+        // therefore, background image position and viewport bounds must be set differently
+        this.backgroundImagePosition = new Vec2(this.levelxbound/2, this.levelybound/2);
+        this.viewportBounds = new Vec2(this.levelxbound*2, this.levelybound)
     }
 
-    /**
-     * Load in our resources for level 1
-     */
     public loadScene(): void {
-        // Load in the tilemap
         this.load.tilemap(this.tilemapKey, Level1.TILEMAP_PATH);
-        // Load in the player's sprite
         this.load.spritesheet(this.playerSpriteKey, Level1.PLAYER_SPRITE_PATH);
-        // Audio and music
-        this.load.audio(this.levelMusicKey, Level1.LEVEL_MUSIC_PATH);
-        this.load.audio(this.jumpAudioKey, Level1.JUMP_AUDIO_PATH);
-        this.load.audio(this.tileDestroyedAudioKey, Level1.TILE_DESTROYED_PATH);
-
-        // Load in the dying audio
+        // this.load.audio(this.levelMusicKey, Level1.LEVEL_MUSIC_PATH);
+        // this.load.audio(this.jumpAudioKey, Level1.JUMP_AUDIO_PATH);
+        // this.load.audio(this.tileDestroyedAudioKey, Level1.TILE_DESTROYED_PATH);
         this.load.audio(Level1.DYING_AUDIO_KEY, Level1.DYING_AUDIO_PATH);
-
+        this.load.image(Level1.LEVEL1_BACKGROUND_KEY, Level1.LEVEL1_BACKGROUND_PATH);
     }
 
-    /**
-     * Unload resources for level 1
-     */
     public unloadScene(): void {
-        // TODO decide which resources to keep/cull
         // By default, resouceManager unloads everything, so just keep what is same for all levels
         this.load.keepSpritesheet(this.playerSpriteKey);
         this.load.keepAudio(this.jumpAudioKey);
@@ -95,19 +81,10 @@ export default class Level1 extends Level {
 
     public startScene(): void {
         super.startScene();
-        // Set the next level to be Level2
-        this.nextLevel = HW4Level2;
+        this.nextLevel = MainMenu;
     }
 
-    /**
-     * I had to override this method to adjust the viewport for the first level. I screwed up 
-     * when I was making the tilemap for the first level is what it boils down to.
-     * 
-     * - Peter
-     */
     protected initializeViewport(): void {
         super.initializeViewport();
-        this.viewport.setBounds(16, 16, 496, 512);
     }
-
 }

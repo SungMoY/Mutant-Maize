@@ -30,10 +30,13 @@ import Particle from "../../Wolfie2D/Nodes/Graphics/Particle";
  * A const object for the layer names
  */
 export const HW3Layers = {
+    BACKGROUND: "BACKGROUND",
     // The primary layer
     PRIMARY: "PRIMARY",
     // The UI layer
-    UI: "UI"
+    UI: "UI",
+    // The background layer
+
 } as const;
 
 // The layers as a type
@@ -87,11 +90,22 @@ export default abstract class Level extends Scene {
     /** The wall layer of the tilemap */
     protected walls: OrthogonalTilemap;
 
+    // background image
+    protected backgroundKey: string;
+
     /** Sound and music */
     protected levelMusicKey: string;
     protected jumpAudioKey: string;
     protected tileDestroyedAudioKey: string;
     protected dyingAudioKey: string;
+
+    // sets viewport dynamically for each level
+    protected levelxbound: number;
+    protected levelybound: number;
+
+    protected backgroundImagePosition: Vec2;
+
+    protected viewportBounds: Vec2;
 
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
         super(viewport, sceneManager, renderingManager, {...options, physics: {
@@ -115,6 +129,9 @@ export default abstract class Level extends Scene {
     public startScene(): void {
         // Initialize the layers
         this.initLayers();
+
+        // Initialize the background
+        this.initializeBackground();
 
         // Initialize the tilemaps
         this.initializeTilemap();
@@ -292,11 +309,22 @@ export default abstract class Level extends Scene {
      * Initialzes the layers
      */
     protected initLayers(): void {
+        this.addParallaxLayer(HW3Layers.BACKGROUND, new Vec2(0.25, 0), -1);
+        // this.addLayer(HW3Layers.BACKGROUND, -1);
         // Add a layer for UI
         this.addUILayer(HW3Layers.UI);
         // Add a layer for players and enemies
         this.addLayer(HW3Layers.PRIMARY);
+        // Add a layer for the background
     }
+
+    // initialize background image
+    protected initializeBackground(): void {
+        let background = this.add.sprite(this.backgroundKey, "BACKGROUND");
+        background.position = this.backgroundImagePosition;
+        background.scale = new Vec2(1, 1);
+    }
+
     /**
      * Initializes the tilemaps
      * @param key the key for the tilemap data
@@ -315,13 +343,13 @@ export default abstract class Level extends Scene {
 
         // Get the wall and destructible layers 
         this.walls = this.getTilemap(this.wallsLayerKey) as OrthogonalTilemap;
-        this.destructable = this.getTilemap(this.destructibleLayerKey) as OrthogonalTilemap;
+        //this.destructable = this.getTilemap(this.destructibleLayerKey) as OrthogonalTilemap;
 
         // Add physicss to the wall layer
         this.walls.addPhysics();
         // Add physics to the destructible layer of the tilemap
-        this.destructable.addPhysics();
-        this.destructable.setTrigger(GamePhysicsGroups.PLAYER_WEAPON, GameEvents.DESTROY_TILE, null);
+        //this.destructable.addPhysics();
+        //this.destructable.setTrigger(GamePhysicsGroups.PLAYER_WEAPON, GameEvents.DESTROY_TILE, null);
     }
     /**
      * Handles all subscriptions to events
@@ -359,7 +387,8 @@ export default abstract class Level extends Scene {
         this.levelEndLabel = <Label>this.add.uiElement(UIElementType.LABEL, HW3Layers.UI, { position: new Vec2(-300, 100), text: "Level Complete" });
         this.levelEndLabel.size.set(1200, 60);
         this.levelEndLabel.borderRadius = 0;
-        this.levelEndLabel.backgroundColor = new Color(34, 32, 52);
+        //this.levelEndLabel.backgroundColor = new Color(34, 32, 52);
+        this.levelEndLabel.backgroundColor = Color.TRANSPARENT
         this.levelEndLabel.textColor = Color.WHITE;
         this.levelEndLabel.fontSize = 48;
         this.levelEndLabel.font = "PixelSimple";
@@ -371,14 +400,14 @@ export default abstract class Level extends Scene {
             effects: [
                 {
                     property: TweenableProperties.posX,
-                    start: -300,
+                    start: -100,
                     end: 150,
                     ease: EaseFunctionType.OUT_SINE
                 }
             ]
         });
 
-        this.levelTransitionScreen = <Rect>this.add.graphic(GraphicType.RECT, HW3Layers.UI, { position: new Vec2(300, 200), size: new Vec2(600, 400) });
+        this.levelTransitionScreen = <Rect>this.add.graphic(GraphicType.RECT, HW3Layers.UI, { position: new Vec2(480, 360), size: new Vec2(960, 720) });
         this.levelTransitionScreen.color = new Color(34, 32, 52);
         this.levelTransitionScreen.alpha = 1;
 
@@ -436,7 +465,13 @@ export default abstract class Level extends Scene {
         // Add the player to the scene
         this.player = this.add.animatedSprite(key, HW3Layers.PRIMARY);
         // scaling issue: changed from (1, 1) to (1/16, 1/16)
-        this.player.scale.set(1/16, 1/16);
+        // my ufo is 256 by 256 pixels. Each tile in our game is 16by16 pixels. The sprite should be 1 tile wide and 2 tiles tall, or 16 by 32 pixels.
+        /**
+         * Scaling issue:
+         * Each tile in our game is 16 by 16 pixels. The tilemap itself was
+         * scaled by a factor of 2, so each tile is 32 by 32 pixels.
+         */
+        this.player.scale.set(1/4, 1/4);
         this.player.position.copy(this.playerSpawn);
         
         // Give the player physics
@@ -492,8 +527,9 @@ export default abstract class Level extends Scene {
             throw new Error("Player must be initialized before setting the viewport to folow the player");
         }
         this.viewport.follow(this.player);
-        this.viewport.setZoomLevel(4);
-        this.viewport.setBounds(0, 0, 512, 512);
+        this.viewport.setZoomLevel(1);
+        this.viewport.setBounds(0, 0, this.viewportBounds.x, this.viewportBounds.y);
+        console.log(this.levelxbound);
     }
     /**
      * Initializes the level end area
