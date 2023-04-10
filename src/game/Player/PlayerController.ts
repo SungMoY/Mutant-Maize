@@ -7,7 +7,7 @@ import Idle from "./PlayerStates/Idle";
 import Jump from "./PlayerStates/Jump";
 import Walk from "./PlayerStates/Walk";
 
-import PlayerWeapon from "./PlayerWeapon";
+import Rifle from "./Rifle";
 import Input from "../../Wolfie2D/Input/Input";
 
 import { GameControls } from "../GameControls";
@@ -72,7 +72,7 @@ export default class PlayerController extends StateMachineAI {
 
     protected tilemap: OrthogonalTilemap;
     // protected cannon: Sprite;
-    protected weapon: PlayerWeapon;
+    protected rifle: Rifle;
 
     protected isDead: boolean;
 
@@ -80,7 +80,7 @@ export default class PlayerController extends StateMachineAI {
     public initializeAI(owner: HW3AnimatedSprite, options: Record<string, any>){
         this.owner = owner;
 
-        this.weapon = options.weaponSystem;
+        this.rifle = options.weaponSystem;
 
         this.tilemap = this.owner.getScene().getTilemap(options.tilemap) as OrthogonalTilemap;
         this.speed = 400;
@@ -97,6 +97,7 @@ export default class PlayerController extends StateMachineAI {
         this.addState(PlayerStates.JUMP, new Jump(this, this.owner));
         this.addState(PlayerStates.FALL, new Fall(this, this.owner));
         this.addState(PlayerStates.DEAD, new Dead(this, this.owner));
+        // need to initalize player in grapple state
         
         // Start the player in the Idle state
         this.initialize(PlayerStates.IDLE);
@@ -120,11 +121,25 @@ export default class PlayerController extends StateMachineAI {
 		super.update(deltaT);
 
         // If the player hits the attack button and the weapon system isn't running, restart the system and fire!
-        if ((Input.isPressed(GameControls.SHOTGUN) && !this.weapon.isSystemRunning()) || (Input.isMousePressed(2) && !this.weapon.isSystemRunning())) {
+        if ((Input.isMousePressed(0) && !this.rifle.isSystemRunning())) {
             // Start the particle system at the player's current position
-            this.weapon.startSystem(500, 0, this.owner.position, this.faceDir);
+            this.rifle.startSystem(500, 0, this.owner.position, this.faceDir);
             //this.weapon.startSystem(100, 0, this.owner.position, this.faceDir); // fast fire but no travel
             // get direction and play attacking animation
+            let direction = this.faceDir;
+            if (direction.x < 0) {
+                this.owner.animation.play(PlayerAnimations.ATTACKING_LEFT);
+                // return to idle
+                this.owner.animation.queue(PlayerAnimations.IDLE, true);
+            }
+            else {
+                this.owner.animation.play(PlayerAnimations.ATTACKING_RIGHT);
+                this.owner.animation.queue(PlayerAnimations.IDLE, true);
+            }
+        }
+
+        if ((Input.isMousePressed(2) && !this.rifle.isSystemRunning())) {
+            this.rifle.startSystem(500, 0, this.owner.position, this.faceDir);
             let direction = this.faceDir;
             if (direction.x < 0) {
                 this.owner.animation.play(PlayerAnimations.ATTACKING_LEFT);

@@ -5,6 +5,7 @@ import Timer from "../../Wolfie2D/Timing/Timer";
 import Color from "../../Wolfie2D/Utils/Color";
 import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
 import RandUtils from "../../Wolfie2D/Utils/RandUtils";
+import CustomParticleSystem from "../Datatypes/CustomParticleSystem";
 import { GamePhysicsGroups } from "../GamePhysicsGroups";
 
  
@@ -15,7 +16,7 @@ import { GamePhysicsGroups } from "../GamePhysicsGroups";
  * The particle system used for the player's attack. Particles in the particle system should
  * be spawned at the player's position and fired in the direction of the mouse's position.
  */
-export default class PlayerWeapon extends ParticleSystem {
+export default class Rifle extends ParticleSystem {
 
     //facedir variable
     private faceDir: Vec2;
@@ -55,17 +56,6 @@ export default class PlayerWeapon extends ParticleSystem {
      * @param particle the particle to give the animation to
      */
     public setParticleAnimation(particle: Particle) {
-        // Give the particle a random velocity.
-        // particle.vel = RandUtils.randVec(100, 200, -32, 32);
-
-        // the particles have a velocity towards the mouse
-        /*
-        particle.vel = RandUtils.randVec(this.faceDir.x/2, 
-                                        this.faceDir.x+this.faceDir.x/2, 
-                                        this.faceDir.y/4, 
-                                        this.faceDir.y*4
-        );
-        */
         let fact = 5; // larger factor = wider and farther
 
         particle.vel = new Vec2(this.faceDir.x*fact,this.faceDir.y*fact);
@@ -73,24 +63,9 @@ export default class PlayerWeapon extends ParticleSystem {
         // set each particle's group to physics group
         particle.setGroup(GamePhysicsGroups.PLAYER_WEAPON);
 
-        particle.color = Color.YELLOW;
+        particle.color = Color.TRANSPARENT;
         particle.size = new Vec2(20, 20)
-
-        // Give the particle tweens
-        /*
-        particle.tweens.add("active", {
-            startDelay: 0,
-            duration: this.lifetime,
-            effects: [
-                {
-                    property: "alpha",
-                    start: 1,
-                    end: 0,
-                    ease: EaseFunctionType.IN_OUT_SINE
-                }
-            ]
-        });
-        */
+    
     }
 
 }

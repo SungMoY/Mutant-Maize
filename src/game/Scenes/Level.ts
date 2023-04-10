@@ -18,7 +18,7 @@ import Timer from "../../Wolfie2D/Timing/Timer";
 import Color from "../../Wolfie2D/Utils/Color";
 import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
 import PlayerController, { PlayerTweens } from "../Player/PlayerController";
-import PlayerWeapon from "../Player/PlayerWeapon";
+import Rifle from "../Player/Rifle";
 
 import { GameEvents } from "../GameEvents";
 import { GamePhysicsGroups } from "../GamePhysicsGroups";
@@ -27,6 +27,7 @@ import MainMenu from "./MainMenu";
 import Particle from "../../Wolfie2D/Nodes/Graphics/Particle";
 import Button from "../../Wolfie2D/Nodes/UIElements/Button";
 import Shape from "../../Wolfie2D/DataTypes/Shapes/Shape";
+import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 
 /**
  * A const object for the layer names
@@ -53,8 +54,9 @@ export default abstract class Level extends Scene {
     public add: HW3FactoryManager;
 
 
-    /** The particle system used for the player's weapon */
-    protected playerWeaponSystem: PlayerWeapon
+    /** The particle system used for the player's rifle */
+    protected rifleParticlesSystem: Rifle
+    //protected shotgunParticles: 
     /** The key for the player's animated sprite */
     protected playerSpriteKey: string;
     /** The animated sprite that is the player */
@@ -105,6 +107,9 @@ export default abstract class Level extends Scene {
 
     protected viewportBounds: Vec2;
     protected pauseButton: Button;
+
+    protected kernel: Sprite;
+    protected kernelSpriteKey: string;
 
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
         super(viewport, sceneManager, renderingManager, {...options, physics: {
@@ -159,6 +164,19 @@ export default abstract class Level extends Scene {
         while (this.receiver.hasNextEvent()) {
             this.handleEvent(this.receiver.getNextEvent());
         }
+
+        // get particles. place on their position the sprite, kernel
+        let particles = this.rifleParticlesSystem.getPool();
+        for (let i = 0; i < particles.length; i++) {
+            console.log(particles[i].moving)
+            if (particles[i].moving) {
+                this.kernel.scale.set(0.05, 0.05);
+                this.kernel.position = particles[i].position;
+            } else {
+                this.kernel.scale.set(0, 0);
+            }
+        }
+
     }
 
     /**
@@ -208,7 +226,7 @@ export default abstract class Level extends Scene {
      * @param particleId the id of the particle
      */
      protected handleParticleHit(particleId: number): void {
-         let particles = this.playerWeaponSystem.getPool();
+         let particles = this.rifleParticlesSystem.getPool();
 
          let particle = particles.find(particle => particle.id === particleId);
          if (particle !== undefined) {
@@ -227,15 +245,7 @@ export default abstract class Level extends Scene {
                  for(let row = minIndex.y; row <= maxIndex.y; row++){
                      // If the tile is collideable -> check if this particle is colliding with the tile
                      if(tilemap.isTileCollidable(col, row) && this.particleHitTile(tilemap, particle, col, row)){
-                         // TODO Destroy the tile
-                         /*
-                         let rowCol = new Vec2(col, row);
-                         if (tilemap.getTileAtRowCol(rowCol) !== 0) {
-                             tilemap.setTileAtRowCol(rowCol, 0);
-                             this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: this.tileDestroyedAudioKey, loop: false, holdReference: false });
 
-                         }
-                         */
                          particle.vel = new Vec2(0,0);
                          particle.alpha = 0;
                          
@@ -439,16 +449,16 @@ export default abstract class Level extends Scene {
     }
 
     protected initializeWeaponSystem(): void {
-        //this.playerWeaponSystem = new PlayerWeapon(50, Vec2.ZERO, 1000, 3, 0, 50);
-        this.playerWeaponSystem = new PlayerWeapon(1, Vec2.ZERO, 1000, 3, 0, 1); // for 1 particle
-        this.playerWeaponSystem.initializePool(this, LevelLayers.PRIMARY);
+        this.kernel = this.add.sprite(this.kernelSpriteKey, LevelLayers.PRIMARY);
+        this.rifleParticlesSystem = new Rifle(1, Vec2.ZERO, 500, 10, 0, 1); // for 1 particle
+        this.rifleParticlesSystem.initializePool(this, LevelLayers.PRIMARY);
     }
     /**
      * Initializes the player, setting the player's initial position to the given position.
      * @param position the player's spawn position
      */
     protected initializePlayer(key: string): void {
-        if (this.playerWeaponSystem === undefined) {
+        if (this.rifleParticlesSystem === undefined) {
             throw new Error("Player weapon system must be initialized before initializing the player!");
         }
         if (this.playerSpawn === undefined) {
@@ -480,7 +490,7 @@ export default abstract class Level extends Scene {
 
         // Give the player it's AI
         this.player.addAI(PlayerController, { 
-            weaponSystem: this.playerWeaponSystem, 
+            weaponSystem: this.rifleParticlesSystem, 
             tilemap: "Destructable" 
         });
     }
