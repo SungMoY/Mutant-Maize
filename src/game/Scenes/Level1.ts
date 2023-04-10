@@ -38,6 +38,9 @@ export default class Level1 extends Level {
     public static readonly KERNEL_SPRITE_KEY = "KERNEL_SPRITE_KEY";
     public static readonly KERNEL_SPRITE_PATH = "game_assets/sprites/kernel.png";
 
+    public static readonly POPCORN_SPRITE_KEY = "POPCORN_SPRITE_KEY";
+    public static readonly POPCORN_SPRITE_PATH = "game_assets/sprites/popcorn.png";
+
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
         super(viewport, sceneManager, renderingManager, options);
         this.tilemapKey = Level1.TILEMAP_KEY;
@@ -52,6 +55,7 @@ export default class Level1 extends Level {
         this.levelEndPosition = new Vec2(3776, 304).mult(this.tilemapScale);
         this.levelEndHalfSize = new Vec2(32, 32).mult(this.tilemapScale);
         this.kernelSpriteKey = Level1.KERNEL_SPRITE_KEY;
+        this.popcornSpriteKey = Level1.POPCORN_SPRITE_KEY;
         this.levelxbound = 3840
         this.levelybound = 720
         // due to parallax of the background image, levelxbound does not equal viewport size
@@ -69,6 +73,7 @@ export default class Level1 extends Level {
         this.load.audio(Level1.DYING_AUDIO_KEY, Level1.DYING_AUDIO_PATH);
         this.load.image(Level1.LEVEL1_BACKGROUND_KEY, Level1.LEVEL1_BACKGROUND_PATH);
         this.load.image(Level1.KERNEL_SPRITE_KEY, Level1.KERNEL_SPRITE_PATH)
+        this.load.image(Level1.POPCORN_SPRITE_KEY, Level1.POPCORN_SPRITE_PATH)
     }
 
     public unloadScene(): void {

@@ -10,14 +10,12 @@ import { GamePhysicsGroups } from "../GamePhysicsGroups";
  
 
 /**
- * // TODO change up particleSystem so that instead of particles, it is a bunch of sprites
- * ALSO separate the pool of particles such that rifle particles do not show up in shotgun particles
- * this requires further extending ParticleSystem for Rifle and Shotgun so that it is more unique
+ * // TODO get the particles to move towards the mouse when the player attacks
  * 
  * The particle system used for the player's attack. Particles in the particle system should
  * be spawned at the player's position and fired in the direction of the mouse's position.
  */
-export default class Rifle extends ParticleSystem {
+export default class Shotgun extends ParticleSystem {
 
     //facedir variable
     private faceDir: Vec2;
@@ -57,15 +55,18 @@ export default class Rifle extends ParticleSystem {
      * @param particle the particle to give the animation to
      */
     public setParticleAnimation(particle: Particle) {
-        let fact = 5; // larger factor = wider and farther
 
-        particle.vel = new Vec2(this.faceDir.x*fact,this.faceDir.y*fact);
+        let xVal = this.faceDir.x * 7
+
+        // needs work
+        particle.vel = RandUtils.randVec(xVal, xVal, -250, 250)
 
         // set each particle's group to physics group
         particle.setGroup(GamePhysicsGroups.PLAYER_WEAPON);
 
-        particle.color = Color.YELLOW;
-        particle.size = new Vec2(20, 20)
+        particle.color = Color.RED;
+        particle.size = new Vec2(10, 10)
+    
     }
 
 }

@@ -20,6 +20,8 @@ export const GameEvents = {
     // The event sent when the player dies. Gets sent after the player's death animation
     PLAYER_DEAD: "PLAYER_DEAD",
 
+    GRAPPLE_COLLISION: "GRAPPLE_COLLISION",
+
     PAUSE: "PAUSE",
     
 } as const;

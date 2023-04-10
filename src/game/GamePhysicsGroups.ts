@@ -11,6 +11,5 @@ export const GamePhysicsGroups = {
         set the physics group for a particular tilemap layer.
     */
     GROUND: "GROUND",
-    DESTRUCTABLE: "DESTRUCTABLE"
-    
+    ENTITY: "ENTITY"
 } as const;
