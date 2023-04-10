@@ -12,13 +12,14 @@ import MainMenu from "./MainMenu";
  */
 export default class Level1 extends Level {
 
-    public static readonly PLAYER_SPAWN = new Vec2(75, 608);
+    public static readonly PLAYER_SPAWN = new Vec2(150, 500);
     public static readonly PLAYER_SPRITE_KEY = "PLAYER_SPRITE_KEY";
     public static readonly PLAYER_SPRITE_PATH = "game_assets/spritesheets/UFO_alien.json";
 
     public static readonly TILEMAP_KEY = "LEVEL1";
-    public static readonly TILEMAP_PATH = "game_assets/tilemaps/level1map.json";
-    public static readonly TILEMAP_SCALE = new Vec2(2, 2);
+    public static readonly TILEMAP_PATH = "game_assets/tilemaps/level1_map.json";
+    // this scale makes the tilesets more visually appealing on the browser
+    public static readonly TILEMAP_SCALE = new Vec2(3, 3);
     public static readonly WALLS_LAYER_KEY = "Main";
 
     public static readonly LEVEL_MUSIC_KEY = "LEVEL_MUSIC";
@@ -51,7 +52,7 @@ export default class Level1 extends Level {
         // due to parallax of the background image, levelxbound does not equal viewport size
         // therefore, background image position and viewport bounds must be set differently
         this.backgroundImagePosition = new Vec2(this.levelxbound/2, this.levelybound/2);
-        this.viewportBounds = new Vec2(this.levelxbound*2, this.levelybound)
+        this.viewportBounds = new Vec2(this.levelxbound*3, this.levelybound+48)
     }
 
     public loadScene(): void {

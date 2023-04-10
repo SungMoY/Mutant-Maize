@@ -26,6 +26,7 @@ import HW3FactoryManager from "../Factory/HW3FactoryManager";
 import MainMenu from "./MainMenu";
 import Particle from "../../Wolfie2D/Nodes/Graphics/Particle";
 import Button from "../../Wolfie2D/Nodes/UIElements/Button";
+import Shape from "../../Wolfie2D/DataTypes/Shapes/Shape";
 
 /**
  * A const object for the layer names
@@ -277,8 +278,8 @@ export default abstract class Level extends Scene {
     }
 
     protected initLayers(): void {
+        // potentially add some parallax for y
         this.addParallaxLayer(LevelLayers.BACKGROUND, new Vec2(0.25, 0), -1);
-        // this.addLayer(LevelLayers.BACKGROUND, -1);
         // Add a layer for UI
         this.addUILayer(LevelLayers.UI);
         // Add a layer for players and enemies
@@ -441,11 +442,16 @@ export default abstract class Level extends Scene {
          * Each tile in our game is 16 by 16 pixels. The tilemap itself was
          * scaled by a factor of 2, so each tile is 32 by 32 pixels.
          */
-        this.player.scale.set(1/8, 1/4);
+        //this.player.scale.set(0.125, 0.25);
+        this.player.scale.set(1.5/8, 3/8);
         this.player.position.copy(this.playerSpawn);
         
         // Give the player physics
         this.player.addPhysics(new AABB(this.player.position.clone(), this.player.boundary.getHalfSize().clone()));
+
+        // utilize this line to separately set character collision, decoupled from its sprite size/scaling
+        //this.player.setCollisionShape(new AABB(this.player.position.clone(), new Vec2(this.player.boundary.getHalfSize().clone().x/2, this.player.boundary.getHalfSize().clone().y/2)));
+
         // Add player to player physics group
         this.player.setGroup(GamePhysicsGroups.PLAYER);
 
