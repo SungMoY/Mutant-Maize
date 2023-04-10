@@ -1,0 +1,254 @@
+{
+	"name": "rob_the_cob",
+	"spriteSheetImage": "rob_the_cob.png",
+	"spriteWidth": 32,
+	"spriteHeight": 32,
+	"leftBuffer": 0,
+	"rightBuffer": 0,
+	"topBuffer": 0,
+	"bottomBuffer": 0,
+	"columns": 11,
+	"rows": 8,
+	"animations": [
+		{
+			"name": "RUN_RIGHT",
+			"repeat": false,
+			"frames": [
+				{
+					"index": 0,
+					"duration": 30
+				},
+				{
+					"index": 1,
+					"duration": 30
+				},
+				{
+					"index": 2,
+					"duration": 30
+				},
+				{
+					"index": 3,
+					"duration": 30
+				},
+				{
+					"index": 4,
+					"duration": 30
+				}
+			]
+		},
+		{
+			"name": "RUN_LEFT",
+			"repeat": false,
+			"frames": [
+				{
+					"index": 11,
+					"duration": 30
+				},
+				{
+					"index": 12,
+					"duration": 30
+				},
+				{
+					"index": 13,
+					"duration": 30
+				},
+				{
+					"index": 14,
+					"duration": 30
+				}
+			]
+		},
+		{
+			"name": "IDLE",
+			"repeat": false,
+			"frames": [
+				{
+					"index": 22,
+					"duration": 30
+				},
+				{
+					"index": 23,
+					"duration": 30
+				},
+				{
+					"index": 24,
+					"duration": 30
+				},
+				{
+					"index": 25,
+					"duration": 30
+				}
+			]
+		},
+		{
+			"name": "ATTACKING_LEFT",
+			"repeat": false,
+			"frames": [
+				{
+					"index": 33,
+					"duration": 3
+				},
+				{
+					"index": 34,
+					"duration": 3
+				},
+				{
+					"index": 35,
+					"duration": 3
+				},
+				{
+					"index": 36,
+					"duration": 3
+				},
+				{
+					"index": 37,
+					"duration": 10
+				},
+				{
+					"index": 38,
+					"duration": 10
+				},
+				{
+					"index": 39,
+					"duration": 10
+				},
+				{
+					"index": 40,
+					"duration": 3
+				},
+				{
+					"index": 41,
+					"duration": 3
+				},
+				{
+					"index": 42,
+					"duration": 3
+				},
+				{
+					"index": 43,
+					"duration": 3
+				}
+			]
+		},
+		{
+			"name": "ATTACKING_RIGHT",
+			"repeat": false,
+			"frames": [
+				{
+					"index": 44,
+					"duration": 3
+				},
+				{
+					"index": 45,
+					"duration": 3
+				},
+				{
+					"index": 46,
+					"duration": 3
+				},
+				{
+					"index": 47,
+					"duration": 3
+				},
+				{
+					"index": 48,
+					"duration": 10
+				},
+				{
+					"index": 49,
+					"duration": 10
+				},
+				{
+					"index": 50,
+					"duration": 10
+				},
+				{
+					"index": 51,
+					"duration": 3
+				},
+				{
+					"index": 52,
+					"duration": 3
+				},
+				{
+					"index": 53,
+					"duration": 3
+				},
+				{
+					"index": 54,
+					"duration": 3
+				}
+			]
+		},
+		{
+			"name": "TAKING_DAMAGE",
+			"repeat": false,
+			"frames": [
+				{
+					"index": 55,
+					"duration": 30
+				},
+				{
+					"index": 56,
+					"duration": 30
+				},
+				{
+					"index": 57,
+					"duration": 30
+				},
+				{
+					"index": 58,
+					"duration": 30
+				},
+				{
+					"index": 59,
+					"duration": 30
+				}
+			]
+		},
+		{
+			"name": "DYING",
+			"repeat": false,
+			"frames": [
+				{
+					"index": 66,
+					"duration": 12
+				},
+				{
+					"index": 67,
+					"duration": 12
+				},
+				{
+					"index": 68,
+					"duration": 12
+				},
+				{
+					"index": 69,
+					"duration": 12
+				},
+				{
+					"index": 70,
+					"duration": 12
+				}
+			]
+		},
+		{
+			"name": "DEAD",
+			"repeat": false,
+			"frames": [
+				{
+					"index": 77,
+					"duration": 20
+				},
+				{
+					"index": 78,
+					"duration": 20
+				},
+				{
+					"index": 79,
+					"duration": 20
+				}
+			]
+		}
+	]
+}

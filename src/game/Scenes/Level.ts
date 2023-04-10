@@ -443,7 +443,8 @@ export default abstract class Level extends Scene {
          * scaled by a factor of 2, so each tile is 32 by 32 pixels.
          */
         //this.player.scale.set(0.125, 0.25);
-        this.player.scale.set(1.5/8, 3/8);
+        //this.player.scale.set(1.5/8, 3/8);
+        this.player.scale.set(1.75, 1.75);
         this.player.position.copy(this.playerSpawn);
         
         // Give the player physics

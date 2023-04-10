@@ -14,7 +14,8 @@ export default class Level1 extends Level {
 
     public static readonly PLAYER_SPAWN = new Vec2(150, 500);
     public static readonly PLAYER_SPRITE_KEY = "PLAYER_SPRITE_KEY";
-    public static readonly PLAYER_SPRITE_PATH = "game_assets/spritesheets/UFO_alien.json";
+    //public static readonly PLAYER_SPRITE_PATH = "game_assets/spritesheets/UFO_alien.json";
+    public static readonly PLAYER_SPRITE_PATH = "game_assets/spritesheets/rob_the_cob.json";
 
     public static readonly TILEMAP_KEY = "LEVEL1";
     public static readonly TILEMAP_PATH = "game_assets/tilemaps/level1_map.json";
