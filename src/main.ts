@@ -17,8 +17,9 @@ import SplashScreen from "./game/Scenes/SplashScreen";
             {name: GameControls.MOVE_LEFT, keys: ["a"]},
             {name: GameControls.MOVE_RIGHT, keys: ["d"]},
             {name: GameControls.JUMP, keys: ["w", "space"]},
-            {name: GameControls.RIFLE, keys: ["t"]},
+            {name: GameControls.RIFLE, keys: ["t"]}, // and left click
             {name: GameControls.SHOTGUN, keys: ["f"]},
+            {name: GameControls.GRAPPLE, keys: ["shift"]},
         ],
         useWebGL: false,                        // Tell the game we want to use webgl
         showDebug: false                       // Whether to show debug messages. You can change this to true if you want

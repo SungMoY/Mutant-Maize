@@ -120,9 +120,10 @@ export default class PlayerController extends StateMachineAI {
 		super.update(deltaT);
 
         // If the player hits the attack button and the weapon system isn't running, restart the system and fire!
-        if ((Input.isPressed(GameControls.SHOTGUN) && !this.weapon.isSystemRunning()) || (Input.isMouseJustPressed(2) && !this.weapon.isSystemRunning())) {
+        if ((Input.isPressed(GameControls.SHOTGUN) && !this.weapon.isSystemRunning()) || (Input.isMousePressed(2) && !this.weapon.isSystemRunning())) {
             // Start the particle system at the player's current position
             this.weapon.startSystem(500, 0, this.owner.position, this.faceDir);
+            //this.weapon.startSystem(100, 0, this.owner.position, this.faceDir); // fast fire but no travel
             // get direction and play attacking animation
             let direction = this.faceDir;
             if (direction.x < 0) {

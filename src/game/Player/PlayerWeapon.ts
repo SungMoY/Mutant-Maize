@@ -59,18 +59,25 @@ export default class PlayerWeapon extends ParticleSystem {
         // particle.vel = RandUtils.randVec(100, 200, -32, 32);
 
         // the particles have a velocity towards the mouse
+        /*
         particle.vel = RandUtils.randVec(this.faceDir.x/2, 
                                         this.faceDir.x+this.faceDir.x/2, 
                                         this.faceDir.y/4, 
                                         this.faceDir.y*4
         );
+        */
+        let fact = 5; // larger factor = wider and farther
+
+        particle.vel = new Vec2(this.faceDir.x*fact,this.faceDir.y*fact);
 
         // set each particle's group to physics group
         particle.setGroup(GamePhysicsGroups.PLAYER_WEAPON);
 
-        particle.color = Color.RED;
+        particle.color = Color.YELLOW;
+        particle.size = new Vec2(20, 20)
 
         // Give the particle tweens
+        /*
         particle.tweens.add("active", {
             startDelay: 0,
             duration: this.lifetime,
@@ -83,6 +90,7 @@ export default class PlayerWeapon extends ParticleSystem {
                 }
             ]
         });
+        */
     }
 
 }
