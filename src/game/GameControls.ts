@@ -7,4 +7,5 @@ export const GameControls = {
     JUMP: "JUMP",
     RIFLE: "RIFLE",
     SHOTGUN: "SHOTGUN",
+    GRAPPLE: "GRAPPLE",
 } as const;

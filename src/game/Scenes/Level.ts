@@ -207,38 +207,59 @@ export default abstract class Level extends Scene {
      * Handle particle hit events
      * @param particleId the id of the particle
      */
-    // protected handleParticleHit(particleId: number): void {
-    //     let particles = this.playerWeaponSystem.getPool();
+     protected handleParticleHit(particleId: number): void {
+         let particles = this.playerWeaponSystem.getPool();
 
-    //     let particle = particles.find(particle => particle.id === particleId);
-    //     if (particle !== undefined) {
-    //         // Get the destructable tilemap
-    //         let tilemap = this.destructable;
+         let particle = particles.find(particle => particle.id === particleId);
+         if (particle !== undefined) {
+             // Get the destructable tilemap
+             let tilemap = this.walls;
 
-    //         let min = new Vec2(particle.sweptRect.left, particle.sweptRect.top);
-    //         let max = new Vec2(particle.sweptRect.right, particle.sweptRect.bottom);
+             let min = new Vec2(particle.sweptRect.left, particle.sweptRect.top);
+             let max = new Vec2(particle.sweptRect.right, particle.sweptRect.bottom);
 
-    //         // Convert the min/max x/y to the min and max row/col in the tilemap array
-    //         let minIndex = tilemap.getColRowAt(min);
-    //         let maxIndex = tilemap.getColRowAt(max);
+             // Convert the min/max x/y to the min and max row/col in the tilemap array
+             let minIndex = tilemap.getColRowAt(min);
+             let maxIndex = tilemap.getColRowAt(max);
 
-    //         // Loop over all possible tiles the particle could be colliding with 
-    //         for(let col = minIndex.x; col <= maxIndex.x; col++){
-    //             for(let row = minIndex.y; row <= maxIndex.y; row++){
-    //                 // If the tile is collideable -> check if this particle is colliding with the tile
-    //                 if(tilemap.isTileCollidable(col, row) && this.particleHitTile(tilemap, particle, col, row)){
-    //                     // TODO Destroy the tile
-    //                     let rowCol = new Vec2(col, row);
-    //                     if (tilemap.getTileAtRowCol(rowCol) !== 0) {
-    //                         tilemap.setTileAtRowCol(rowCol, 0);
-    //                         this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: this.tileDestroyedAudioKey, loop: false, holdReference: false });
+             // Loop over all possible tiles the particle could be colliding with 
+             for(let col = minIndex.x; col <= maxIndex.x; col++){
+                 for(let row = minIndex.y; row <= maxIndex.y; row++){
+                     // If the tile is collideable -> check if this particle is colliding with the tile
+                     if(tilemap.isTileCollidable(col, row) && this.particleHitTile(tilemap, particle, col, row)){
+                         // TODO Destroy the tile
+                         /*
+                         let rowCol = new Vec2(col, row);
+                         if (tilemap.getTileAtRowCol(rowCol) !== 0) {
+                             tilemap.setTileAtRowCol(rowCol, 0);
+                             this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: this.tileDestroyedAudioKey, loop: false, holdReference: false });
 
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
+                         }
+                         */
+                         particle.vel = new Vec2(0,0);
+                         particle.alpha = 0;
+                         
+                         let playerPosition = this.player.position;
+                         let teleportPosition = new Vec2();
+                         let reachTile = tilemap.getColRowAt(particle.position);
+                         reachTile.x = reachTile.x * 16;
+                         reachTile.y = reachTile.y * 16;
+ 
+                         if (particle.position.x > playerPosition.x) {
+                             teleportPosition.x = (reachTile.x - playerPosition.x) + 8; // half of tilesize
+                         }
+                         else {
+                             teleportPosition.x = (reachTile.x - playerPosition.x) - 8; 
+                         }
+                         teleportPosition.y = (reachTile.y - playerPosition.y) + 8;
+ 
+                         this.player.move(teleportPosition);
+                         this.player.finishMove();
+                     }
+                 }
+             }
+         }
+     }
 
     /**
      * Checks if a particle hit the tile at the (col, row) coordinates in the tilemap.
@@ -418,7 +439,8 @@ export default abstract class Level extends Scene {
     }
 
     protected initializeWeaponSystem(): void {
-        this.playerWeaponSystem = new PlayerWeapon(50, Vec2.ZERO, 1000, 3, 0, 50);
+        //this.playerWeaponSystem = new PlayerWeapon(50, Vec2.ZERO, 1000, 3, 0, 50);
+        this.playerWeaponSystem = new PlayerWeapon(1, Vec2.ZERO, 1000, 3, 0, 1); // for 1 particle
         this.playerWeaponSystem.initializePool(this, LevelLayers.PRIMARY);
     }
     /**
@@ -444,7 +466,7 @@ export default abstract class Level extends Scene {
          */
         //this.player.scale.set(0.125, 0.25);
         //this.player.scale.set(1.5/8, 3/8);
-        this.player.scale.set(1.75, 1.75);
+        this.player.scale.set(1.5, 3);
         this.player.position.copy(this.playerSpawn);
         
         // Give the player physics
