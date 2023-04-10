@@ -15,6 +15,8 @@ import HW3AnimatedSprite from "../Nodes/HW3AnimatedSprite";
 import MathUtils from "../../Wolfie2D/Utils/MathUtils";
 import { GameEvents } from "../GameEvents";
 import Dead from "./PlayerStates/Dead";
+import Shotgun from "./Shotgun";
+import Grapple from "./Grapple";
 
 // TODO play your heros animations
 
@@ -71,8 +73,10 @@ export default class PlayerController extends StateMachineAI {
 	protected _speed: number;
 
     protected tilemap: OrthogonalTilemap;
-    // protected cannon: Sprite;
+
     protected rifle: Rifle;
+    protected shotgun: Shotgun;
+    protected grapple: Grapple;
 
     protected isDead: boolean;
 
@@ -80,7 +84,9 @@ export default class PlayerController extends StateMachineAI {
     public initializeAI(owner: HW3AnimatedSprite, options: Record<string, any>){
         this.owner = owner;
 
-        this.rifle = options.weaponSystem;
+        this.rifle = options.rifleSystem;
+        this.shotgun = options.shotgunSystem;
+        this.grapple = options.grappleSystem;
 
         this.tilemap = this.owner.getScene().getTilemap(options.tilemap) as OrthogonalTilemap;
         this.speed = 400;
@@ -121,7 +127,8 @@ export default class PlayerController extends StateMachineAI {
 		super.update(deltaT);
 
         // If the player hits the attack button and the weapon system isn't running, restart the system and fire!
-        if ((Input.isMousePressed(0) && !this.rifle.isSystemRunning())) {
+        if ((Input.isMouseJustPressed(0) && !this.rifle.isSystemRunning())) {
+            console.log("FIRING RIFLE")
             // Start the particle system at the player's current position
             this.rifle.startSystem(500, 0, this.owner.position, this.faceDir);
             //this.weapon.startSystem(100, 0, this.owner.position, this.faceDir); // fast fire but no travel
@@ -138,8 +145,9 @@ export default class PlayerController extends StateMachineAI {
             }
         }
 
-        if ((Input.isMousePressed(2) && !this.rifle.isSystemRunning())) {
-            this.rifle.startSystem(500, 0, this.owner.position, this.faceDir);
+        if ((Input.isMouseJustPressed(2) && !this.shotgun.isSystemRunning())) {
+            console.log("FIRING SHOTGUN")
+            this.shotgun.startSystem(500, 0, this.owner.position, this.faceDir);
             let direction = this.faceDir;
             if (direction.x < 0) {
                 this.owner.animation.play(PlayerAnimations.ATTACKING_LEFT);
@@ -151,6 +159,23 @@ export default class PlayerController extends StateMachineAI {
                 this.owner.animation.queue(PlayerAnimations.IDLE, true);
             }
         }
+
+        if (Input.isJustPressed(GameControls.GRAPPLE)) {
+            console.log("FIRING GRAPPLE")
+            // send a vector outwards. check if it collides a tile or entity. if it does, move the player to that position. if nothing is hit, do nothing
+            this.grapple.startSystem(500, 0, this.owner.position, this.faceDir);
+            let direction = this.faceDir;
+            if (direction.x < 0) {
+                this.owner.animation.play(PlayerAnimations.ATTACKING_LEFT);
+                // return to idle
+                this.owner.animation.queue(PlayerAnimations.IDLE, true);
+            }
+            else {
+                this.owner.animation.play(PlayerAnimations.ATTACKING_RIGHT);
+                this.owner.animation.queue(PlayerAnimations.IDLE, true);
+            }
+        }
+
 
         // if the player is dead, enter the dead state
         if (this.health <= 0 && !this.isDead) {

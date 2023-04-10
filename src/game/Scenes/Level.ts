@@ -19,6 +19,7 @@ import Color from "../../Wolfie2D/Utils/Color";
 import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
 import PlayerController, { PlayerTweens } from "../Player/PlayerController";
 import Rifle from "../Player/Rifle";
+import Shotgun from "../Player/Shotgun";
 
 import { GameEvents } from "../GameEvents";
 import { GamePhysicsGroups } from "../GamePhysicsGroups";
@@ -28,6 +29,7 @@ import Particle from "../../Wolfie2D/Nodes/Graphics/Particle";
 import Button from "../../Wolfie2D/Nodes/UIElements/Button";
 import Shape from "../../Wolfie2D/DataTypes/Shapes/Shape";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
+import Grapple from "../Player/Grapple";
 
 /**
  * A const object for the layer names
@@ -55,8 +57,9 @@ export default abstract class Level extends Scene {
 
 
     /** The particle system used for the player's rifle */
-    protected rifleParticlesSystem: Rifle
-    //protected shotgunParticles: 
+    protected rifleParticlesSystem: Rifle;
+    protected shotgunParticlesSystem: Shotgun;
+    protected grappleParticlesSystem: Grapple;
     /** The key for the player's animated sprite */
     protected playerSpriteKey: string;
     /** The animated sprite that is the player */
@@ -111,18 +114,22 @@ export default abstract class Level extends Scene {
     protected kernel: Sprite;
     protected kernelSpriteKey: string;
 
+    protected popcorn: Array<Sprite>;
+    protected popcornSpriteKey: string;
+
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
         super(viewport, sceneManager, renderingManager, {...options, physics: {
             groupNames: [
                 GamePhysicsGroups.GROUND,
                 GamePhysicsGroups.PLAYER,
                 GamePhysicsGroups.PLAYER_WEAPON,
+                GamePhysicsGroups.ENTITY
             ],
             collisions: [
-                [0, 1, 1, 0],
+                [0, 1, 1, 1],
                 [1, 0, 0, 1],
                 [1, 0, 0, 1],
-                [0, 1, 1, 0]
+                [1, 1, 1, 0]
             ]
          }});
         this.add = new HW3FactoryManager(this, this.tilemaps);
@@ -165,18 +172,27 @@ export default abstract class Level extends Scene {
             this.handleEvent(this.receiver.getNextEvent());
         }
 
-        // get particles. place on their position the sprite, kernel
-        let particles = this.rifleParticlesSystem.getPool();
-        for (let i = 0; i < particles.length; i++) {
-            console.log(particles[i].moving)
-            if (particles[i].moving) {
-                this.kernel.scale.set(0.05, 0.05);
-                this.kernel.position = particles[i].position;
-            } else {
-                this.kernel.scale.set(0, 0);
-            }
-        }
-
+        // WIP adding sprites to particles
+        // let shotgunParticles = this.shotgunParticlesSystem.getPool();
+        // let rifleParticles = this.rifleParticlesSystem.getPool();
+        // for (let i = 0; i < rifleParticles.length; i++) {
+        //     if (rifleParticles[i].moving) {
+        //         this.kernel.scale.set(0.05, 0.05);
+        //         this.kernel.position = rifleParticles[i].position;
+        //         console.log(this.kernel.id)
+        //     } else {
+        //         this.kernel.scale.set(0, 0);
+        //         this.kernel.position = Vec2.ZERO;
+        //     }
+        // }
+        // for (let i = 0; i < shotgunParticles.length; i++) {
+        //     if (shotgunParticles[i].moving) {
+        //         this.popcorn[i].scale.set(0.05, 0.05);
+        //         this.popcorn[i].position = shotgunParticles[i].position;
+        //         console.log(this.popcorn[i].id)
+        //     } else {
+        //     }
+        // }        
     }
 
     /**
@@ -208,6 +224,10 @@ export default abstract class Level extends Scene {
                 this.sceneManager.changeToScene(MainMenu);
                 break;
             }
+            case GameEvents.GRAPPLE_COLLISION: {
+                this.handleGrappleCollision(event.data.get("node"));
+                break;
+            }
             case GameEvents.PAUSE: {
                 // add a layer of transparency over the screen
                 break;
@@ -220,6 +240,15 @@ export default abstract class Level extends Scene {
     }
 
     /* Handlers for the different events the scene is subscribed to */
+
+    protected handleGrappleCollision(particleId: number): void {
+        let particles = this.grappleParticlesSystem.getPool();
+        let particle = particles.find(particle => particle.id === particleId);
+        if (particle !== undefined) {
+            let position = particle.position;
+            console.log("HIT: " + position.x + ", " + position.y);
+        }
+    }
 
     /**
      * Handle particle hit events
@@ -326,13 +355,13 @@ export default abstract class Level extends Scene {
 
     protected initializeTilemap(): void {
         if (this.tilemapKey === undefined || this.tilemapScale === undefined) {
-            throw new Error("Cannot add the homework 4 tilemap unless the tilemap key and scale are set.");
+            throw new Error("Cannot add the tilemap unless the tilemap key and scale are set.");
         }
         // Add the tilemap to the scene
         this.add.tilemap(this.tilemapKey, this.tilemapScale);
 
         if (this.wallsLayerKey === undefined) {
-            throw new Error("Make sure the keys for the  wall layer are both set");
+            throw new Error("Make sure the keys for the wall layer are both set");
         }
 
         // Get the wall layers 
@@ -340,6 +369,9 @@ export default abstract class Level extends Scene {
 
         // Add physicss to the wall layer
         this.walls.addPhysics();
+
+        this.walls.setGroup(GamePhysicsGroups.GROUND);
+        this.walls.setTrigger(GamePhysicsGroups.PLAYER_WEAPON, GameEvents.GRAPPLE_COLLISION, null);
     }
 
     protected subscribeToEvents(): void {
@@ -349,6 +381,7 @@ export default abstract class Level extends Scene {
         this.receiver.subscribe(GameEvents.HEALTH_CHANGE);
         this.receiver.subscribe(GameEvents.PLAYER_DEAD);
         this.receiver.subscribe(GameEvents.PAUSE);
+        this.receiver.subscribe(GameEvents.GRAPPLE_COLLISION);
     }
     /**
      * Adds in any necessary UI to the game
@@ -449,9 +482,20 @@ export default abstract class Level extends Scene {
     }
 
     protected initializeWeaponSystem(): void {
-        this.kernel = this.add.sprite(this.kernelSpriteKey, LevelLayers.PRIMARY);
+        //this.kernel = this.add.sprite(this.kernelSpriteKey, LevelLayers.PRIMARY);
         this.rifleParticlesSystem = new Rifle(1, Vec2.ZERO, 500, 10, 0, 1); // for 1 particle
         this.rifleParticlesSystem.initializePool(this, LevelLayers.PRIMARY);
+
+        // array of 10 popcorn sprites
+        // this.popcorn = [];
+        // for (let i = 0; i < 10; i++) {
+        //     this.popcorn.push(this.add.sprite(this.popcornSpriteKey, LevelLayers.PRIMARY));
+        // }
+        this.shotgunParticlesSystem = new Shotgun(5, Vec2.ZERO, 200, 10, 0, 1); // for 1 particle
+        this.shotgunParticlesSystem.initializePool(this, LevelLayers.PRIMARY);
+
+        this.grappleParticlesSystem = new Grapple(1, Vec2.ZERO, 500, 10, 0, 1); // for 1 particle
+        this.grappleParticlesSystem.initializePool(this, LevelLayers.PRIMARY);
     }
     /**
      * Initializes the player, setting the player's initial position to the given position.
@@ -459,7 +503,13 @@ export default abstract class Level extends Scene {
      */
     protected initializePlayer(key: string): void {
         if (this.rifleParticlesSystem === undefined) {
-            throw new Error("Player weapon system must be initialized before initializing the player!");
+            throw new Error("Player rifle system must be initialized before initializing the player!");
+        }
+        if (this.shotgunParticlesSystem === undefined) {
+            throw new Error("Player shotgun system must be initialized before initializing the player!");
+        }
+        if (this.grappleParticlesSystem === undefined) {
+            throw new Error("Player grapple system must be initialized before initializing the player!");
         }
         if (this.playerSpawn === undefined) {
             throw new Error("Player spawn must be set before initializing the player!");
@@ -467,30 +517,21 @@ export default abstract class Level extends Scene {
 
         // Add the player to the scene
         this.player = this.add.animatedSprite(key, LevelLayers.PRIMARY);
-        // scaling issue: changed from (1, 1) to (1/16, 1/16)
-        // my ufo is 256 by 256 pixels. Each tile in our game is 16by16 pixels. The sprite should be 1 tile wide and 2 tiles tall, or 16 by 32 pixels.
-        /**
-         * Scaling issue:
-         * Each tile in our game is 16 by 16 pixels. The tilemap itself was
-         * scaled by a factor of 2, so each tile is 32 by 32 pixels.
-         */
-        //this.player.scale.set(0.125, 0.25);
-        //this.player.scale.set(1.5/8, 3/8);
+
         this.player.scale.set(1.5, 3);
         this.player.position.copy(this.playerSpawn);
         
         // Give the player physics
         this.player.addPhysics(new AABB(this.player.position.clone(), this.player.boundary.getHalfSize().clone()));
 
-        // utilize this line to separately set character collision, decoupled from its sprite size/scaling
-        //this.player.setCollisionShape(new AABB(this.player.position.clone(), new Vec2(this.player.boundary.getHalfSize().clone().x/2, this.player.boundary.getHalfSize().clone().y/2)));
-
         // Add player to player physics group
         this.player.setGroup(GamePhysicsGroups.PLAYER);
 
         // Give the player it's AI
         this.player.addAI(PlayerController, { 
-            weaponSystem: this.rifleParticlesSystem, 
+            rifleSystem: this.rifleParticlesSystem,
+            shotgunSystem: this.shotgunParticlesSystem,
+            grappleSystem: this.grappleParticlesSystem,
             tilemap: "Destructable" 
         });
     }

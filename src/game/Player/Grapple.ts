@@ -17,7 +17,7 @@ import { GamePhysicsGroups } from "../GamePhysicsGroups";
  * The particle system used for the player's attack. Particles in the particle system should
  * be spawned at the player's position and fired in the direction of the mouse's position.
  */
-export default class Rifle extends ParticleSystem {
+export default class Grapple extends ParticleSystem {
 
     //facedir variable
     private faceDir: Vec2;
@@ -64,7 +64,7 @@ export default class Rifle extends ParticleSystem {
         // set each particle's group to physics group
         particle.setGroup(GamePhysicsGroups.PLAYER_WEAPON);
 
-        particle.color = Color.YELLOW;
+        particle.color = Color.BLUE;
         particle.size = new Vec2(20, 20)
     }
 
