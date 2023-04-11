@@ -57,7 +57,7 @@ export default class Rifle extends ParticleSystem {
      * @param particle the particle to give the animation to
      */
     public setParticleAnimation(particle: Particle) {
-        let fact = 5; // larger factor = wider and farther
+        let fact = 10; // larger factor = wider and farther
 
         particle.vel = new Vec2(this.faceDir.x*fact,this.faceDir.y*fact);
 
