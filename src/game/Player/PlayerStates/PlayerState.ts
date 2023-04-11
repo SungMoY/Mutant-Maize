@@ -16,7 +16,7 @@ export default abstract class PlayerState extends State {
 	public constructor(parent: PlayerController, owner: HW3AnimatedSprite){
 		super(parent);
 		this.owner = owner;
-        this.gravity = 1500;
+        this.gravity = 1250;
 	}
 
     public abstract onEnter(options: Record<string, any>): void;

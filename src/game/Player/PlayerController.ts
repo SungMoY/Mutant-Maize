@@ -17,6 +17,9 @@ import { GameEvents } from "../GameEvents";
 import Dead from "./PlayerStates/Dead";
 import Shotgun from "./Shotgun";
 import Grapple from "./Grapple";
+import Stack from "../../Wolfie2D/DataTypes/Stack";
+import Queue from "../../Wolfie2D/DataTypes/Queue";
+import GameEvent from "../../Wolfie2D/Events/GameEvent";
 
 // TODO play your heros animations
 
@@ -77,9 +80,10 @@ export default class PlayerController extends StateMachineAI {
     protected rifle: Rifle;
     protected shotgun: Shotgun;
     protected grapple: Grapple;
+    protected grappleCoords: Queue<Vec2>;
 
     protected isDead: boolean;
-
+    protected readCoords: boolean;
     
     public initializeAI(owner: HW3AnimatedSprite, options: Record<string, any>){
         this.owner = owner;
@@ -97,6 +101,10 @@ export default class PlayerController extends StateMachineAI {
 
         this.isDead = false;
 
+        this.grappleCoords = new Queue<Vec2>();
+
+        this.readCoords = true;
+
         // Add the different states the player can be in to the PlayerController 
 		this.addState(PlayerStates.IDLE, new Idle(this, this.owner));
 		this.addState(PlayerStates.WALK, new Walk(this, this.owner));
@@ -107,6 +115,8 @@ export default class PlayerController extends StateMachineAI {
         
         // Start the player in the Idle state
         this.initialize(PlayerStates.IDLE);
+
+        this.receiver.subscribe(GameEvents.GRAPPLE_COLLISION);
     }
 
     /** 
@@ -126,8 +136,17 @@ export default class PlayerController extends StateMachineAI {
     public update(deltaT: number): void {
 		super.update(deltaT);
 
+        if (this.grappleCoords.hasItems()) {
+            let moveTo = this.grappleCoords.dequeue();
+            if (!this.grappleCoords.hasItems()) {
+                this.readCoords = true;
+            }
+            //this.owner.move(new Vec2(moveTo.x + (moveTo.x * deltaT), moveTo.y * deltaT))
+            this.owner.position = (new Vec2(moveTo.x, moveTo.y));
+        }
+
         // If the player hits the attack button and the weapon system isn't running, restart the system and fire!
-        if ((Input.isMouseJustPressed(0) && !this.rifle.isSystemRunning())) {
+        if ((Input.isMouseJustPressed(0) && !this.rifle.isSystemRunning()) && !Input.isMouseJustPressed(1) && !Input.isMouseJustPressed(2)&& !Input.isMouseJustPressed(4)) {
             console.log("FIRING RIFLE")
             // Start the particle system at the player's current position
             this.rifle.startSystem(500, 0, this.owner.position, this.faceDir);
@@ -160,7 +179,7 @@ export default class PlayerController extends StateMachineAI {
             }
         }
 
-        if (Input.isJustPressed(GameControls.GRAPPLE)) {
+        if (Input.isJustPressed(GameControls.GRAPPLE) || Input.isMouseJustPressed(4)) {
             console.log("FIRING GRAPPLE")
             // send a vector outwards. check if it collides a tile or entity. if it does, move the player to that position. if nothing is hit, do nothing
             this.grapple.startSystem(500, 0, this.owner.position, this.faceDir);
@@ -176,7 +195,6 @@ export default class PlayerController extends StateMachineAI {
             }
         }
 
-
         // if the player is dead, enter the dead state
         if (this.health <= 0 && !this.isDead) {
             this.isDead = true;
@@ -184,6 +202,68 @@ export default class PlayerController extends StateMachineAI {
         }
 
 	}
+
+    handleEvent(event: GameEvent): void {
+        if (event.type === GameEvents.GRAPPLE_COLLISION) {
+            this.handleGrappleCollision(event.data.get("node"));
+            return
+        }
+        if(this.active){
+            this.currentState.handleInput(event);
+        }
+    }
+
+    private handleGrappleCollision(particleId: number) {
+        let particles = this.grapple.getPool();
+        let particle = particles.find(particle => particle.id === particleId);
+        if (particle !== undefined) {
+            this.grapple.stopSystem();
+            let position = particle.position;
+            // based on this.player.position and position, calculate vector
+            let fromPosition = this.owner.position;
+            let toPosition = position;
+            // get the closest tile to the position
+            let reachTile = this.tilemap.getColRowAt(toPosition);
+            // DO NTO CHANGE
+            reachTile.x = reachTile.x * 48;
+            reachTile.y = reachTile.y * 48;
+
+            // create 10 coords between the two positions, enqueue them to grappleCoords
+            let numCoords = 15;
+            let xDiff = toPosition.x - fromPosition.x;
+            let yDiff = toPosition.y - fromPosition.y;
+            let xStep = xDiff / numCoords;
+            let yStep = yDiff / numCoords;
+
+            let newCoord = Vec2.ZERO
+            if (this.readCoords) {
+                this.readCoords = false;
+                for (let i = 1; i < numCoords; i++) {
+                    //let newCoord = new Vec2(xStep * i/2, yStep * i*2);
+                    newCoord = new Vec2(fromPosition.x + (xStep * i),fromPosition.y + (yStep * i));
+                    this.grappleCoords.enqueue(newCoord);
+
+                }
+
+                let endVec = new Vec2(0,0);
+                if (toPosition.x > this.owner.position.x) {
+                    endVec.x = (reachTile.x) + 8; // half of tilesize
+                }
+                else {
+                    endVec.x = (reachTile.x) - 8; 
+                }
+                if (toPosition.y > this.owner.position.y) { // if end position is lower, move player up
+                    console.log("END POS IS LOWER");
+                    endVec.y = (reachTile.y) - 16; // half of tilesize
+                }
+                else {
+                    console.log("END POS IS HIGHER")
+                    endVec.y = (reachTile.y) + 16; // if end position is higher, move player down
+                }
+                this.grappleCoords.enqueue(endVec);
+            }
+        }
+    }
 
     public get velocity(): Vec2 { return this._velocity; }
     public set velocity(velocity: Vec2) { this._velocity = velocity; }
