@@ -55,12 +55,10 @@ export default class Shotgun extends ParticleSystem {
      * @param particle the particle to give the animation to
      */
     public setParticleAnimation(particle: Particle) {
-        // needs work
-        let fact = 10
+        let fact = 5
         let xVal = this.faceDir.x * fact
         let yVal = this.faceDir.y * fact
 
-        // needs work
         if (Math.abs(this.faceDir.x) >= 95) {
             particle.vel = RandUtils.randVec(xVal, xVal/1.5, -xVal/3, xVal/3);
             console.log(particle.vel);

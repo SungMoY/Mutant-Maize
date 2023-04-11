@@ -84,6 +84,8 @@ export default class PlayerController extends StateMachineAI {
 
     protected isDead: boolean;
     protected readCoords: boolean;
+
+    protected inGrapple: boolean;
     
     public initializeAI(owner: HW3AnimatedSprite, options: Record<string, any>){
         this.owner = owner;
@@ -100,6 +102,7 @@ export default class PlayerController extends StateMachineAI {
         this.maxHealth = 5;
 
         this.isDead = false;
+        this.inGrapple = false;
 
         this.grappleCoords = new Queue<Vec2>();
 
@@ -140,13 +143,15 @@ export default class PlayerController extends StateMachineAI {
             let moveTo = this.grappleCoords.dequeue();
             if (!this.grappleCoords.hasItems()) {
                 this.readCoords = true;
+                this.inGrapple = false;
             }
             //this.owner.move(new Vec2(moveTo.x + (moveTo.x * deltaT), moveTo.y * deltaT))
             this.owner.position = (new Vec2(moveTo.x, moveTo.y));
+            
         }
 
         // If the player hits the attack button and the weapon system isn't running, restart the system and fire!
-        if ((Input.isMouseJustPressed(0) && !this.rifle.isSystemRunning()) && !Input.isMouseJustPressed(1) && !Input.isMouseJustPressed(2)&& !Input.isMouseJustPressed(4)) {
+        if ((Input.isMouseJustPressed(0) && !this.rifle.isSystemRunning()) && !this.inGrapple && !Input.isMouseJustPressed(1) && !Input.isMouseJustPressed(2)&& !Input.isMouseJustPressed(4)) {
             console.log("FIRING RIFLE")
             // Start the particle system at the player's current position
             this.rifle.startSystem(500, 0, this.owner.position, this.faceDir);
@@ -164,7 +169,7 @@ export default class PlayerController extends StateMachineAI {
             }
         }
 
-        if ((Input.isMouseJustPressed(2) && !this.shotgun.isSystemRunning())) {
+        if ((Input.isMouseJustPressed(2) && !this.shotgun.isSystemRunning()) && !this.inGrapple) {
             console.log("FIRING SHOTGUN")
             this.shotgun.startSystem(500, 0, this.owner.position, this.faceDir);
             let direction = this.faceDir;
@@ -179,7 +184,7 @@ export default class PlayerController extends StateMachineAI {
             }
         }
 
-        if (Input.isJustPressed(GameControls.GRAPPLE) || Input.isMouseJustPressed(4)) {
+        if (Input.isJustPressed(GameControls.GRAPPLE) || Input.isMouseJustPressed(4) && !this.inGrapple) {
             console.log("FIRING GRAPPLE")
             // send a vector outwards. check if it collides a tile or entity. if it does, move the player to that position. if nothing is hit, do nothing
             this.grapple.startSystem(500, 0, this.owner.position, this.faceDir);
@@ -239,10 +244,8 @@ export default class PlayerController extends StateMachineAI {
             if (this.readCoords) {
                 this.readCoords = false;
                 for (let i = 1; i < numCoords; i++) {
-                    //let newCoord = new Vec2(xStep * i/2, yStep * i*2);
                     newCoord = new Vec2(fromPosition.x + (xStep * i),fromPosition.y + (yStep * i));
                     this.grappleCoords.enqueue(newCoord);
-
                 }
 
                 let endVec = new Vec2(0,0);
@@ -262,6 +265,7 @@ export default class PlayerController extends StateMachineAI {
                 }
                 this.grappleCoords.enqueue(endVec);
             }
+            this.inGrapple = true;
         }
     }
 
