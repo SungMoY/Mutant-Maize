@@ -74,9 +74,9 @@ export default class ControlsScreen extends Scene {
         let mouseText = [
             {text: "Mouse 1: Kernel Rifle", 
                 pos: new Vec2(size.x + 109, size.y - 105)},
-            {text: "Mouse 1 (Hold): Popcorn Shotgun", 
+            {text: "Mouse 2: Popcorn Shotgun", 
                 pos: new Vec2(size.x + 175, size.y - 55)},
-            {text: "Mouse 2: Silk Grapple", 
+            {text: "Shift: Silk Grapple", 
                 pos: new Vec2(size.x + 112, size.y - 5)}
         ]
         for (let i = 0; i < mouseText.length; i++) {
