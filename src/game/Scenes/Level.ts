@@ -3,7 +3,7 @@ import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import Input from "../../Wolfie2D/Input/Input";
-import { TweenableProperties } from "../../Wolfie2D/Nodes/GameNode";
+import GameNode, { TweenableProperties } from "../../Wolfie2D/Nodes/GameNode";
 import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import Rect from "../../Wolfie2D/Nodes/Graphics/Rect";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
@@ -27,9 +27,10 @@ import HW3FactoryManager from "../Factory/HW3FactoryManager";
 import MainMenu from "./MainMenu";
 import Particle from "../../Wolfie2D/Nodes/Graphics/Particle";
 import Button from "../../Wolfie2D/Nodes/UIElements/Button";
-import Shape from "../../Wolfie2D/DataTypes/Shapes/Shape";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import Grapple from "../Player/Grapple";
+import Queue from "../../Wolfie2D/DataTypes/Queue";
+
 
 /**
  * A const object for the layer names
@@ -116,6 +117,8 @@ export default abstract class Level extends Scene {
 
     protected popcorn: Array<Sprite>;
     protected popcornSpriteKey: string;
+
+    protected grappleQueue: Queue<Vec2>;
 
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
         super(viewport, sceneManager, renderingManager, {...options, physics: {
@@ -225,7 +228,7 @@ export default abstract class Level extends Scene {
                 break;
             }
             case GameEvents.GRAPPLE_COLLISION: {
-                this.handleGrappleCollision(event.data.get("node"));
+                //this.handleGrappleCollision(event.data.get("node"));
                 break;
             }
             case GameEvents.PAUSE: {
@@ -245,8 +248,21 @@ export default abstract class Level extends Scene {
         let particles = this.grappleParticlesSystem.getPool();
         let particle = particles.find(particle => particle.id === particleId);
         if (particle !== undefined) {
+            this.grappleParticlesSystem.stopSystem();
             let position = particle.position;
             console.log("HIT: " + position.x + ", " + position.y);
+            // based on this.player.position and position, calculate vector
+            let fromPosition = this.player.position;
+            let toPosition = position;
+
+            this.grappleQueue = new Queue<Vec2>();
+            this.grappleQueue.enqueue(fromPosition);
+            for (let i  = 1; i < 11; i++) {
+                let x = fromPosition.x + (toPosition.x - fromPosition.x) * i / 10;
+                let y = fromPosition.y + (toPosition.y - fromPosition.y) * i / 10;
+                this.grappleQueue.enqueue(new Vec2(x, y));
+            }
+            this.grappleQueue.enqueue(toPosition);
         }
     }
 
@@ -491,7 +507,7 @@ export default abstract class Level extends Scene {
         // for (let i = 0; i < 10; i++) {
         //     this.popcorn.push(this.add.sprite(this.popcornSpriteKey, LevelLayers.PRIMARY));
         // }
-        this.shotgunParticlesSystem = new Shotgun(5, Vec2.ZERO, 200, 10, 0, 1); // for 1 particle
+        this.shotgunParticlesSystem = new Shotgun(5, Vec2.ZERO, 500, 10, 0, 1); // for 1 particle
         this.shotgunParticlesSystem.initializePool(this, LevelLayers.PRIMARY);
 
         this.grappleParticlesSystem = new Grapple(1, Vec2.ZERO, 500, 10, 0, 1); // for 1 particle
@@ -532,7 +548,7 @@ export default abstract class Level extends Scene {
             rifleSystem: this.rifleParticlesSystem,
             shotgunSystem: this.shotgunParticlesSystem,
             grappleSystem: this.grappleParticlesSystem,
-            tilemap: "Destructable" 
+            tilemap: "Main"
         });
     }
 
