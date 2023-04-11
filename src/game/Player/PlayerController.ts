@@ -28,7 +28,6 @@ import GameEvent from "../../Wolfie2D/Events/GameEvent";
  */
 export const PlayerAnimations = {
     IDLE: "IDLE",
-    WALK: "WALK",
     JUMP: "JUMP",
     TAKING_DAMAGE: "TAKING_DAMAGE",
     RUN_LEFT: "RUN_LEFT",
@@ -36,8 +35,12 @@ export const PlayerAnimations = {
     ATTACKING_LEFT: "ATTACKING_LEFT",
     ATTACKING_RIGHT: "ATTACKING_RIGHT",
     DYING: "DYING",
-    DEATH: "DEATH"
+    DEATH: "DEATH",
+    GRAPPLING: "GRAPPLING",
+    SHOTGUN_LEFT: "SHOTGUN_LEFT",
+    SHOTGUN_RIGHT: "SHOTGUN_RIGHT",
 } as const
+
 
 /**
  * Tween animations the player can player.
@@ -82,6 +85,7 @@ export default class PlayerController extends StateMachineAI {
     protected grapple: Grapple;
     protected grappleCoords: Queue<Vec2>;
 
+
     protected isDead: boolean;
     protected readCoords: boolean;
     
@@ -104,6 +108,7 @@ export default class PlayerController extends StateMachineAI {
         this.grappleCoords = new Queue<Vec2>();
 
         this.readCoords = true;
+
 
         // Add the different states the player can be in to the PlayerController 
 		this.addState(PlayerStates.IDLE, new Idle(this, this.owner));
@@ -168,13 +173,13 @@ export default class PlayerController extends StateMachineAI {
             console.log("FIRING SHOTGUN")
             this.shotgun.startSystem(500, 0, this.owner.position, this.faceDir);
             let direction = this.faceDir;
-            if (direction.x < 0) {
-                this.owner.animation.play(PlayerAnimations.ATTACKING_LEFT);
+            if (direction.x > 0) {
+                this.owner.animation.play(PlayerAnimations.SHOTGUN_LEFT);
                 // return to idle
                 this.owner.animation.queue(PlayerAnimations.IDLE, true);
             }
             else {
-                this.owner.animation.play(PlayerAnimations.ATTACKING_RIGHT);
+                this.owner.animation.play(PlayerAnimations.SHOTGUN_RIGHT);
                 this.owner.animation.queue(PlayerAnimations.IDLE, true);
             }
         }
@@ -183,16 +188,9 @@ export default class PlayerController extends StateMachineAI {
             console.log("FIRING GRAPPLE")
             // send a vector outwards. check if it collides a tile or entity. if it does, move the player to that position. if nothing is hit, do nothing
             this.grapple.startSystem(500, 0, this.owner.position, this.faceDir);
-            let direction = this.faceDir;
-            if (direction.x < 0) {
-                this.owner.animation.play(PlayerAnimations.ATTACKING_LEFT);
-                // return to idle
-                this.owner.animation.queue(PlayerAnimations.IDLE, true);
-            }
-            else {
-                this.owner.animation.play(PlayerAnimations.ATTACKING_RIGHT);
-                this.owner.animation.queue(PlayerAnimations.IDLE, true);
-            }
+
+            this.owner.animation.play(PlayerAnimations.GRAPPLING);
+            this.owner.animation.queue(PlayerAnimations.IDLE, true);
         }
 
         // if the player is dead, enter the dead state
