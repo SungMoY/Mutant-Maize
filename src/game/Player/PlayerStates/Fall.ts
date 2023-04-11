@@ -7,12 +7,20 @@ export default class Fall extends PlayerState {
     onEnter(options: Record<string, any>): void {
         // If we're falling, the vertical velocity should be >= 0
         this.parent.velocity.y = 0;
-        this.owner.animation.play(PlayerAnimations.IDLE, false);
+        if (!this.owner.animation.isPlaying(PlayerAnimations.GRAPPLING)) {
+            this.owner.animation.play(PlayerAnimations.IDLE, false);
+        }
     }
 
     update(deltaT: number): void {
         if (this.owner.onGround) {
-            this.owner.animation.play(PlayerAnimations.IDLE, false);
+            if (Math.floor(this.parent.velocity.y / 300) > 0) {
+                this.parent.health -= Math.floor(this.parent.velocity.y / 300);
+                //this.parent.health -= 0.1;
+                this.owner.animation.play(PlayerAnimations.TAKING_DAMAGE, false);
+            } else {
+                this.owner.animation.play(PlayerAnimations.IDLE, false);
+            }
             this.finished(PlayerStates.IDLE);
         } 
         // Otherwise, keep moving

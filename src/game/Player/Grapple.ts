@@ -64,8 +64,8 @@ export default class Grapple extends ParticleSystem {
         // set each particle's group to physics group
         particle.setGroup(GamePhysicsGroups.PLAYER_WEAPON);
 
-        particle.color = Color.BLUE;
-        particle.size = new Vec2(20, 20)
+        particle.color = new Color(34, 200, 34, 1)
+        particle.size = new Vec2(10, 10)
     }
 
 }

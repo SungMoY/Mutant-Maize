@@ -227,10 +227,6 @@ export default abstract class Level extends Scene {
                 this.sceneManager.changeToScene(MainMenu);
                 break;
             }
-            case GameEvents.GRAPPLE_COLLISION: {
-                //this.handleGrappleCollision(event.data.get("node"));
-                break;
-            }
             case GameEvents.PAUSE: {
                 // add a layer of transparency over the screen
                 break;
@@ -243,28 +239,6 @@ export default abstract class Level extends Scene {
     }
 
     /* Handlers for the different events the scene is subscribed to */
-
-    protected handleGrappleCollision(particleId: number): void {
-        let particles = this.grappleParticlesSystem.getPool();
-        let particle = particles.find(particle => particle.id === particleId);
-        if (particle !== undefined) {
-            this.grappleParticlesSystem.stopSystem();
-            let position = particle.position;
-            console.log("HIT: " + position.x + ", " + position.y);
-            // based on this.player.position and position, calculate vector
-            let fromPosition = this.player.position;
-            let toPosition = position;
-
-            this.grappleQueue = new Queue<Vec2>();
-            this.grappleQueue.enqueue(fromPosition);
-            for (let i  = 1; i < 11; i++) {
-                let x = fromPosition.x + (toPosition.x - fromPosition.x) * i / 10;
-                let y = fromPosition.y + (toPosition.y - fromPosition.y) * i / 10;
-                this.grappleQueue.enqueue(new Vec2(x, y));
-            }
-            this.grappleQueue.enqueue(toPosition);
-        }
-    }
 
     /**
      * Handle particle hit events
@@ -397,7 +371,6 @@ export default abstract class Level extends Scene {
         this.receiver.subscribe(GameEvents.HEALTH_CHANGE);
         this.receiver.subscribe(GameEvents.PLAYER_DEAD);
         this.receiver.subscribe(GameEvents.PAUSE);
-        this.receiver.subscribe(GameEvents.GRAPPLE_COLLISION);
     }
     /**
      * Adds in any necessary UI to the game
@@ -510,7 +483,7 @@ export default abstract class Level extends Scene {
         this.shotgunParticlesSystem = new Shotgun(5, Vec2.ZERO, 500, 10, 0, 1); // for 1 particle
         this.shotgunParticlesSystem.initializePool(this, LevelLayers.PRIMARY);
 
-        this.grappleParticlesSystem = new Grapple(1, Vec2.ZERO, 500, 10, 0, 1); // for 1 particle
+        this.grappleParticlesSystem = new Grapple(100, Vec2.ZERO, 500, 10, 0, 0.5); // for 1 particle
         this.grappleParticlesSystem.initializePool(this, LevelLayers.PRIMARY);
     }
     /**
@@ -531,6 +504,8 @@ export default abstract class Level extends Scene {
             throw new Error("Player spawn must be set before initializing the player!");
         }
 
+
+
         // Add the player to the scene
         this.player = this.add.animatedSprite(key, LevelLayers.PRIMARY);
 
@@ -543,13 +518,35 @@ export default abstract class Level extends Scene {
         // Add player to player physics group
         this.player.setGroup(GamePhysicsGroups.PLAYER);
 
+        this.player.tweens.add(PlayerTweens.DEATH, {
+            startDelay: 0,
+            duration: 500,
+            effects: [
+                {
+                    property: "rotation",
+                    start: 0,
+                    end: Math.PI,
+                    ease: EaseFunctionType.IN_OUT_QUAD
+                },
+                {
+                    property: "alpha",
+                    start: 1,
+                    end: 0,
+                    ease: EaseFunctionType.IN_OUT_QUAD
+                }
+            ],
+            onEnd: GameEvents.PLAYER_DEAD
+        });
+
+
         // Give the player it's AI
         this.player.addAI(PlayerController, { 
             rifleSystem: this.rifleParticlesSystem,
             shotgunSystem: this.shotgunParticlesSystem,
             grappleSystem: this.grappleParticlesSystem,
-            tilemap: "Main"
+            tilemap: "Main",
         });
+        
     }
 
     protected initializeViewport(): void {
