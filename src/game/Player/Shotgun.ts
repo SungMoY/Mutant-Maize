@@ -56,7 +56,7 @@ export default class Shotgun extends ParticleSystem {
      */
     public setParticleAnimation(particle: Particle) {
         // needs work
-        let fact = 10
+        let fact = 5
         let xVal = this.faceDir.x * fact
         let yVal = this.faceDir.y * fact
 

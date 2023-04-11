@@ -15,8 +15,8 @@ export default class Fall extends PlayerState {
     update(deltaT: number): void {
         if (this.owner.onGround) {
             if (Math.floor(this.parent.velocity.y / 300) > 0) {
-                this.parent.health -= Math.floor(this.parent.velocity.y / 300);
-                //this.parent.health -= 0.1;
+                //this.parent.health -= Math.floor(this.parent.velocity.y / 300);
+                this.parent.health -= 0.01;
                 this.owner.animation.play(PlayerAnimations.TAKING_DAMAGE, false);
             } else {
                 this.owner.animation.play(PlayerAnimations.IDLE, false);

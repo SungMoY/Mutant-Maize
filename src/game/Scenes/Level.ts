@@ -152,7 +152,7 @@ export default abstract class Level extends Scene {
         this.initializeLevelEnds();
 
         this.levelTransitionTimer = new Timer(500);
-        this.levelEndTimer = new Timer(3000, () => {
+        this.levelEndTimer = new Timer(500, () => {
             // After the level end timer ends, fade to black and then go to the next scene
             this.levelTransitionScreen.tweens.play("fadeIn");
         });
@@ -313,7 +313,6 @@ export default abstract class Level extends Scene {
         // If the timer hasn't run yet, start the end level animation
         if (!this.levelEndTimer.hasRun() && this.levelEndTimer.isStopped()) {
             this.levelEndTimer.start();
-            this.levelEndLabel.tweens.play("slideIn");
         }
     }
 
@@ -396,16 +395,6 @@ export default abstract class Level extends Scene {
 		this.healthBarMissing.backgroundColor = Color.RED;
         this.healthBarMissing.borderRadius = 0;
 
-        // End of level label (start off screen)
-        this.levelEndLabel = <Label>this.add.uiElement(UIElementType.LABEL, LevelLayers.UI, { position: new Vec2(-300, 100), text: "Level Complete" });
-        this.levelEndLabel.size.set(1200, 60);
-        this.levelEndLabel.borderRadius = 0;
-        //this.levelEndLabel.backgroundColor = new Color(34, 32, 52);
-        this.levelEndLabel.backgroundColor = Color.TRANSPARENT
-        this.levelEndLabel.textColor = Color.WHITE;
-        this.levelEndLabel.fontSize = 48;
-        this.levelEndLabel.font = "PixelSimple";
-
         // Create pause button on top left corner
         let pauseButtonImage = this.add.sprite("pauseButton", LevelLayers.UI);
         pauseButtonImage.position = new Vec2(60, 50);
@@ -418,20 +407,6 @@ export default abstract class Level extends Scene {
             console.log("Pause button clicked");
             this.emitter.fireEvent(GameEvents.PAUSE);
         }
-
-        // Add a tween to move the label on screen
-        this.levelEndLabel.tweens.add("slideIn", {
-            startDelay: 0,
-            duration: 1000,
-            effects: [
-                {
-                    property: TweenableProperties.posX,
-                    start: -100,
-                    end: 150,
-                    ease: EaseFunctionType.OUT_SINE
-                }
-            ]
-        });
 
         this.levelTransitionScreen = <Rect>this.add.graphic(GraphicType.RECT, LevelLayers.UI, { position: new Vec2(480, 360), size: new Vec2(960, 720) });
         this.levelTransitionScreen.color = new Color(34, 32, 52);
@@ -566,7 +541,7 @@ export default abstract class Level extends Scene {
         this.levelEndArea.addPhysics(undefined, undefined, false, true);
         this.levelEndArea.setGroup(GamePhysicsGroups.GROUND)
         this.levelEndArea.setTrigger(GamePhysicsGroups.PLAYER, GameEvents.PLAYER_ENTERED_LEVEL_END, null);
-        this.levelEndArea.color = new Color(255, 0, 255, .20);
+        this.levelEndArea.color = Color.MAGENTA;
         
     }
 

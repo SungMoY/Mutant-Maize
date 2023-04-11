@@ -13,6 +13,7 @@ import MainMenu from "./MainMenu";
 export default class Level1 extends Level {
 
     public static readonly PLAYER_SPAWN = new Vec2(150, 500);
+    //public static readonly PLAYER_SPAWN = new Vec2(11000, 576);
     public static readonly PLAYER_SPRITE_KEY = "PLAYER_SPRITE_KEY";
     //public static readonly PLAYER_SPRITE_PATH = "game_assets/spritesheets/UFO_alien.json";
     public static readonly PLAYER_SPRITE_PATH = "game_assets/spritesheets/rob_the_cob.json";
@@ -52,8 +53,8 @@ export default class Level1 extends Level {
         this.jumpAudioKey = Level1.JUMP_AUDIO_KEY;
         this.dyingAudioKey = Level1.DYING_AUDIO_KEY;
         this.backgroundKey = Level1.LEVEL1_BACKGROUND_KEY;
-        this.levelEndPosition = new Vec2(3776, 304).mult(this.tilemapScale);
-        this.levelEndHalfSize = new Vec2(32, 32).mult(this.tilemapScale);
+        this.levelEndPosition = new Vec2(11232, 528)
+        this.levelEndHalfSize = new Vec2(96, 96)
         this.kernelSpriteKey = Level1.KERNEL_SPRITE_KEY;
         this.popcornSpriteKey = Level1.POPCORN_SPRITE_KEY;
         this.levelxbound = 3840
