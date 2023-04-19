@@ -35,7 +35,7 @@ export default class AboutScreen extends Scene {
         // Create a label named "ABOUT"
         let controlsLabel = <Label>this.add.uiElement(UIElementType.LABEL, "MAIN", {position: new Vec2(size.x, size.y - 275), text: "ABOUT"});
         controlsLabel.textColor = Color.WHITE;
-        controlsLabel.font = "'handjet_square_doublemedium'";
+        controlsLabel.font = "handjet_square_doublemedium";
         controlsLabel.fontSize = 96;
 
         // Create div
@@ -50,7 +50,7 @@ export default class AboutScreen extends Scene {
         //backstory title
         let backstoryTitle = <Label>this.add.uiElement(UIElementType.LABEL, "MAIN", {position: new Vec2(size.x, size.y-180), text: "Backstory"});
         backstoryTitle.textColor = Color.WHITE;
-        backstoryTitle.font = "'handjet_square_doublemedium'";
+        backstoryTitle.font = "handjet_square_doublemedium";
         backstoryTitle.fontSize = 36;
         //backstory text per line
         let backstoryText = [
@@ -64,7 +64,7 @@ export default class AboutScreen extends Scene {
         for (let i = 0; i < backstoryText.length; i++) {
             let backstoryLine = <Label>this.add.uiElement(UIElementType.LABEL, "MAIN", {position: new Vec2(size.x, size.y-140 + (i*25)), text: backstoryText[i]});
             backstoryLine.textColor = Color.WHITE;
-            backstoryLine.font = "'handjet_square_doublemedium'";
+            backstoryLine.font = "handjet_square_doublemedium";
             backstoryLine.fontSize = 24;
             backstoryLine.setPadding(new Vec2(10, 10));
         }
@@ -76,7 +76,7 @@ export default class AboutScreen extends Scene {
         //objective title
         let objectiveTitle = <Label>this.add.uiElement(UIElementType.LABEL, "MAIN", {position: new Vec2(size.x, size.y+35), text: "Objective"});
         objectiveTitle.textColor = Color.WHITE;
-        objectiveTitle.font = "'handjet_square_doublemedium'";
+        objectiveTitle.font = "handjet_square_doublemedium";
         objectiveTitle.fontSize = 36;
         //objective text
         let objectiveText = [
@@ -89,14 +89,14 @@ export default class AboutScreen extends Scene {
         for (let i = 0; i < objectiveText.length; i++) {
             let objectiveLine = <Label>this.add.uiElement(UIElementType.LABEL, "MAIN", {position: new Vec2(size.x, size.y+70 + (i*25)), text: objectiveText[i]});
             objectiveLine.textColor = Color.WHITE;
-            objectiveLine.font = "'handjet_square_doublemedium'";
+            objectiveLine.font = "handjet_square_doublemedium";
             objectiveLine.fontSize = 24;
         }
         // Create a back button
         let backBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "MAIN", {position: new Vec2(size.x, size.y + 275), text: "BACK"});
         backBtn.backgroundColor = new Color(0, 0, 0, 0.9)
         backBtn.setPadding(new Vec2(50, 10));
-        backBtn.font = "'handjet_square_doublemedium'";
+        backBtn.font = "handjet_square_doublemedium";
         backBtn.fontSize = 48;
 
         // When the play button is clicked, go to the next scene

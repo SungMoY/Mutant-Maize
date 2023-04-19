@@ -31,7 +31,7 @@ export default class ControlsScreen extends Scene {
         // Create a label named "Controls"
         let controlsLabel = <Label>this.add.uiElement(UIElementType.LABEL, "MAIN", {position: new Vec2(size.x, size.y - 275), text: "CONTROLS"});
         controlsLabel.textColor = Color.WHITE;
-        controlsLabel.font = "'handjet_square_doublemedium'";
+        controlsLabel.font = "handjet_square_doublemedium";
         controlsLabel.fontSize = 96;
 
         // WASD Head Div
@@ -41,7 +41,7 @@ export default class ControlsScreen extends Scene {
         // WASD Title Text Div
         let WASDTitleLabel = <Label>this.add.uiElement(UIElementType.LABEL, "MAIN", {position: new Vec2(size.x - 250, size.y - 155), text: "BASIC"});
         WASDTitleLabel.textColor = Color.WHITE;
-        WASDTitleLabel.font = "'handjet_square_doublemedium'";
+        WASDTitleLabel.font = "handjet_square_doublemedium";
         WASDTitleLabel.fontSize = 48;
         // WASD Content Text Div
         let text = [
@@ -57,7 +57,7 @@ export default class ControlsScreen extends Scene {
         for (let i = 0; i < text.length; i++) {
             let label = <Label>this.add.uiElement(UIElementType.LABEL, "MAIN", {position: text[i].pos, text: text[i].text});
             label.textColor = Color.WHITE;
-            label.font = "'handjet_square_doublemedium'";
+            label.font = "handjet_square_doublemedium";
             label.fontSize = 32;
         }
         
@@ -68,7 +68,7 @@ export default class ControlsScreen extends Scene {
         // Mouse Title Text Div
         let mouseTitleLabel = <Label>this.add.uiElement(UIElementType.LABEL, "MAIN", {position: new Vec2(size.x + 175, size.y - 155), text: "SPECIAL"});
         mouseTitleLabel.textColor = Color.WHITE;
-        mouseTitleLabel.font = "'handjet_square_doublemedium'";
+        mouseTitleLabel.font = "handjet_square_doublemedium";
         mouseTitleLabel.fontSize = 48;
         // Mouse Content Text Div
         let mouseText = [
@@ -82,7 +82,7 @@ export default class ControlsScreen extends Scene {
         for (let i = 0; i < mouseText.length; i++) {
             let label = <Label>this.add.uiElement(UIElementType.LABEL, "MAIN", {position: mouseText[i].pos, text: mouseText[i].text});
             label.textColor = Color.WHITE;
-            label.font = "'handjet_square_doublemedium'";
+            label.font = "handjet_square_doublemedium";
             label.fontSize = 32;
         }
 
@@ -90,7 +90,7 @@ export default class ControlsScreen extends Scene {
         let backBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "MAIN", {position: new Vec2(size.x, size.y + 275), text: "BACK"});
         backBtn.backgroundColor = new Color(0, 0, 0, 0.9)
         backBtn.setPadding(new Vec2(50, 10));
-        backBtn.font = "'handjet_square_doublemedium'";
+        backBtn.font = "handjet_square_doublemedium";
         backBtn.fontSize = 48;
 
         // When the play button is clicked, go to the next scene
