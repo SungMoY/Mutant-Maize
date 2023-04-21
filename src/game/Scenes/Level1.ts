@@ -12,16 +12,11 @@ import MainMenu from "./MainMenu";
  */
 export default class Level1 extends Level {
 
-    public static readonly PLAYER_SPAWN = new Vec2(150, 500);
-    //public static readonly PLAYER_SPAWN = new Vec2(11000, 576);
     public static readonly PLAYER_SPRITE_KEY = "PLAYER_SPRITE_KEY";
-    //public static readonly PLAYER_SPRITE_PATH = "game_assets/spritesheets/UFO_alien.json";
     public static readonly PLAYER_SPRITE_PATH = "game_assets/spritesheets/rob_the_cob.json";
 
     public static readonly TILEMAP_KEY = "LEVEL1";
     public static readonly TILEMAP_PATH = "game_assets/tilemaps/level1_map.json";
-    // this scale makes the tilesets more visually appealing on the browser
-    public static readonly TILEMAP_SCALE = new Vec2(3, 3);
     public static readonly WALLS_LAYER_KEY = "Main";
 
     public static readonly LEVEL_MUSIC_KEY = "LEVEL_MUSIC";
@@ -42,13 +37,16 @@ export default class Level1 extends Level {
     public static readonly POPCORN_SPRITE_KEY = "POPCORN_SPRITE_KEY";
     public static readonly POPCORN_SPRITE_PATH = "game_assets/sprites/popcorn.png";
 
+    public static readonly RAT_SPRITE_KEY = "RAT_SPRITE_KEY";
+    public static readonly RAT_SPRITE_PATH = "game_assets/spritesheets/UFO_alien.json";
+
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
         super(viewport, sceneManager, renderingManager, options);
         this.tilemapKey = Level1.TILEMAP_KEY;
-        this.tilemapScale = Level1.TILEMAP_SCALE;
+        this.tilemapScale = new Vec2(3, 3);
         this.wallsLayerKey = Level1.WALLS_LAYER_KEY;
         this.playerSpriteKey = Level1.PLAYER_SPRITE_KEY;
-        this.playerSpawn = Level1.PLAYER_SPAWN;
+        this.playerSpawn = new Vec2(150, 500);
         // this.levelMusicKey = Level1.LEVEL_MUSIC_KEY
         this.jumpAudioKey = Level1.JUMP_AUDIO_KEY;
         this.dyingAudioKey = Level1.DYING_AUDIO_KEY;
@@ -57,6 +55,12 @@ export default class Level1 extends Level {
         this.levelEndHalfSize = new Vec2(96, 96)
         this.kernelSpriteKey = Level1.KERNEL_SPRITE_KEY;
         this.popcornSpriteKey = Level1.POPCORN_SPRITE_KEY;
+
+        this.ratSpriteKey = Level1.RAT_SPRITE_KEY;
+        this.ratPositions = [
+            new Vec2(200, 720 - 48-48)
+        ]
+
         this.levelxbound = 3840
         this.levelybound = 720
         // due to parallax of the background image, levelxbound does not equal viewport size
@@ -75,6 +79,8 @@ export default class Level1 extends Level {
         this.load.image(Level1.LEVEL1_BACKGROUND_KEY, Level1.LEVEL1_BACKGROUND_PATH);
         this.load.image(Level1.KERNEL_SPRITE_KEY, Level1.KERNEL_SPRITE_PATH)
         this.load.image(Level1.POPCORN_SPRITE_KEY, Level1.POPCORN_SPRITE_PATH)
+
+        this.load.spritesheet(Level1.RAT_SPRITE_KEY, Level1.RAT_SPRITE_PATH);
     }
 
     public unloadScene(): void {
