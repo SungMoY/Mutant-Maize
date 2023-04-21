@@ -1,8 +1,12 @@
 import Game from "./Wolfie2D/Loop/Game";
 import { GameControls } from "./game/GameControls";
+import AboutScreen from "./game/Scenes/AboutScreen";
 import ControlsScreen from "./game/Scenes/ControlsScreen";
+import CreditsScreen from "./game/Scenes/CreditsScreen";
+import Level from "./game/Scenes/Level";
 import Level1 from "./game/Scenes/Level1";
 import Level2 from "./game/Scenes/Level2";
+import LevelSelectScreen from "./game/Scenes/LevelSelectScreen";
 import MainMenu from "./game/Scenes/MainMenu";
 import SplashScreen from "./game/Scenes/SplashScreen";
 
@@ -29,5 +33,5 @@ import SplashScreen from "./game/Scenes/SplashScreen";
     const game = new Game(options);
 
     // Start our game
-    game.start(SplashScreen, {});
+    game.start(Level1, {});
 })();

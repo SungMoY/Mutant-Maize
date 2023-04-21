@@ -41,20 +41,20 @@ export default class LevelSelectScreen extends Scene {
         // Create a label named "Level Select"
         let lvlSelectLabel = <Label>this.add.uiElement(UIElementType.LABEL, "MAIN", {position: new Vec2(size.x, size.y - 275), text: "Level Select"});
         lvlSelectLabel.textColor = Color.WHITE;
-        lvlSelectLabel.font = "handjet_square_doublemedium";
+        lvlSelectLabel.font = "Verdana";
         lvlSelectLabel.fontSize = 96;
 
         // lvlSelectDiv text
         let lvlSelectText = <Label>this.add.uiElement(UIElementType.LABEL, "MAIN", {position: new Vec2(size.x, size.y-105), text: ""});
         lvlSelectText.backgroundColor = Color.TRANSPARENT;
         lvlSelectText.setPadding(new Vec2(450, 93));
-        //cheats text per line
+        //levels text per line NOTE THAT THEY ARE NOT IN NUMERICAL ORDER
         let lvlSelectTextLines = [
             {text: "1. Cornfield", goto: Level1},
-            {text: "2. Barn Wall"},
             {text: "3. Barn"},
-            {text: "4. Garden"},
             {text: "5. House Wall"},
+            {text: "2. Barn Wall"},
+            {text: "4. Garden"},
             {text: "6. House"},
         ]
         for (let i = 0; i < lvlSelectTextLines.length/2; i++) {
@@ -72,8 +72,8 @@ export default class LevelSelectScreen extends Scene {
             // create text
             let line = <Label>this.add.uiElement(UIElementType.LABEL, "MAIN", {position: new Vec2(size.x-175, size.y-140 + (i*100)), text: lvlSelectTextLines[i].text});
             line.textColor = Color.WHITE;
-            line.font = "handjet_square_doublemedium";
-            line.fontSize = 56;
+            line.font = "Verdana";
+            line.fontSize = 36;
             line.setPadding(new Vec2(10, 10));
             line.backgroundColor = Color.TRANSPARENT
             line.borderColor = Color.TRANSPARENT
@@ -93,8 +93,8 @@ export default class LevelSelectScreen extends Scene {
             // create text
             let line = <Label>this.add.uiElement(UIElementType.LABEL, "MAIN", {position: new Vec2(size.x+175, size.y-140 + ((i-3)*100)), text: lvlSelectTextLines[i].text});
             line.textColor = Color.WHITE;
-            line.font = "handjet_square_doublemedium";
-            line.fontSize = 56;
+            line.font = "Verdana";
+            line.fontSize = 36;
             line.setPadding(new Vec2(10, 10));
             line.backgroundColor = Color.TRANSPARENT
             line.borderColor = Color.TRANSPARENT
@@ -104,7 +104,7 @@ export default class LevelSelectScreen extends Scene {
         let backBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "MAIN", {position: new Vec2(size.x, size.y + 275), text: "BACK"});
         backBtn.backgroundColor = new Color(0, 0, 0, 0.9)
         backBtn.setPadding(new Vec2(50, 10));
-        backBtn.font = "handjet_square_doublemedium";
+        backBtn.font = "Verdana";
         backBtn.fontSize = 48;
 
         // When the play button is clicked, go to the next scene
