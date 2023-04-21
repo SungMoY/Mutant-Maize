@@ -145,12 +145,14 @@ export default class PlayerController extends StateMachineAI {
 
         if (this.grappleCoords.hasItems()) {
             let moveTo = this.grappleCoords.dequeue();
+            Input.disableInput();
+            this.owner.position = (new Vec2(moveTo.x, moveTo.y));
             if (!this.grappleCoords.hasItems()) {
                 this.readCoords = true;
                 this.inGrapple = false;
+                Input.enableInput();
             }
             //this.owner.move(new Vec2(moveTo.x + (moveTo.x * deltaT), moveTo.y * deltaT))
-            this.owner.position = (new Vec2(moveTo.x, moveTo.y));
         }
 
         // If the player hits the attack button and the weapon system isn't running, restart the system and fire!
@@ -190,8 +192,8 @@ export default class PlayerController extends StateMachineAI {
         if (Input.isJustPressed(GameControls.GRAPPLE) || Input.isMouseJustPressed(4) && !this.inGrapple) {
             console.log("FIRING GRAPPLE")
             // send a vector outwards. check if it collides a tile or entity. if it does, move the player to that position. if nothing is hit, do nothing
+            //this.grapple.startSystem(500, 0, new Vec2(this.owner.position.x, this.owner.position.y - this.owner.collisionShape.halfSize.y), this.faceDir);
             this.grapple.startSystem(500, 0, this.owner.position, this.faceDir);
-
             this.owner.animation.play(PlayerAnimations.GRAPPLING);
             this.owner.animation.queue(PlayerAnimations.IDLE, true);
         }
@@ -243,25 +245,23 @@ export default class PlayerController extends StateMachineAI {
                     //let newCoord = new Vec2(xStep * i/2, yStep * i*2);
                     newCoord = new Vec2(fromPosition.x + (xStep * i),fromPosition.y + (yStep * i));
                     this.grappleCoords.enqueue(newCoord);
-
                 }
-
-                let endVec = new Vec2(0,0);
-                if (toPosition.x > this.owner.position.x) {
-                    endVec.x = (reachTile.x) + 8; // half of tilesize
-                }
-                else {
-                    endVec.x = (reachTile.x) - 8; 
-                }
-                if (toPosition.y > this.owner.position.y) { // if end position is lower, move player up
-                    console.log("END POS IS LOWER");
-                    endVec.y = (reachTile.y) - 16; // half of tilesize
-                }
-                else {
-                    console.log("END POS IS HIGHER")
-                    endVec.y = (reachTile.y) + 16; // if end position is higher, move player down
-                }
-                this.grappleCoords.enqueue(endVec);
+                // let endVec = new Vec2(0,0);
+                // if (toPosition.x > this.owner.position.x) {
+                //     endVec.x = (reachTile.x) + 8; // half of tilesize
+                // }
+                // else {
+                //     endVec.x = (reachTile.x) - 8; 
+                // }
+                // if (toPosition.y > this.owner.position.y) { // if end position is lower, move player up
+                //     console.log("END POS IS LOWER");
+                //     endVec.y = (reachTile.y) - 16; // half of tilesize
+                // }
+                // else {
+                //     console.log("END POS IS HIGHER")
+                //     endVec.y = (reachTile.y) + 16; // if end position is higher, move player down
+                // }
+                // this.grappleCoords.enqueue(endVec);
             }
             this.inGrapple = true;
         }
