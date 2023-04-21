@@ -17,7 +17,6 @@ import { GameEvents } from "../GameEvents";
 import Dead from "./PlayerStates/Dead";
 import Shotgun from "./Shotgun";
 import Grapple from "./Grapple";
-import Stack from "../../Wolfie2D/DataTypes/Stack";
 import Queue from "../../Wolfie2D/DataTypes/Queue";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
 
@@ -142,6 +141,9 @@ export default class PlayerController extends StateMachineAI {
 
     public update(deltaT: number): void {
 		super.update(deltaT);
+        if (this.owner.isColliding && !this.owner.collidedWithTilemap) {
+            console.log("COLLIDING")
+        }
 
         if (this.grappleCoords.hasItems()) {
             let moveTo = this.grappleCoords.dequeue();

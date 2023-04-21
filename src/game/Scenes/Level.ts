@@ -30,6 +30,8 @@ import Button from "../../Wolfie2D/Nodes/UIElements/Button";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import Grapple from "../Player/Grapple";
 import Queue from "../../Wolfie2D/DataTypes/Queue";
+import RatAI from "../NPC/Rat/RatAI";
+import HW3AnimatedSprite from "../Nodes/HW3AnimatedSprite";
 
 
 /**
@@ -120,13 +122,23 @@ export default abstract class Level extends Scene {
 
     protected grappleQueue: Queue<Vec2>;
 
+    protected ratSpriteKey: string;
+    protected ratPositions: Array<Vec2>;
+
+    protected birdSpriteKey: string;
+    protected birdPositions: Array<Vec2>;
+    protected birdDistance: number;
+
+    protected bossSpriteKey: string;
+    protected bossPosition: Vec2;
+
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
         super(viewport, sceneManager, renderingManager, {...options, physics: {
             groupNames: [
                 GamePhysicsGroups.GROUND,
                 GamePhysicsGroups.PLAYER,
                 GamePhysicsGroups.PLAYER_WEAPON,
-                GamePhysicsGroups.ENTITY
+                GamePhysicsGroups.ENTITY,
             ],
             collisions: [
                 [0, 1, 1, 1],
@@ -147,6 +159,7 @@ export default abstract class Level extends Scene {
         this.initializeWeaponSystem();
         this.initializeUI();
         this.initializePlayer(this.playerSpriteKey);
+        this.initializeNPCs();
         this.initializeViewport();
         this.subscribeToEvents();
         this.initializeLevelEnds();
@@ -227,10 +240,6 @@ export default abstract class Level extends Scene {
                 this.sceneManager.changeToScene(MainMenu);
                 break;
             }
-            case GameEvents.PAUSE: {
-                // add a layer of transparency over the screen
-                break;
-            }
             // Default: Throw an error! No unhandled events allowed.
             default: {
                 throw new Error(`Unhandled event caught in scene with type ${event.type}`)
@@ -263,7 +272,7 @@ export default abstract class Level extends Scene {
              for(let col = minIndex.x; col <= maxIndex.x; col++){
                  for(let row = minIndex.y; row <= maxIndex.y; row++){
                      // If the tile is collideable -> check if this particle is colliding with the tile
-                     if(tilemap.isTileCollidable(col, row) && this.particleHitTile(tilemap, particle, col, row)){
+                     if(tilemap.isTileCollidable(col, row)){
 
                          particle.vel = new Vec2(0,0);
                          particle.alpha = 0;
@@ -289,25 +298,6 @@ export default abstract class Level extends Scene {
              }
          }
      }
-
-    /**
-     * Checks if a particle hit the tile at the (col, row) coordinates in the tilemap.
-     * 
-     * @param tilemap the tilemap
-     * @param particle the particle
-     * @param col the column the 
-     * @param row the row 
-     * @returns true of the particle hit the tile; false otherwise
-     */
-    protected particleHitTile(tilemap: OrthogonalTilemap, particle: Particle, col: number, row: number): boolean {
-        // TODO detect whether a particle hit a tile
-        // This is mildly redundant
-        let currTile = tilemap.getTileAtRowCol(new Vec2(col, row));
-        let particlePos = particle.position;
-        let particleSize = particle.size;
-
-        return true;
-    }
 
     protected handleEnteredLevelEnd(): void {
         // If the timer hasn't run yet, start the end level animation
@@ -369,7 +359,6 @@ export default abstract class Level extends Scene {
         this.receiver.subscribe(GameEvents.LEVEL_END);
         this.receiver.subscribe(GameEvents.HEALTH_CHANGE);
         this.receiver.subscribe(GameEvents.PLAYER_DEAD);
-        this.receiver.subscribe(GameEvents.PAUSE);
     }
     /**
      * Adds in any necessary UI to the game
@@ -484,11 +473,12 @@ export default abstract class Level extends Scene {
         // Add the player to the scene
         this.player = this.add.animatedSprite(key, LevelLayers.PRIMARY);
 
-        this.player.scale.set(1.5, 3);
+        this.player.scale.set(2, 3);
         this.player.position.copy(this.playerSpawn);
         
         // Give the player physics
-        this.player.addPhysics(new AABB(this.player.position.clone(), this.player.boundary.getHalfSize().clone()));
+        //this.player.addPhysics(new AABB(this.player.position.clone(), this.player.boundary.getHalfSize().clone()));
+        this.player.addPhysics(new AABB(this.player.position.clone(), new Vec2 (this.player.boundary.getHalfSize().clone().x * 0.75, this.player.boundary.getHalfSize().clone().y)));
 
         // Add player to player physics group
         this.player.setGroup(GamePhysicsGroups.PLAYER);
@@ -544,6 +534,22 @@ export default abstract class Level extends Scene {
         this.levelEndArea.color = Color.MAGENTA;
         
     }
+
+    protected initializeNPCs(): void {
+        for (let i = 0; i < this.ratPositions.length; i++) {
+            let rat = this.add.animatedSprite(this.ratSpriteKey, LevelLayers.PRIMARY);
+            rat.position.set(this.ratPositions[i].x, this.ratPositions[i].y);
+
+            // change based on new sprite
+            rat.scale.set(0.3, 0.3);
+            rat.addPhysics(new AABB(rat.position.clone(), new Vec2(rat.boundary.getHalfSize().x, rat.boundary.getHalfSize().y)));
+            // set new group to deal with collisions bw player/player particles and rats
+            //rat.setGroup(GamePhysicsGroups.PLAYER)
+            rat.addAI(RatAI, { tilemap: "Main" });
+            rat.setGroup(GamePhysicsGroups.ENTITY);
+        }
+    }
+
 
     // Get the key of the player's jump audio file
     public getJumpAudioKey(): string {
