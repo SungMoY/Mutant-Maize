@@ -29,5 +29,7 @@ export const GameEvents = {
     RIFLE_HIT: "RIFLE_HIT",
     SHOTGUN_HIT: "SHOTGUN_HIT",
     GRAPPLE_HIT: "GRAPPLE_HIT",
+
+    PLAYER_HIT: "PLAYER_HIT",
     
 } as const;

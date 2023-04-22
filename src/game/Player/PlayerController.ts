@@ -19,6 +19,7 @@ import Shotgun from "./Shotgun";
 import Grapple from "./Grapple";
 import Queue from "../../Wolfie2D/DataTypes/Queue";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
+import Timer from "../../Wolfie2D/Timing/Timer";
 
 // TODO play your heros animations
 
@@ -88,6 +89,8 @@ export default class PlayerController extends StateMachineAI {
     protected isDead: boolean;
     protected readCoords: boolean;
     protected inGrapple: boolean;
+
+    protected invincibleTimer: Timer;
     
     public initializeAI(owner: HW3AnimatedSprite, options: Record<string, any>){
         this.owner = owner;
@@ -110,6 +113,8 @@ export default class PlayerController extends StateMachineAI {
 
         this.readCoords = true;
 
+        this.invincibleTimer = new Timer(2000);
+
 
         // Add the different states the player can be in to the PlayerController 
 		this.addState(PlayerStates.IDLE, new Idle(this, this.owner));
@@ -126,6 +131,7 @@ export default class PlayerController extends StateMachineAI {
         this.receiver.subscribe(GameEvents.RIFLE_COLLISION);
         this.receiver.subscribe(GameEvents.SHOTGUN_COLLISION);
         this.receiver.subscribe(GameEvents.GRAPPLE_HIT);
+        this.receiver.subscribe(GameEvents.PLAYER_HIT);
     }
 
     /** 
@@ -222,6 +228,18 @@ export default class PlayerController extends StateMachineAI {
             case GameEvents.GRAPPLE_HIT:
                 this.handleGrappleCollision(event.data.get("node"));
                 break;
+            case GameEvents.PLAYER_HIT:
+                this.handlePlayerHit();
+                break;
+        }
+    }
+
+    protected handlePlayerHit() {
+        if (this.invincibleTimer.isStopped()) {
+            this.health -= 1;
+            this.owner.animation.playIfNotAlready(PlayerAnimations.TAKING_DAMAGE, false);
+            console.log("Player health: " + this.health);
+            this.invincibleTimer.start();
         }
     }
 

@@ -143,12 +143,12 @@ export default abstract class Level extends Scene {
                 GamePhysicsGroups.ENTITY,
             ],
             collisions: [
-                [0, 1, 1, 1, 0, 1],
+                [0, 1, 1, 1, 1, 1],
                 [1, 0, 0, 0, 0, 1],
                 [1, 0, 0, 0, 0, 1],
                 [1, 0, 0, 0, 0, 1],
                 [1, 0, 0, 0, 0, 1],
-                [1, 0, 1, 1, 1, 0]
+                [1, 1, 1, 1, 1, 0]
             ]
          }});
         this.add = new HW3FactoryManager(this, this.tilemaps);
@@ -467,6 +467,7 @@ export default abstract class Level extends Scene {
             rat.setTrigger(GamePhysicsGroups.RIFLE, GameEvents.RIFLE_HIT, null);
             rat.setTrigger(GamePhysicsGroups.SHOTGUN, GameEvents.SHOTGUN_HIT, null);
             rat.setTrigger(GamePhysicsGroups.GRAPPLE, GameEvents.GRAPPLE_HIT, null);
+            rat.setTrigger(GamePhysicsGroups.PLAYER, GameEvents.PLAYER_HIT, null);
         }
     }
 
