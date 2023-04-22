@@ -123,6 +123,9 @@ export default class PlayerController extends StateMachineAI {
         this.initialize(PlayerStates.IDLE);
 
         this.receiver.subscribe(GameEvents.GRAPPLE_COLLISION);
+        this.receiver.subscribe(GameEvents.RIFLE_COLLISION);
+        this.receiver.subscribe(GameEvents.SHOTGUN_COLLISION);
+        this.receiver.subscribe(GameEvents.GRAPPLE_HIT);
     }
 
     /** 
@@ -141,9 +144,6 @@ export default class PlayerController extends StateMachineAI {
 
     public update(deltaT: number): void {
 		super.update(deltaT);
-        if (this.owner.isColliding && !this.owner.collidedWithTilemap) {
-            console.log("COLLIDING")
-        }
 
         if (this.grappleCoords.hasItems()) {
             let moveTo = this.grappleCoords.dequeue();
@@ -209,16 +209,40 @@ export default class PlayerController extends StateMachineAI {
 	}
 
     handleEvent(event: GameEvent): void {
-        if (event.type === GameEvents.GRAPPLE_COLLISION) {
-            this.handleGrappleCollision(event.data.get("node"));
-            return
-        }
-        if(this.active){
-            this.currentState.handleInput(event);
+        switch (event.type) {
+            case GameEvents.GRAPPLE_COLLISION:
+                this.handleGrappleCollision(event.data.get("node"));
+                break;
+            case GameEvents.RIFLE_COLLISION:
+                this.handleRifleCollision(event.data.get("node"));
+                break;
+            case GameEvents.SHOTGUN_COLLISION:
+                this.handleShotgunCollision(event.data.get("node"));
+                break;
+            case GameEvents.GRAPPLE_HIT:
+                this.handleGrappleCollision(event.data.get("node"));
+                break;
         }
     }
 
-    private handleGrappleCollision(particleId: number) {
+    protected handleRifleCollision(particleId: number) {
+        let particles = this.rifle.getPool();
+        let particle = particles.find(particle => particle.id === particleId);
+        if (particle !== undefined) {
+            particle.position = Vec2.ZERO;
+        }
+    }
+
+    protected handleShotgunCollision(particleId: number) {
+        let particles = this.shotgun.getPool();
+        let particle = particles.find(particle => particle.id === particleId);
+        if (particle !== undefined) {
+            particle.position = Vec2.ZERO;
+            
+        }
+    }
+
+    protected handleGrappleCollision(particleId: number) {
         let particles = this.grapple.getPool();
         let particle = particles.find(particle => particle.id === particleId);
         if (particle !== undefined) {
@@ -290,4 +314,5 @@ export default class PlayerController extends StateMachineAI {
         // If the health hit 0, change the state of the player
         if (this.health === 0) { this.changeState(PlayerStates.DEAD); }
     }
+
 }

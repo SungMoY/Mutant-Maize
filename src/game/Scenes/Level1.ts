@@ -58,7 +58,8 @@ export default class Level1 extends Level {
 
         this.ratSpriteKey = Level1.RAT_SPRITE_KEY;
         this.ratPositions = [
-            new Vec2(200, 720 - 48-48)
+            new Vec2(250, 720 - 48 - 48),
+            new Vec2(900, 720 - 96),
         ]
 
         this.levelxbound = 3840

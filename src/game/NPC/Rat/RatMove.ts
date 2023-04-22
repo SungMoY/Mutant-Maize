@@ -28,26 +28,27 @@ export default class RatWalk extends RatState {
         } else {
             this.owner.animation.play("IDLE", true);
         }
-        this.owner.move(this.parent.velocity.scaled(deltaT));
 
         // check if rat is running into a wall.
         // if velocity is positive, check pixels to the right of the rat
         // if velocity is negative, check pixels to the left of the rat
         // if there is a wall, negate the velocity
+    
 
         if (this.parent.velocity.x > 0) {
             // check pixels to the right of the rat
-            if (this.parent.tilemap.getTileAtWorldPosition(new Vec2(this.owner.collisionShape.halfSize.x + this.owner.position.x, this.owner.position.y)) !== 0) {
+            if (this.parent.tilemap.getTileAtWorldPosition(new Vec2(this.owner.position.x + this.owner.collisionShape.halfSize.x+1, this.owner.position.y)) !== 0) {
                 this.parent.velocity.x = -this.parent.velocity.x;
             }
         } else if (this.parent.velocity.x < 0) {
             // check pixels to the left of the rat
-            if (this.parent.tilemap.getTileAtWorldPosition(new Vec2(-this.owner.collisionShape.halfSize.x + this.owner.position.x, this.owner.position.y)) !== 0) {
+            if (this.parent.tilemap.getTileAtWorldPosition(new Vec2(this.owner.position.x - this.owner.collisionShape.halfSize.x-1, this.owner.position.y)) !== 0) {
                 this.parent.velocity.x = -this.parent.velocity.x;
             }
         }
 
-        
+        this.owner.move(this.parent.velocity.scaled(deltaT));
+
     }
     
 
