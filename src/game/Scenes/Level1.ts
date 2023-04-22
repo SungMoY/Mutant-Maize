@@ -46,7 +46,7 @@ export default class Level1 extends Level {
         this.tilemapScale = new Vec2(3, 3);
         this.wallsLayerKey = Level1.WALLS_LAYER_KEY;
         this.playerSpriteKey = Level1.PLAYER_SPRITE_KEY;
-        this.playerSpawn = new Vec2(120, 500);
+        this.playerSpawn = new Vec2(100, 500);
         // this.levelMusicKey = Level1.LEVEL_MUSIC_KEY
         this.jumpAudioKey = Level1.JUMP_AUDIO_KEY;
         this.dyingAudioKey = Level1.DYING_AUDIO_KEY;

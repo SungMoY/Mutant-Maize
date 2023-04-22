@@ -394,7 +394,7 @@ export default abstract class Level extends Scene {
         
         // Give the player physics
         //this.player.addPhysics(new AABB(this.player.position.clone(), this.player.boundary.getHalfSize().clone()));
-        this.player.addPhysics(new AABB(this.player.position.clone(), new Vec2 (this.player.boundary.getHalfSize().clone().x * 0.75, this.player.boundary.getHalfSize().clone().y)));
+        this.player.addPhysics(new AABB(this.player.position.clone(), new Vec2 (this.player.boundary.getHalfSize().clone().x * 0.75, this.player.boundary.getHalfSize().clone().y)), undefined, false);
 
         // Add player to player physics group
         this.player.setGroup(GamePhysicsGroups.PLAYER);
@@ -459,7 +459,8 @@ export default abstract class Level extends Scene {
 
             // change based on new sprite
             rat.scale.set(0.3, 0.3);
-            rat.addPhysics(new AABB(rat.position.clone(), new Vec2(rat.boundary.getHalfSize().x, rat.boundary.getHalfSize().y)));
+            //rat.addPhysics(new AABB(rat.position.clone(), new Vec2(rat.boundary.getHalfSize().x, rat.boundary.getHalfSize().y)));
+            rat.addPhysics(undefined, undefined, false, false)
             // set new group to deal with collisions bw player/player particles and rats
             //rat.setGroup(GamePhysicsGroups.PLAYER)
             rat.addAI(RatAI, { tilemap: "Main" });
