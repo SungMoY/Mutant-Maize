@@ -62,10 +62,16 @@ export default class Rifle extends ParticleSystem {
         particle.vel = new Vec2(this.faceDir.x*fact,this.faceDir.y*fact);
 
         // set each particle's group to physics group
-        particle.setGroup(GamePhysicsGroups.PLAYER_WEAPON);
+        particle.setGroup(GamePhysicsGroups.RIFLE);
 
         particle.color = Color.YELLOW;
         particle.size = new Vec2(20, 20)
+
+        particle.tweens.add("active", {
+            startDelay: 0,
+            duration: this.lifetime,
+            effects: []
+        });
     }
 
 }
