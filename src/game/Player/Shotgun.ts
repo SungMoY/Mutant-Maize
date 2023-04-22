@@ -61,7 +61,6 @@ export default class Shotgun extends ParticleSystem {
 
         if (Math.abs(this.faceDir.x) >= 95) {
             particle.vel = RandUtils.randVec(xVal, xVal/1.5, -xVal/3, xVal/3);
-            console.log(particle.vel);
         }
         else if (Math.abs(this.faceDir.y) >= 95) {
             particle.vel = RandUtils.randVec(-yVal/3, yVal/3, yVal, yVal/1.5);
@@ -71,10 +70,16 @@ export default class Shotgun extends ParticleSystem {
         }
 
         // set each particle's group to physics group
-        particle.setGroup(GamePhysicsGroups.PLAYER_WEAPON);
+        particle.setGroup(GamePhysicsGroups.SHOTGUN);
 
         particle.color = Color.RED;
         particle.size = new Vec2(10, 10)
+
+        particle.tweens.add("active", {
+            startDelay: 0,
+            duration: this.lifetime,
+            effects: []
+        });
     
     }
 

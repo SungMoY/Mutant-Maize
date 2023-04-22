@@ -20,8 +20,16 @@ export const GameEvents = {
     // The event sent when the player dies. Gets sent after the player's death animation
     PLAYER_DEAD: "PLAYER_DEAD",
 
+    // when particles hit against wall
     GRAPPLE_COLLISION: "GRAPPLE_COLLISION",
+    RIFLE_COLLISION: "RIFLE_COLLISION",
+    SHOTGUN_COLLISION: "SHOTGUN_COLLISION",
 
-    PAUSE: "PAUSE",
+    // when particles hit an enemy
+    RIFLE_HIT: "RIFLE_HIT",
+    SHOTGUN_HIT: "SHOTGUN_HIT",
+    GRAPPLE_HIT: "GRAPPLE_HIT",
+
+    PLAYER_HIT: "PLAYER_HIT",
     
 } as const;

@@ -38,7 +38,7 @@ export default class Idle extends PlayerState {
             this.parent.velocity.y += this.gravity*deltaT;
             // Move the player
             this.owner.move(this.parent.velocity.scaled(deltaT));
-        }		
+        }
 	}
 
 	public onExit(): Record<string, any> {

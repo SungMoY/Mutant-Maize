@@ -30,6 +30,8 @@ import Button from "../../Wolfie2D/Nodes/UIElements/Button";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import Grapple from "../Player/Grapple";
 import Queue from "../../Wolfie2D/DataTypes/Queue";
+import RatAI from "../NPC/Rat/RatAI";
+import HW3AnimatedSprite from "../Nodes/HW3AnimatedSprite";
 
 
 /**
@@ -120,19 +122,33 @@ export default abstract class Level extends Scene {
 
     protected grappleQueue: Queue<Vec2>;
 
+    protected ratSpriteKey: string;
+    protected ratPositions: Array<Vec2>;
+
+    protected birdSpriteKey: string;
+    protected birdPositions: Array<Vec2>;
+    protected birdDistance: number;
+
+    protected bossSpriteKey: string;
+    protected bossPosition: Vec2;
+
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
         super(viewport, sceneManager, renderingManager, {...options, physics: {
             groupNames: [
                 GamePhysicsGroups.GROUND,
                 GamePhysicsGroups.PLAYER,
-                GamePhysicsGroups.PLAYER_WEAPON,
-                GamePhysicsGroups.ENTITY
+                GamePhysicsGroups.RIFLE,
+                GamePhysicsGroups.SHOTGUN,
+                GamePhysicsGroups.GRAPPLE,
+                GamePhysicsGroups.ENTITY,
             ],
             collisions: [
-                [0, 1, 1, 1],
-                [1, 0, 0, 1],
-                [1, 0, 0, 1],
-                [1, 1, 1, 0]
+                [0, 1, 1, 1, 1, 1],
+                [1, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 1],
+                [1, 1, 1, 1, 1, 0]
             ]
          }});
         this.add = new HW3FactoryManager(this, this.tilemaps);
@@ -147,12 +163,13 @@ export default abstract class Level extends Scene {
         this.initializeWeaponSystem();
         this.initializeUI();
         this.initializePlayer(this.playerSpriteKey);
+        this.initializeNPCs();
         this.initializeViewport();
         this.subscribeToEvents();
         this.initializeLevelEnds();
 
         this.levelTransitionTimer = new Timer(500);
-        this.levelEndTimer = new Timer(3000, () => {
+        this.levelEndTimer = new Timer(500, () => {
             // After the level end timer ends, fade to black and then go to the next scene
             this.levelTransitionScreen.tweens.play("fadeIn");
         });
@@ -173,29 +190,7 @@ export default abstract class Level extends Scene {
         // Handle all game events
         while (this.receiver.hasNextEvent()) {
             this.handleEvent(this.receiver.getNextEvent());
-        }
-
-        // WIP adding sprites to particles
-        // let shotgunParticles = this.shotgunParticlesSystem.getPool();
-        // let rifleParticles = this.rifleParticlesSystem.getPool();
-        // for (let i = 0; i < rifleParticles.length; i++) {
-        //     if (rifleParticles[i].moving) {
-        //         this.kernel.scale.set(0.05, 0.05);
-        //         this.kernel.position = rifleParticles[i].position;
-        //         console.log(this.kernel.id)
-        //     } else {
-        //         this.kernel.scale.set(0, 0);
-        //         this.kernel.position = Vec2.ZERO;
-        //     }
-        // }
-        // for (let i = 0; i < shotgunParticles.length; i++) {
-        //     if (shotgunParticles[i].moving) {
-        //         this.popcorn[i].scale.set(0.05, 0.05);
-        //         this.popcorn[i].position = shotgunParticles[i].position;
-        //         console.log(this.popcorn[i].id)
-        //     } else {
-        //     }
-        // }        
+        }      
     }
 
     /**
@@ -227,14 +222,6 @@ export default abstract class Level extends Scene {
                 this.sceneManager.changeToScene(MainMenu);
                 break;
             }
-            case GameEvents.GRAPPLE_COLLISION: {
-                //this.handleGrappleCollision(event.data.get("node"));
-                break;
-            }
-            case GameEvents.PAUSE: {
-                // add a layer of transparency over the screen
-                break;
-            }
             // Default: Throw an error! No unhandled events allowed.
             default: {
                 throw new Error(`Unhandled event caught in scene with type ${event.type}`)
@@ -244,102 +231,10 @@ export default abstract class Level extends Scene {
 
     /* Handlers for the different events the scene is subscribed to */
 
-    protected handleGrappleCollision(particleId: number): void {
-        let particles = this.grappleParticlesSystem.getPool();
-        let particle = particles.find(particle => particle.id === particleId);
-        if (particle !== undefined) {
-            this.grappleParticlesSystem.stopSystem();
-            let position = particle.position;
-            console.log("HIT: " + position.x + ", " + position.y);
-            // based on this.player.position and position, calculate vector
-            let fromPosition = this.player.position;
-            let toPosition = position;
-
-            this.grappleQueue = new Queue<Vec2>();
-            this.grappleQueue.enqueue(fromPosition);
-            for (let i  = 1; i < 11; i++) {
-                let x = fromPosition.x + (toPosition.x - fromPosition.x) * i / 10;
-                let y = fromPosition.y + (toPosition.y - fromPosition.y) * i / 10;
-                this.grappleQueue.enqueue(new Vec2(x, y));
-            }
-            this.grappleQueue.enqueue(toPosition);
-        }
-    }
-
-    /**
-     * Handle particle hit events
-     * @param particleId the id of the particle
-     */
-     protected handleParticleHit(particleId: number): void {
-         let particles = this.rifleParticlesSystem.getPool();
-
-         let particle = particles.find(particle => particle.id === particleId);
-         if (particle !== undefined) {
-             // Get the destructable tilemap
-             let tilemap = this.walls;
-
-             let min = new Vec2(particle.sweptRect.left, particle.sweptRect.top);
-             let max = new Vec2(particle.sweptRect.right, particle.sweptRect.bottom);
-
-             // Convert the min/max x/y to the min and max row/col in the tilemap array
-             let minIndex = tilemap.getColRowAt(min);
-             let maxIndex = tilemap.getColRowAt(max);
-
-             // Loop over all possible tiles the particle could be colliding with 
-             for(let col = minIndex.x; col <= maxIndex.x; col++){
-                 for(let row = minIndex.y; row <= maxIndex.y; row++){
-                     // If the tile is collideable -> check if this particle is colliding with the tile
-                     if(tilemap.isTileCollidable(col, row) && this.particleHitTile(tilemap, particle, col, row)){
-
-                         particle.vel = new Vec2(0,0);
-                         particle.alpha = 0;
-                         
-                         let playerPosition = this.player.position;
-                         let teleportPosition = new Vec2();
-                         let reachTile = tilemap.getColRowAt(particle.position);
-                         reachTile.x = reachTile.x * 16;
-                         reachTile.y = reachTile.y * 16;
- 
-                         if (particle.position.x > playerPosition.x) {
-                             teleportPosition.x = (reachTile.x - playerPosition.x) + 8; // half of tilesize
-                         }
-                         else {
-                             teleportPosition.x = (reachTile.x - playerPosition.x) - 8; 
-                         }
-                         teleportPosition.y = (reachTile.y - playerPosition.y) + 8;
- 
-                         this.player.move(teleportPosition);
-                         this.player.finishMove();
-                     }
-                 }
-             }
-         }
-     }
-
-    /**
-     * Checks if a particle hit the tile at the (col, row) coordinates in the tilemap.
-     * 
-     * @param tilemap the tilemap
-     * @param particle the particle
-     * @param col the column the 
-     * @param row the row 
-     * @returns true of the particle hit the tile; false otherwise
-     */
-    protected particleHitTile(tilemap: OrthogonalTilemap, particle: Particle, col: number, row: number): boolean {
-        // TODO detect whether a particle hit a tile
-        // This is mildly redundant
-        let currTile = tilemap.getTileAtRowCol(new Vec2(col, row));
-        let particlePos = particle.position;
-        let particleSize = particle.size;
-
-        return true;
-    }
-
     protected handleEnteredLevelEnd(): void {
         // If the timer hasn't run yet, start the end level animation
         if (!this.levelEndTimer.hasRun() && this.levelEndTimer.isStopped()) {
             this.levelEndTimer.start();
-            this.levelEndLabel.tweens.play("slideIn");
         }
     }
 
@@ -387,7 +282,9 @@ export default abstract class Level extends Scene {
         this.walls.addPhysics();
 
         this.walls.setGroup(GamePhysicsGroups.GROUND);
-        this.walls.setTrigger(GamePhysicsGroups.PLAYER_WEAPON, GameEvents.GRAPPLE_COLLISION, null);
+        this.walls.setTrigger(GamePhysicsGroups.GRAPPLE, GameEvents.GRAPPLE_COLLISION, null);
+        this.walls.setTrigger(GamePhysicsGroups.RIFLE, GameEvents.RIFLE_COLLISION, null);
+        this.walls.setTrigger(GamePhysicsGroups.SHOTGUN, GameEvents.SHOTGUN_COLLISION, null);
     }
 
     protected subscribeToEvents(): void {
@@ -396,8 +293,6 @@ export default abstract class Level extends Scene {
         this.receiver.subscribe(GameEvents.LEVEL_END);
         this.receiver.subscribe(GameEvents.HEALTH_CHANGE);
         this.receiver.subscribe(GameEvents.PLAYER_DEAD);
-        this.receiver.subscribe(GameEvents.PAUSE);
-        this.receiver.subscribe(GameEvents.GRAPPLE_COLLISION);
     }
     /**
      * Adds in any necessary UI to the game
@@ -405,60 +300,23 @@ export default abstract class Level extends Scene {
     protected initializeUI(): void {
 
         // Health Bar Background
-        this.healthBar = <Label>this.add.uiElement(UIElementType.LABEL, LevelLayers.UI, {position: new Vec2(260, 48), text: ""});
+        this.healthBar = <Label>this.add.uiElement(UIElementType.LABEL, LevelLayers.UI, {position: new Vec2(200, 48), text: ""});
         this.healthBar.size = new Vec2(300, 20);
         this.healthBar.backgroundColor = Color.BLUE;
         this.healthBar.borderColor = Color.BLACK;
         this.healthBar.borderRadius = 0;
 
         // HealthBarHealth
-		this.healthBarHealth = <Label>this.add.uiElement(UIElementType.LABEL, LevelLayers.UI, {position: new Vec2(260, 48), text: ""});
+		this.healthBarHealth = <Label>this.add.uiElement(UIElementType.LABEL, LevelLayers.UI, {position: new Vec2(200, 48), text: ""});
 		this.healthBarHealth.size = new Vec2(300, 20);
         this.healthBarHealth.backgroundColor = Color.BLUE;
         this.healthBarHealth.borderRadius = 0;
 
         // HealthBarMissing
-		this.healthBarMissing = <Label>this.add.uiElement(UIElementType.LABEL, LevelLayers.UI, {position: new Vec2(260, 48), text: ""});
+		this.healthBarMissing = <Label>this.add.uiElement(UIElementType.LABEL, LevelLayers.UI, {position: new Vec2(200, 48), text: ""});
 		this.healthBarMissing.size = new Vec2(300, 20);
 		this.healthBarMissing.backgroundColor = Color.RED;
         this.healthBarMissing.borderRadius = 0;
-
-        // End of level label (start off screen)
-        this.levelEndLabel = <Label>this.add.uiElement(UIElementType.LABEL, LevelLayers.UI, { position: new Vec2(-300, 100), text: "Level Complete" });
-        this.levelEndLabel.size.set(1200, 60);
-        this.levelEndLabel.borderRadius = 0;
-        //this.levelEndLabel.backgroundColor = new Color(34, 32, 52);
-        this.levelEndLabel.backgroundColor = Color.TRANSPARENT
-        this.levelEndLabel.textColor = Color.WHITE;
-        this.levelEndLabel.fontSize = 48;
-        this.levelEndLabel.font = "PixelSimple";
-
-        // Create pause button on top left corner
-        let pauseButtonImage = this.add.sprite("pauseButton", LevelLayers.UI);
-        pauseButtonImage.position = new Vec2(60, 50);
-        pauseButtonImage.scale = new Vec2(0.3, 0.3);
-        this.pauseButton = <Button>this.add.uiElement(UIElementType.BUTTON, LevelLayers.UI, { position: new Vec2(60, 50), text: "" });
-        this.pauseButton.setPadding(new Vec2(20, 10));
-        this.pauseButton.backgroundColor = Color.TRANSPARENT;
-        this.pauseButton.borderColor = Color.TRANSPARENT;
-        this.pauseButton.onClick = () => {
-            console.log("Pause button clicked");
-            this.emitter.fireEvent(GameEvents.PAUSE);
-        }
-
-        // Add a tween to move the label on screen
-        this.levelEndLabel.tweens.add("slideIn", {
-            startDelay: 0,
-            duration: 1000,
-            effects: [
-                {
-                    property: TweenableProperties.posX,
-                    start: -100,
-                    end: 150,
-                    ease: EaseFunctionType.OUT_SINE
-                }
-            ]
-        });
 
         this.levelTransitionScreen = <Rect>this.add.graphic(GraphicType.RECT, LevelLayers.UI, { position: new Vec2(480, 360), size: new Vec2(960, 720) });
         this.levelTransitionScreen.color = new Color(34, 32, 52);
@@ -502,15 +360,10 @@ export default abstract class Level extends Scene {
         this.rifleParticlesSystem = new Rifle(1, Vec2.ZERO, 500, 10, 0, 1); // for 1 particle
         this.rifleParticlesSystem.initializePool(this, LevelLayers.PRIMARY);
 
-        // array of 10 popcorn sprites
-        // this.popcorn = [];
-        // for (let i = 0; i < 10; i++) {
-        //     this.popcorn.push(this.add.sprite(this.popcornSpriteKey, LevelLayers.PRIMARY));
-        // }
-        this.shotgunParticlesSystem = new Shotgun(5, Vec2.ZERO, 500, 10, 0, 1); // for 1 particle
+        this.shotgunParticlesSystem = new Shotgun(5, Vec2.ZERO, 500, 10, 0, 5); // for 1 particle
         this.shotgunParticlesSystem.initializePool(this, LevelLayers.PRIMARY);
 
-        this.grappleParticlesSystem = new Grapple(1, Vec2.ZERO, 500, 10, 0, 1); // for 1 particle
+        this.grappleParticlesSystem = new Grapple(100, Vec2.ZERO, 500, 10, 0, 1); // for 1 particle
         this.grappleParticlesSystem.initializePool(this, LevelLayers.PRIMARY);
     }
     /**
@@ -531,25 +384,50 @@ export default abstract class Level extends Scene {
             throw new Error("Player spawn must be set before initializing the player!");
         }
 
+
+
         // Add the player to the scene
         this.player = this.add.animatedSprite(key, LevelLayers.PRIMARY);
 
-        this.player.scale.set(1.5, 3);
+        this.player.scale.set(2, 3);
         this.player.position.copy(this.playerSpawn);
         
         // Give the player physics
-        this.player.addPhysics(new AABB(this.player.position.clone(), this.player.boundary.getHalfSize().clone()));
+        //this.player.addPhysics(new AABB(this.player.position.clone(), this.player.boundary.getHalfSize().clone()));
+        this.player.addPhysics(new AABB(this.player.position.clone(), new Vec2 (this.player.boundary.getHalfSize().clone().x * 0.75, this.player.boundary.getHalfSize().clone().y)), undefined, false);
 
         // Add player to player physics group
         this.player.setGroup(GamePhysicsGroups.PLAYER);
+
+        this.player.tweens.add(PlayerTweens.DEATH, {
+            startDelay: 0,
+            duration: 500,
+            effects: [
+                {
+                    property: "rotation",
+                    start: 0,
+                    end: Math.PI,
+                    ease: EaseFunctionType.IN_OUT_QUAD
+                },
+                {
+                    property: "alpha",
+                    start: 1,
+                    end: 0,
+                    ease: EaseFunctionType.IN_OUT_QUAD
+                }
+            ],
+            onEnd: GameEvents.PLAYER_DEAD
+        });
+
 
         // Give the player it's AI
         this.player.addAI(PlayerController, { 
             rifleSystem: this.rifleParticlesSystem,
             shotgunSystem: this.shotgunParticlesSystem,
             grappleSystem: this.grappleParticlesSystem,
-            tilemap: "Main"
+            tilemap: "Main",
         });
+        
     }
 
     protected initializeViewport(): void {
@@ -569,9 +447,31 @@ export default abstract class Level extends Scene {
         this.levelEndArea.addPhysics(undefined, undefined, false, true);
         this.levelEndArea.setGroup(GamePhysicsGroups.GROUND)
         this.levelEndArea.setTrigger(GamePhysicsGroups.PLAYER, GameEvents.PLAYER_ENTERED_LEVEL_END, null);
-        this.levelEndArea.color = new Color(255, 0, 255, .20);
+        this.levelEndArea.color = Color.MAGENTA;
         
     }
+
+    protected initializeNPCs(): void {
+        for (let i = 0; i < this.ratPositions.length; i++) {
+            let rat = this.add.animatedSprite(this.ratSpriteKey, LevelLayers.PRIMARY);
+
+            rat.position.set(this.ratPositions[i].x, this.ratPositions[i].y);
+
+            // change based on new sprite
+            rat.scale.set(0.3, 0.3);
+            //rat.addPhysics(new AABB(rat.position.clone(), new Vec2(rat.boundary.getHalfSize().x, rat.boundary.getHalfSize().y)));
+            rat.addPhysics(undefined, undefined, false, false)
+            // set new group to deal with collisions bw player/player particles and rats
+            //rat.setGroup(GamePhysicsGroups.PLAYER)
+            rat.addAI(RatAI, { tilemap: "Main" });
+            rat.setGroup(GamePhysicsGroups.ENTITY);
+            rat.setTrigger(GamePhysicsGroups.RIFLE, GameEvents.RIFLE_HIT, null);
+            rat.setTrigger(GamePhysicsGroups.SHOTGUN, GameEvents.SHOTGUN_HIT, null);
+            rat.setTrigger(GamePhysicsGroups.GRAPPLE, GameEvents.GRAPPLE_HIT, null);
+            rat.setTrigger(GamePhysicsGroups.PLAYER, GameEvents.PLAYER_HIT, null);
+        }
+    }
+
 
     // Get the key of the player's jump audio file
     public getJumpAudioKey(): string {
@@ -581,5 +481,17 @@ export default abstract class Level extends Scene {
     // Get the key of the player's death audio file
     public getDyingAudioKey(): string {
         return this.dyingAudioKey
+    }
+
+    public getRifleParticlePool() {
+        return this.rifleParticlesSystem.getPool();
+    }
+
+    public getShotgunParticlePool() {
+        return this.shotgunParticlesSystem.getPool();
+    }
+
+    public getGrappleParticlePool() {
+        return this.grappleParticlesSystem.getPool();
     }
 }

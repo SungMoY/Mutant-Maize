@@ -17,9 +17,9 @@ import { GameEvents } from "../GameEvents";
 import Dead from "./PlayerStates/Dead";
 import Shotgun from "./Shotgun";
 import Grapple from "./Grapple";
-import Stack from "../../Wolfie2D/DataTypes/Stack";
 import Queue from "../../Wolfie2D/DataTypes/Queue";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
+import Timer from "../../Wolfie2D/Timing/Timer";
 
 // TODO play your heros animations
 
@@ -28,7 +28,6 @@ import GameEvent from "../../Wolfie2D/Events/GameEvent";
  */
 export const PlayerAnimations = {
     IDLE: "IDLE",
-    WALK: "WALK",
     JUMP: "JUMP",
     TAKING_DAMAGE: "TAKING_DAMAGE",
     RUN_LEFT: "RUN_LEFT",
@@ -36,8 +35,12 @@ export const PlayerAnimations = {
     ATTACKING_LEFT: "ATTACKING_LEFT",
     ATTACKING_RIGHT: "ATTACKING_RIGHT",
     DYING: "DYING",
-    DEATH: "DEATH"
+    DEATH: "DEATH",
+    GRAPPLING: "GRAPPLING",
+    SHOTGUN_LEFT: "SHOTGUN_LEFT",
+    SHOTGUN_RIGHT: "SHOTGUN_RIGHT",
 } as const
+
 
 /**
  * Tween animations the player can player.
@@ -82,10 +85,14 @@ export default class PlayerController extends StateMachineAI {
     protected grapple: Grapple;
     protected grappleCoords: Queue<Vec2>;
 
+
     protected isDead: boolean;
     protected readCoords: boolean;
-
     protected inGrapple: boolean;
+
+    protected invincibleTimer: Timer;
+
+    protected storedVelx: number;
     
     public initializeAI(owner: HW3AnimatedSprite, options: Record<string, any>){
         this.owner = owner;
@@ -98,8 +105,8 @@ export default class PlayerController extends StateMachineAI {
         this.speed = 400;
         this.velocity = Vec2.ZERO;
 
-        this.health = 5;
-        this.maxHealth = 5;
+        this.health = 100;
+        this.maxHealth = 100;
 
         this.isDead = false;
         this.inGrapple = false;
@@ -107,6 +114,9 @@ export default class PlayerController extends StateMachineAI {
         this.grappleCoords = new Queue<Vec2>();
 
         this.readCoords = true;
+
+        this.invincibleTimer = new Timer(2000);
+
 
         // Add the different states the player can be in to the PlayerController 
 		this.addState(PlayerStates.IDLE, new Idle(this, this.owner));
@@ -120,6 +130,10 @@ export default class PlayerController extends StateMachineAI {
         this.initialize(PlayerStates.IDLE);
 
         this.receiver.subscribe(GameEvents.GRAPPLE_COLLISION);
+        this.receiver.subscribe(GameEvents.RIFLE_COLLISION);
+        this.receiver.subscribe(GameEvents.SHOTGUN_COLLISION);
+        this.receiver.subscribe(GameEvents.GRAPPLE_HIT);
+        this.receiver.subscribe(GameEvents.PLAYER_HIT);
     }
 
     /** 
@@ -139,15 +153,21 @@ export default class PlayerController extends StateMachineAI {
     public update(deltaT: number): void {
 		super.update(deltaT);
 
+        if (this.owner.animation.isPlaying(PlayerAnimations.TAKING_DAMAGE)) {
+            Input.disableInput();
+        } else {
+            Input.enableInput();
+        }
+
         if (this.grappleCoords.hasItems()) {
             let moveTo = this.grappleCoords.dequeue();
+            Input.disableInput();
+            this.owner.position = (new Vec2(moveTo.x, moveTo.y));
             if (!this.grappleCoords.hasItems()) {
                 this.readCoords = true;
                 this.inGrapple = false;
+                Input.enableInput();
             }
-            //this.owner.move(new Vec2(moveTo.x + (moveTo.x * deltaT), moveTo.y * deltaT))
-            this.owner.position = (new Vec2(moveTo.x, moveTo.y));
-            
         }
 
         // If the player hits the attack button and the weapon system isn't running, restart the system and fire!
@@ -173,13 +193,13 @@ export default class PlayerController extends StateMachineAI {
             console.log("FIRING SHOTGUN")
             this.shotgun.startSystem(500, 0, this.owner.position, this.faceDir);
             let direction = this.faceDir;
-            if (direction.x < 0) {
-                this.owner.animation.play(PlayerAnimations.ATTACKING_LEFT);
+            if (direction.x > 0) {
+                this.owner.animation.play(PlayerAnimations.SHOTGUN_LEFT);
                 // return to idle
                 this.owner.animation.queue(PlayerAnimations.IDLE, true);
             }
             else {
-                this.owner.animation.play(PlayerAnimations.ATTACKING_RIGHT);
+                this.owner.animation.play(PlayerAnimations.SHOTGUN_RIGHT);
                 this.owner.animation.queue(PlayerAnimations.IDLE, true);
             }
         }
@@ -187,17 +207,10 @@ export default class PlayerController extends StateMachineAI {
         if (Input.isJustPressed(GameControls.GRAPPLE) || Input.isMouseJustPressed(4) && !this.inGrapple) {
             console.log("FIRING GRAPPLE")
             // send a vector outwards. check if it collides a tile or entity. if it does, move the player to that position. if nothing is hit, do nothing
+            //this.grapple.startSystem(500, 0, new Vec2(this.owner.position.x, this.owner.position.y - this.owner.collisionShape.halfSize.y), this.faceDir);
             this.grapple.startSystem(500, 0, this.owner.position, this.faceDir);
-            let direction = this.faceDir;
-            if (direction.x < 0) {
-                this.owner.animation.play(PlayerAnimations.ATTACKING_LEFT);
-                // return to idle
-                this.owner.animation.queue(PlayerAnimations.IDLE, true);
-            }
-            else {
-                this.owner.animation.play(PlayerAnimations.ATTACKING_RIGHT);
-                this.owner.animation.queue(PlayerAnimations.IDLE, true);
-            }
+            this.owner.animation.play(PlayerAnimations.GRAPPLING);
+            this.owner.animation.queue(PlayerAnimations.IDLE, true);
         }
 
         // if the player is dead, enter the dead state
@@ -209,16 +222,54 @@ export default class PlayerController extends StateMachineAI {
 	}
 
     handleEvent(event: GameEvent): void {
-        if (event.type === GameEvents.GRAPPLE_COLLISION) {
-            this.handleGrappleCollision(event.data.get("node"));
-            return
-        }
-        if(this.active){
-            this.currentState.handleInput(event);
+        switch (event.type) {
+            case GameEvents.GRAPPLE_COLLISION:
+                this.handleGrappleCollision(event.data.get("node"));
+                break;
+            case GameEvents.RIFLE_COLLISION:
+                this.handleRifleCollision(event.data.get("node"));
+                break;
+            case GameEvents.SHOTGUN_COLLISION:
+                this.handleShotgunCollision(event.data.get("node"));
+                break;
+            case GameEvents.GRAPPLE_HIT:
+                this.handleGrappleCollision(event.data.get("node"));
+                break;
+            case GameEvents.PLAYER_HIT:
+                this.handlePlayerHit();
+                break;
         }
     }
 
-    private handleGrappleCollision(particleId: number) {
+    protected handlePlayerHit() {
+        if (this.invincibleTimer.isStopped()) {
+            this.health -= 1;
+            this.owner.animation.stop();
+            this.owner.animation.playIfNotAlready(PlayerAnimations.TAKING_DAMAGE, false);
+            this.owner.animation.queue(PlayerAnimations.IDLE, true);
+            console.log("Player health: " + this.health);
+            this.invincibleTimer.start();
+        }
+    }
+
+    protected handleRifleCollision(particleId: number) {
+        let particles = this.rifle.getPool();
+        let particle = particles.find(particle => particle.id === particleId);
+        if (particle !== undefined) {
+            particle.position = Vec2.ZERO;
+        }
+    }
+
+    protected handleShotgunCollision(particleId: number) {
+        let particles = this.shotgun.getPool();
+        let particle = particles.find(particle => particle.id === particleId);
+        if (particle !== undefined) {
+            particle.position = Vec2.ZERO;
+            
+        }
+    }
+
+    protected handleGrappleCollision(particleId: number) {
         let particles = this.grapple.getPool();
         let particle = particles.find(particle => particle.id === particleId);
         if (particle !== undefined) {
@@ -247,23 +298,22 @@ export default class PlayerController extends StateMachineAI {
                     newCoord = new Vec2(fromPosition.x + (xStep * i),fromPosition.y + (yStep * i));
                     this.grappleCoords.enqueue(newCoord);
                 }
-
-                let endVec = new Vec2(0,0);
-                if (toPosition.x > this.owner.position.x) {
-                    endVec.x = (reachTile.x) + 8; // half of tilesize
-                }
-                else {
-                    endVec.x = (reachTile.x) - 8; 
-                }
-                if (toPosition.y > this.owner.position.y) { // if end position is lower, move player up
-                    console.log("END POS IS LOWER");
-                    endVec.y = (reachTile.y) - 16; // half of tilesize
-                }
-                else {
-                    console.log("END POS IS HIGHER")
-                    endVec.y = (reachTile.y) + 16; // if end position is higher, move player down
-                }
-                this.grappleCoords.enqueue(endVec);
+                // let endVec = new Vec2(0,0);
+                // if (toPosition.x > this.owner.position.x) {
+                //     endVec.x = (reachTile.x) + 8; // half of tilesize
+                // }
+                // else {
+                //     endVec.x = (reachTile.x) - 8; 
+                // }
+                // if (toPosition.y > this.owner.position.y) { // if end position is lower, move player up
+                //     console.log("END POS IS LOWER");
+                //     endVec.y = (reachTile.y) - 16; // half of tilesize
+                // }
+                // else {
+                //     console.log("END POS IS HIGHER")
+                //     endVec.y = (reachTile.y) + 16; // if end position is higher, move player down
+                // }
+                // this.grappleCoords.enqueue(endVec);
             }
             this.inGrapple = true;
         }
@@ -290,4 +340,5 @@ export default class PlayerController extends StateMachineAI {
         // If the health hit 0, change the state of the player
         if (this.health === 0) { this.changeState(PlayerStates.DEAD); }
     }
+
 }

@@ -35,7 +35,7 @@ export default class AboutScreen extends Scene {
         // Create a label named "ABOUT"
         let controlsLabel = <Label>this.add.uiElement(UIElementType.LABEL, "MAIN", {position: new Vec2(size.x, size.y - 275), text: "ABOUT"});
         controlsLabel.textColor = Color.WHITE;
-        controlsLabel.font = "'handjet_square_doublemedium'";
+        controlsLabel.font = "Verdana";
         controlsLabel.fontSize = 96;
 
         // Create div
@@ -50,22 +50,22 @@ export default class AboutScreen extends Scene {
         //backstory title
         let backstoryTitle = <Label>this.add.uiElement(UIElementType.LABEL, "MAIN", {position: new Vec2(size.x, size.y-180), text: "Backstory"});
         backstoryTitle.textColor = Color.WHITE;
-        backstoryTitle.font = "'handjet_square_doublemedium'";
+        backstoryTitle.font = "Verdana";
         backstoryTitle.fontSize = 36;
         //backstory text per line
         let backstoryText = [
             "Rob the Cob is a mature ear of corn during the Fall. He doesn’t know when gained sentience but",
-            "continued to live out his days observing the world. Until one day he watches his friends and family",
-            'experiments that the farmers exact on their lost comrades. When evening starts to roll around, the',
-            "farmers stop for the day, Rob manages to escape the doom of being harvested. As night rolls in he equips",
-            "himself with an arsenal of corn related tools, Rob seeks to escape the farmland and starts plans to build", 
-            "an army to seek revenge."
+            "continued to live out his days observing the world. Until one day he watches his friends and",
+            "family experiments that the farmers exact on their lost comrades. When evening starts to roll",
+            "around, the farmers stop for the day, Rob manages to escape the doom of being harvested. As",
+            "night rolls in he equips himself with an arsenal of corn related tools, Rob seeks to escape the",
+            "farmland and starts plans to build an army to seek revenge."
         ]
         for (let i = 0; i < backstoryText.length; i++) {
             let backstoryLine = <Label>this.add.uiElement(UIElementType.LABEL, "MAIN", {position: new Vec2(size.x, size.y-140 + (i*25)), text: backstoryText[i]});
             backstoryLine.textColor = Color.WHITE;
-            backstoryLine.font = "'handjet_square_doublemedium'";
-            backstoryLine.fontSize = 24;
+            backstoryLine.font = "Verdana";
+            backstoryLine.fontSize = 18;
             backstoryLine.setPadding(new Vec2(10, 10));
         }
 
@@ -76,27 +76,27 @@ export default class AboutScreen extends Scene {
         //objective title
         let objectiveTitle = <Label>this.add.uiElement(UIElementType.LABEL, "MAIN", {position: new Vec2(size.x, size.y+35), text: "Objective"});
         objectiveTitle.textColor = Color.WHITE;
-        objectiveTitle.font = "'handjet_square_doublemedium'";
+        objectiveTitle.font = "Verdana";
         objectiveTitle.fontSize = 36;
         //objective text
         let objectiveText = [
-            "Rob the Cob’s objective is to make his way through the farm with the goal of exacting revenge for ",
-            "his fallen corn brethren and ultimately escaping. Rob will use corn-related tools to overcome any ",
-            "obstacles in his way. Obstacles that Rob will encounter are bugs and pests that like to feed on crops, ",
-            "as well as the difficult terrain of barns. Bosses will be objects in a generic farm that seem opposing ",
-            "from a cob of corn’s perspective like a chicken and a dog."
+            "Rob the Cob’s objective is to make his way through the farm with the goal of exacting revenge",
+            "for his fallen corn brethren and ultimately escaping. Rob will use corn-related tools to overcome",
+            "any obstacles in his way. Obstacles that Rob will encounter are bugs and pests that like to feed",
+            "on crops,as well as the difficult terrain of barns. Bosses will be objects in a generic farm that",
+            "seem opposing from a cob of corn’s perspective like a chicken and a dog."
     ]
         for (let i = 0; i < objectiveText.length; i++) {
             let objectiveLine = <Label>this.add.uiElement(UIElementType.LABEL, "MAIN", {position: new Vec2(size.x, size.y+70 + (i*25)), text: objectiveText[i]});
             objectiveLine.textColor = Color.WHITE;
-            objectiveLine.font = "'handjet_square_doublemedium'";
-            objectiveLine.fontSize = 24;
+            objectiveLine.font = "Verdana";
+            objectiveLine.fontSize = 18;
         }
         // Create a back button
         let backBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "MAIN", {position: new Vec2(size.x, size.y + 275), text: "BACK"});
         backBtn.backgroundColor = new Color(0, 0, 0, 0.9)
         backBtn.setPadding(new Vec2(50, 10));
-        backBtn.font = "'handjet_square_doublemedium'";
+        backBtn.font = "Verdana";
         backBtn.fontSize = 48;
 
         // When the play button is clicked, go to the next scene
