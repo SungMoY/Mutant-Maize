@@ -91,6 +91,8 @@ export default class PlayerController extends StateMachineAI {
     protected inGrapple: boolean;
 
     protected invincibleTimer: Timer;
+
+    protected storedVelx: number;
     
     public initializeAI(owner: HW3AnimatedSprite, options: Record<string, any>){
         this.owner = owner;
@@ -103,8 +105,8 @@ export default class PlayerController extends StateMachineAI {
         this.speed = 400;
         this.velocity = Vec2.ZERO;
 
-        this.health = 5;
-        this.maxHealth = 5;
+        this.health = 100;
+        this.maxHealth = 100;
 
         this.isDead = false;
         this.inGrapple = false;
@@ -151,6 +153,12 @@ export default class PlayerController extends StateMachineAI {
     public update(deltaT: number): void {
 		super.update(deltaT);
 
+        if (this.owner.animation.isPlaying(PlayerAnimations.TAKING_DAMAGE)) {
+            Input.disableInput();
+        } else {
+            Input.enableInput();
+        }
+
         if (this.grappleCoords.hasItems()) {
             let moveTo = this.grappleCoords.dequeue();
             Input.disableInput();
@@ -160,7 +168,6 @@ export default class PlayerController extends StateMachineAI {
                 this.inGrapple = false;
                 Input.enableInput();
             }
-            //this.owner.move(new Vec2(moveTo.x + (moveTo.x * deltaT), moveTo.y * deltaT))
         }
 
         // If the player hits the attack button and the weapon system isn't running, restart the system and fire!
@@ -237,7 +244,9 @@ export default class PlayerController extends StateMachineAI {
     protected handlePlayerHit() {
         if (this.invincibleTimer.isStopped()) {
             this.health -= 1;
+            this.owner.animation.stop();
             this.owner.animation.playIfNotAlready(PlayerAnimations.TAKING_DAMAGE, false);
+            this.owner.animation.queue(PlayerAnimations.IDLE, true);
             console.log("Player health: " + this.health);
             this.invincibleTimer.start();
         }

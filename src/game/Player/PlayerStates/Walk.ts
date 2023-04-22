@@ -7,11 +7,12 @@ export default class Walk extends PlayerState {
 
 	onEnter(options: Record<string, any>): void {
         // based on velocity, play run_left or run_right
+        console.log("ENTERING WALK STATE")
         this.parent.speed = this.parent.MIN_SPEED;
         if (this.parent.velocity.x < 0) {
-            this.owner.animation.playIfNotAlready(PlayerAnimations.RUN_LEFT, true);
+            this.owner.animation.play(PlayerAnimations.RUN_LEFT, true);
         } else {
-            this.owner.animation.playIfNotAlready(PlayerAnimations.RUN_RIGHT, true);
+            this.owner.animation.play(PlayerAnimations.RUN_RIGHT, true);
         }
 	}
 
