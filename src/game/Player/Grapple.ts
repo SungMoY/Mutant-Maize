@@ -57,7 +57,7 @@ export default class Grapple extends ParticleSystem {
      * @param particle the particle to give the animation to
      */
     public setParticleAnimation(particle: Particle) {
-        let fact = 5.125; // larger factor = wider and farther
+        let fact = 8.125; // larger factor = farther
 
         particle.vel = new Vec2(this.faceDir.x*fact,this.faceDir.y*fact);
 

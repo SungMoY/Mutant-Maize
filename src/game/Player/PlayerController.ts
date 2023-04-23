@@ -275,19 +275,33 @@ export default class PlayerController extends StateMachineAI {
         if (particle !== undefined) {
             this.grapple.stopSystem();
             let position = particle.position;
+            particle.position = new Vec2(0,0);
             // based on this.player.position and position, calculate vector
             let fromPosition = this.owner.position;
             let toPosition = position;
             // get the closest tile to the position
             let reachTile = this.tilemap.getColRowAt(toPosition);
-            // DO NTO CHANGE
+            // DO NOT CHANGE
             reachTile.x = reachTile.x * 48;
             reachTile.y = reachTile.y * 48;
 
+            //console.log(reachTile.y)
+            //console.log(fromPosition.y)
+            console.log(this.tilemap.getColRowAt(new Vec2(reachTile.x, reachTile.y - 48)))
+
             // create 10 coords between the two positions, enqueue them to grappleCoords
             let numCoords = 15;
-            let xDiff = toPosition.x - fromPosition.x;
-            let yDiff = toPosition.y - fromPosition.y;
+            let xDiff = reachTile.x - fromPosition.x + 24;
+            let yDiff = reachTile.y - fromPosition.y + 24;
+            if ((fromPosition.y - reachTile.y) <= 100 && (fromPosition.y > reachTile.y)) {
+                yDiff = reachTile.y - fromPosition.y + 48; // * (1 - ((fromPosition.y - reachTile.y)/48))
+                console.log("c1")
+            }
+            else if (reachTile.y >= fromPosition.y) {
+                yDiff = reachTile.y - fromPosition.y;
+                console.log("c2")
+            }
+
             let xStep = xDiff / numCoords;
             let yStep = yDiff / numCoords;
 

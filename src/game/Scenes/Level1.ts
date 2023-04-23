@@ -16,7 +16,7 @@ export default class Level1 extends Level {
     public static readonly PLAYER_SPRITE_PATH = "game_assets/spritesheets/rob_the_cob.json";
 
     public static readonly TILEMAP_KEY = "LEVEL1";
-    public static readonly TILEMAP_PATH = "game_assets/tilemaps/level1_map.json";
+    public static readonly TILEMAP_PATH = "game_assets/tilemaps/Level_1/level1_map.json";
     public static readonly WALLS_LAYER_KEY = "Main";
 
     public static readonly LEVEL_MUSIC_KEY = "LEVEL_MUSIC";
