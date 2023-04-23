@@ -1,6 +1,4 @@
-import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import GameEvent from "../../../Wolfie2D/Events/GameEvent";
-import Timer from "../../../Wolfie2D/Timing/Timer";
 import RatState from "./RatState";
 
 export default class RatTakingDamage extends RatState {
@@ -10,7 +8,7 @@ export default class RatTakingDamage extends RatState {
     }
     public onEnter(options: Record<string, any>): void {
         console.log("RAT WAS GRAPPLED STUNNED")
-        this.owner.animation.play("TAKING_DAMAGE", false);
+        this.owner.animation.play("STUNNED", false);
         this.parent.grappleStunTimer.start();
     }
 
@@ -18,7 +16,6 @@ export default class RatTakingDamage extends RatState {
         super.update(deltaT);
 
     }
-    
 
     public onExit(): Record<string, any> {
         return {};

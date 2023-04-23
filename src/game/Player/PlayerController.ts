@@ -271,6 +271,7 @@ export default class PlayerController extends StateMachineAI {
     }
 
     protected handleGrappleCollision(particleId: number) {
+
         let particles = this.grapple.getPool();
         let particle = particles.find(particle => particle.id === particleId);
         if (particle !== undefined) {
@@ -313,22 +314,6 @@ export default class PlayerController extends StateMachineAI {
                     newCoord = new Vec2(fromPosition.x + (xStep * i),fromPosition.y + (yStep * i));
                     this.grappleCoords.enqueue(newCoord);
                 }
-                // let endVec = new Vec2(0,0);
-                // if (toPosition.x > this.owner.position.x) {
-                //     endVec.x = (reachTile.x) + 8; // half of tilesize
-                // }
-                // else {
-                //     endVec.x = (reachTile.x) - 8; 
-                // }
-                // if (toPosition.y > this.owner.position.y) { // if end position is lower, move player up
-                //     console.log("END POS IS LOWER");
-                //     endVec.y = (reachTile.y) - 16; // half of tilesize
-                // }
-                // else {
-                //     console.log("END POS IS HIGHER")
-                //     endVec.y = (reachTile.y) + 16; // if end position is higher, move player down
-                // }
-                // this.grappleCoords.enqueue(endVec);
             }
             this.inGrapple = true;
         }

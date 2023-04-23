@@ -1,6 +1,5 @@
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import GameEvent from "../../../Wolfie2D/Events/GameEvent";
-import Timer from "../../../Wolfie2D/Timing/Timer";
 import RatState from "./RatState";
 
 export default class RatWalk extends RatState {
