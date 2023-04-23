@@ -8,4 +8,10 @@ export const GameControls = {
     RIFLE: "RIFLE",
     SHOTGUN: "SHOTGUN",
     GRAPPLE: "GRAPPLE",
+    CHEAT_ONE: "CHEAT_ONE",
+    CHEAT_TWO: "CHEAT_TWO",
+    CHEAT_THREE: "CHEAT_THREE",
+    CHEAT_FOUR: "CHEAT_FOUR",
+    CHEAT_FIVE: "CHEAT_FIVE",
+    CHEAT_SIX: "CHEAT_SIX",
 } as const;

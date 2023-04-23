@@ -32,6 +32,8 @@ import Grapple from "../Player/Grapple";
 import Queue from "../../Wolfie2D/DataTypes/Queue";
 import RatAI from "../NPC/Rat/RatAI";
 import HW3AnimatedSprite from "../Nodes/HW3AnimatedSprite";
+import { GameControls } from "../GameControls";
+import Level1 from "./Level1";
 
 
 /**
@@ -152,7 +154,6 @@ export default abstract class Level extends Scene {
             ]
          }});
         this.add = new HW3FactoryManager(this, this.tilemaps);
-        this.load.image("pauseButton", "game_assets/images/pause_button.png");
 
     }
 
@@ -190,7 +191,10 @@ export default abstract class Level extends Scene {
         // Handle all game events
         while (this.receiver.hasNextEvent()) {
             this.handleEvent(this.receiver.getNextEvent());
-        }      
+        }
+        if (Input.isPressed(GameControls.CHEAT_ONE)) {
+            this.sceneManager.changeToScene(Level1);
+        }
     }
 
     /**
@@ -470,6 +474,10 @@ export default abstract class Level extends Scene {
             rat.setTrigger(GamePhysicsGroups.GRAPPLE, GameEvents.GRAPPLE_HIT, null);
             rat.setTrigger(GamePhysicsGroups.PLAYER, GameEvents.PLAYER_HIT, null);
         }
+    }
+
+    protected intializeCheatCodes(): void {
+        
     }
 
 
