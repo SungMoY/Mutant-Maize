@@ -1,7 +1,0 @@
-# Exclude node modules
-node_modules
-
-package-lock.json
-dist/bundle.js
-dist/bundle.js
-dist/bundle.js

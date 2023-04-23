@@ -1,8 +1,0 @@
-{
-  "projects": {
-    "mutant-maize": "mutant-maize",
-    "default": "mutant-maize"
-  },
-  "targets": {},
-  "etags": {}
-}
