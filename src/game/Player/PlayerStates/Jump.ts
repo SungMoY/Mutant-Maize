@@ -10,7 +10,7 @@ export default class Jump extends PlayerState {
         // Get the jump audio key for the player
         let jumpAudio = this.owner.getScene().getJumpAudioKey();
         // Give the player a burst of upward momentum
-        this.parent.velocity.y = -500;
+        this.parent.velocity.y = -550;
         // Play the jump sound for the player
 		this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: jumpAudio, loop: false, holdReference: false});
         this.owner.animation.playIfNotAlready(PlayerAnimations.JUMP, true);
@@ -34,8 +34,8 @@ export default class Jump extends PlayerState {
             // Get the input direction from the player
             let dir = this.parent.inputDir;
             // Update the horizontal velocity of the player
-            this.parent.velocity.x += dir.x * this.parent.speed/3.5 - 0.3*this.parent.velocity.x;
-            //this.parent.velocity.x += dir.x * this.parent.speed/3.5 - 0.2*this.parent.velocity.x; // gives that slight extra forward velocity
+            //this.parent.velocity.x += dir.x * this.parent.speed/3.5 - 0.3*this.parent.velocity.x;
+            this.parent.velocity.x = dir.x * this.parent.speed;
             // Update the vertical velocity of the player
             this.parent.velocity.y += this.gravity*deltaT;
             // Move the player
