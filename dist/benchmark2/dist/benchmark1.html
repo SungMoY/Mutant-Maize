@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Mutant Maize Game Design Document</title>
+  </head>
+  <body>
+    <h2 style="width:750px" align="center">Mutant Maize<br>Game Design Document</h2>
+    <h4 style="width:750px" align="center">by Aaryamann Kanojia, Jewick Shi, Sung Mo Yang</h4>
+    <div>
+      <h3>INTRODUCTION</h3>
+        <p>This document describes a game called "Mutant Maize". It is a 2D game with levels focused on a mix of side-scroller and platformer-jumping. The game will employ sprite-based animation, tiled backgrounds, collision detection, physics, AI, side scrolling &amp; gravity, efficient memory management, render threading, and more basic 2D game techniques.</p>
+      <br>
+      <h3>TECHNOLOGY</h3>
+        <p>Mutant Maize will be developed as a web-based game using the Wolfie2D game engine, a game engine written in Typescript created by Joe Weaver and Richard McKenna. Wolfie2D utilizes WebGL for rendering on the web browser. Artwork will be relatively simple. Piskel will be used to draw tilemaps and sprite sheets. Photoshop will be used to create the logo and level background images.</p>
+      <br>
+      <h3>BACK STORY</h3>
+        <p>Rob the Cob is a mature ear of corn during the Fall. He doesn't know when gained sentience but continued to live out his days observing the world. Until one day he watches his friends and family be harvested by farmers, never to be seen or heard from again. The remaining corn whimpers of the horrors and experiments that the farmers exact on their lost comrades. When evening starts to roll around, the farmers stop for the day, Rob manages to escape the doom of being harvested. As night rolls in he equips himself with an arsenal of corn related tools, Rob seeks to escape the farmland and starts plans to build an army to seek revenge.</p>
+      <br>
+      <h3>OBJECTIVE</h3>
+        <p>Rob the Cob&rsquo;s objective is to make his way through the farm with the goal of exacting revenge for his fallen corn brethren and ultimately escaping. Rob will use corn-related tools to overcome any obstacles in his way. Obstacles that Rob will encounter are bugs and pests that like to feed on crops, as well as the difficult terrain of barns. Bosses will be objects in a generic farm that seem opposing from a cob of corn&rsquo;s perspective like a chicken and a dog.&nbsp;</p>
+      <br>
+      <h3>GAMEPLAY</h3>
+        <p>Levels such as the cornfield and barnyard will be played as side-scrollers while levels with escalation will be played as a platform jumper. With side scrolling, with Rob the Cob able to run left and right, and jump up and down onto platforms and other surfaces. He is also able to grapple onto platforms to reach higher places or enemies to drag them closer. He is also able to shoot different projectiles to defeat enemies or to destroy certain platforms and environments. Platform jumping will have the same mechanics, escape with the primary goal of reaching the end goal through various different maneuvers. Some levels will focus on more verticality, some on maze/confined movement, or a mix of everything.</p>
+        <p>Rob can use his silk as a grappling hook for movement and as a weapon against mobs. He can also shoot out kernels of corn as ranged fire. He can also collect solar energy inside him to charge up a shotgun blast of popcorn.&nbsp;</p>
+        <p>Grappling has a weight class mechanic where the unit with lesser weight is moved towards the unit with greater weight class: Items &lt; Mobs &lt; Rob the Cob &lt; Platforms/Bosses/Walls</p>
+        <p>Each level will have mobs and creeps that Rob must fight through.</p>
+        <p>The 1st level features Rob traversing the cornfield, defeating mice roaming on the ground. This level should be relatively easy to complete and be a stomping ground for new players to get used to the mechanics and physics. Basic shooting and movement will be introduced here.</p>
+        <p>The 2nd level features Rob jumping and climbing up a wall of a barn with the main adversaries being swooping birds. At the end of this level, Rob enters through a window. Grappling will be introduced here.</p>
+        <p>The 3rd level is a boss fight against a chicken. The chicken will attack Rob in pattern-based combat, it is up to the player to identify the pattern and properly take advantage of windows to deal damage. The chicken attacks with periodic charges across the level and pecks. For a ranged attack, it will throw an egg at Rob. Rob can deal with this by shooting the egg before it hits him, or dodging it.&nbsp;</p>
+        <p>The 4th level is the journey from the barn to the farmer&rsquo;s house. It will not be in a cornfield, but through a field of tomatoes, flowers, and other distinguishable produce. There will be mice and birds that will act as the main adversary. The shotgun/corngun will be introduced here.</p>
+        <p>The 5th level is Rob escalating a wall up the farmer&rsquo;s house. It will be similar to the second level, but with a different background and platforms. There will be more platforming and will have a lot more bird adversaries to overcome.</p>
+        <p>The 6th level is a boss fight against the farmer&rsquo;s dog. The dog will also utilize pattern-based combat. The dog has a pouncing attack and a biting attack.&nbsp;</p>
+      <h3>CONTROLS</h3>
+        <p>This game will be played using both a keyboard and mouse. Once started, use the following:</p>
+        <ul>
+            <li>
+                <p>W: Jump Up</p>
+            </li>
+            <li>
+                <p>A: Move Left</p>
+            </li>
+            <li>
+                <p>S: Crouch Down</p>
+            </li>
+            <li>
+                <p>D: Move Right</p>
+            </li>
+            <li>
+                <p>SPACE: Action/Interact</p>
+                <ul>
+                    <li>
+                        <p>&ldquo;Normal&rdquo;: to collect health packs/interact with level</p>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <p>LEFT_MOUSE: Shooting</p>
+                <ul>
+                    <li>
+                        <p>(Click) Kernel Shooter: mid/long range continuous line of projectiles</p>
+                    </li>
+                    <li>
+                        <p>(Hold) Popcorn shotgun: short/mid range burst of projectiles</p>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <p>RIGHT_MOUSE:</p>
+                <ul>
+                    <li>
+                        <p>Grapple: sends tendrils out to latch onto/reach objects/higher places</p>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <p>ESC/P - This pauses the game and presents a pop-up window to the player asking them to continue when they are ready. If a game is not in progress, the buttons do nothing. And if the pop-up window is already up, it&rsquo;ll act as a way to resume the game.</p>
+            </li>
+        </ul>
+        <p>Some features will be introduced over the stages, such as Cornshooter, Corngun, and Grapple.</p>
+        <br>
+        <h3>GRAPHICAL USER INTERFACE</h3>
+          <p>For the GUI that will be presented we will have a couple of basic default menus and in-game HUD.</p>
+        <br>
+        <h4>Splash Screen:</h4>
+          <p>The Splash screen will show a cornfield with the main game logo and character at the front and center of the screen. There will be a &ldquo;Click to Start&rdquo; text to inform the user and if done will bring the player to the Main Menu</p>
+          <img src="benchmark1assets/splash_screen.png" width="624" height="351">
+        <br>
+        <h4>Main Menu:</h4>
+        <p>The title screen will have a blurred general image of a cornfield as the overall background with the game logo and title on top. It will also include different buttons that would show the player information or to adjust specific parameters. The main menu buttons that will be presented are:</p>
+        <ul>
+            <li>
+                <p>"Play Level" will bring up a menu that allows the player to select the stage they want to play assuming they have it unlocked.</p>
+            </li>
+            <li>
+                <p>"Controls" will bring up a menu that will give the keybind that will control the character.</p>
+            </li>
+            <li>
+                <p>"About" will bring up a menu that gives a brief game lore and what the game is about.</p>
+            </li>
+            <li>
+                <p>"Credits" will bring up a menu page crediting the developers.</p>
+            </li>
+            <li>
+                <p>"Help" will bring up a menu showing the keybinds for cheats codes.</p>
+            </li>
+        </ul>
+        <img src="benchmark1assets/main_menu.png" width="624" height="351">
+        <img src="benchmark1assets/controls.png" width="624" height="351">
+        <img src="benchmark1assets/about.png" width="624" height="351">
+        <img src="benchmark1assets/credits.png" width="624" height="351">
+        <img src="benchmark1assets/help.png" width="624" height="351">
+        <h4>Level-Selection Menu:</h4>
+          <p>This menu will list the different playable stages that the player can choose from. The stages will appear as boxes with the corresponding level and splash art on it. The boxes will be shaded in a darker color if the stage has not been unlocked by the player yet.</p>
+          <img src="benchmark1assets/level_select.png" width="624" height="351">
+        <h4>Pause Menu:</h4>
+        <p>The pause menu will appear if and only if the game is in progress. On this menu, the menu will allow the player specific options such as:</p>
+        <ul>
+            <li>
+                <p>"Continue" will resume the gameplay</p>
+            </li>
+            <li>
+                <p>"Restart" will reset the stage</p>
+            </li>
+            <li>
+                <p>"Controls" will bring up a menu that will give the keybind that will controlthe character.</p>
+            </li>
+            <li>
+                <p>"Main Menu" will allow the player to return to the main menu if they confirm on the pop up that appears.</p>
+            </li>
+        </ul>
+        <img src="benchmark1assets/pause.png" width="624" height="351">
+        <h4>In-Game GUI/HUD:</h4>
+          <p>The in game HUD will display the current condition of the player. The information that will be displayed to the player will be:</p>
+          <ul>
+              <li>
+                  <p>"Pause Button": Another method to pause the game other than the keybind located at a corner of the screen to prevent it from interfering with the gameplay.</p>
+              </li>
+              <li>
+                  <p>"Stage Level": It will be displayed next to the pause button to show the stage level and similar to not impede the player's visual of the stage.</p>
+              </li>
+              <li>
+                  <p>"Health Bar": The player's current health bar</p>
+              </li>
+          </ul>
+          <img src="benchmark1assets/in_game.png" width="624" height="351">
+          <img src="benchmark1assets/pause.png" width="624" height="351">
+          <img src="benchmark1assets/quit.png" width="624" height="351">
+        <h3>ARTWORK</h3>
+          <p>All artwork in the game will be original. The following needs to be created:</p>
+          <p>Rob the Cob sprite/animations</p>
+          <ul>
+              <li>
+                  <p>Idle</p>
+              </li>
+              <li>
+                  <p>Walking Right</p>
+              </li>
+              <li>
+                  <p>Walking Left</p>
+              </li>
+              <li>
+                  <p>Jumping Right</p>
+              </li>
+              <li>
+                  <p>Jumping Left</p>
+              </li>
+              <li>
+                  <p>Jumping Up</p>
+              </li>
+              <li>
+                  <p>Grappling (with corn silks)</p>
+              </li>
+              <li>
+                  <p>Shooting (Regular)</p>
+              </li>
+              <li>
+                  <p>Charging up (Shotgun)</p>
+              </li>
+              <li>
+                  <p>Shooting (Shotgun)</p>
+              </li>
+              <li>
+                  <p>Taking Damage</p>
+              </li>
+              <li>
+                  <p>Dying</p>
+              </li>
+          </ul>
+          <p><br></p>
+          <p>Mice sprite/animations</p>
+          <ul>
+              <li>
+                  <p>Idle</p>
+              </li>
+              <li>
+                  <p>Moving left</p>
+              </li>
+              <li>
+                  <p>Moving right</p>
+              </li>
+              <li>
+                  <p>Attacking</p>
+              </li>
+              <li>
+                  <p>Taking damage</p>
+              </li>
+              <li>
+                  <p>Dying</p>
+              </li>
+          </ul>
+          <p><br></p>
+          <p>Birds sprite/animations</p>
+          <ul>
+              <li>
+                  <p>Idle</p>
+              </li>
+              <li>
+                  <p>Flying left</p>
+              </li>
+              <li>
+                  <p>Flying Right</p>
+              </li>
+              <li>
+                  <p>Attacking</p>
+              </li>
+              <li>
+                  <p>Taking Damage</p>
+              </li>
+              <li>
+                  <p>Dying</p>
+              </li>
+          </ul>
+          <p><br></p>
+          <p>Chicken sprite/animations</p>
+          <ul>
+              <li>
+                  <p>Idle</p>
+              </li>
+              <li>
+                  <p>Charging Left</p>
+              </li>
+              <li>
+                  <p>Charging Right</p>
+              </li>
+              <li>
+                  <p>Pecking</p>
+              </li>
+              <li>
+                  <p>Launching Egg</p>
+              </li>
+          </ul>
+          <p><br></p>
+          <p>Dog sprite/animations</p>
+          <ul>
+              <li>
+                  <p>Idle</p>
+              </li>
+              <li>
+                  <p>Pouncing Left</p>
+              </li>
+              <li>
+                  <p>Pouncing Right</p>
+              </li>
+              <li>
+                  <p>Bite attack</p>
+              </li>
+          </ul>
+          <p><br></p>
+          <p>Misc</p>
+          <ul>
+              <li>
+                  <p>Health pack sprite</p>
+              </li>
+          </ul>
+          <p><br></p>
+          <p>Levels</p>
+          <ul>
+              <li>
+                  <p>1: Cornfield</p>
+                  <ul>
+                      <li>
+                          <p>Cornfield background image</p>
+                      </li>
+                      <li>
+                          <p>Dirt ground tiles</p>
+                      </li>
+                      <li>
+                          <p>Green plant platform tiles</p>
+                      </li>
+                      <li>
+                          <p>Brown dirt platform tiles</p>
+                      </li>
+                  </ul>
+              </li>
+              <li>
+                  <p>2: Barn Wall</p>
+                  <ul>
+                      <li>
+                          <p>Red-painted wood wall background image</p>
+                      </li>
+                      <li>
+                          <p>Dirt ground tiles</p>
+                      </li>
+                      <li>
+                          <p>Red wood platform tiles</p>
+                      </li>
+                  </ul>
+              </li>
+              <li>
+                  <p>3: Barn Interior/ Chicken Boss Fight</p>
+                  <ul>
+                      <li>
+                          <p>Brown wood wall background image</p>
+                      </li>
+                      <li>
+                          <p>Dirt ground tiles</p>
+                      </li>
+                      <li>
+                          <p>Brown wood platform tiles</p>
+                      </li>
+                      <li>
+                          <p>Hay platform tiles</p>
+                      </li>
+                  </ul>
+              </li>
+              <li>
+                  <p>4: Garden</p>
+                  <ul>
+                      <li>
+                          <p>Garden produce background image</p>
+                      </li>
+                      <li>
+                          <p>Grass ground tiles</p>
+                      </li>
+                      <li>
+                          <p>Green plant platform tiles</p>
+                      </li>
+                      <li>
+                          <p>Dirt ground tiles</p>
+                      </li>
+                  </ul>
+              </li>
+              <li>
+                  <p>5: Farmer&rsquo;s House Wall</p>
+                  <ul>
+                      <li>
+                          <p>Gray/faded white wood wall background image</p>
+                      </li>
+                      <li>
+                          <p>Grass ground tiles</p>
+                      </li>
+                      <li>
+                          <p>Gray/faded white wood platform tiles</p>
+                      </li>
+                  </ul>
+              </li>
+              <li>
+                  <p>6: Farmer&rsquo;s House Interior/Dog Boss Fight</p>
+                  <ul>
+                      <li>
+                          <p>Gray/faded white wood wall background image</p>
+                      </li>
+                      <li>
+                          <p>Gray/faded white wood ground tiles</p>
+                      </li>
+                  </ul>
+              </li>
+              <li>
+                  <p>Level Change animation</p>
+                  <ul>
+                      <li>
+                          <p>Fade from black on level start</p>
+                      </li>
+                      <li>
+                          <p>Fade to black out on level end</p>
+                      </li>
+                  </ul>
+              </li>
+          </ul>
+          <p><br></p>
+          <p>Tiles: Any tiles placed are collidable surfaces because they will be either ground tiles or platform tiles.&nbsp;Some tiles can be broken and it will be up to the player to find out which ones can be destroyed to help with gameplay or just for fun.</p>
+          <p><br></p>
+        <h3>SOUND EFFECTS</h3>
+        <p>All sound effects will be original. Sounds must be made to coincide with each of the following events:</p>
+        <p>Rob the Cob</p>
+        <ul>
+            <li>
+                <p>Walking</p>
+            </li>
+            <li>
+                <p>Jumping</p>
+            </li>
+            <li>
+                <p>Landing on the ground</p>
+            </li>
+            <li>
+                <p>Shooting kernels</p>
+            </li>
+            <li>
+                <p>Charging popcorn shotgun</p>
+            </li>
+            <li>
+                <p>Shooting popcorn shotgun</p>
+            </li>
+            <li>
+                <p>Using silk grabble</p>
+            </li>
+            <li>
+                <p>Dying</p>
+            </li>
+            <li>
+                <p>Taking Damage</p>
+            </li>
+        </ul>
+        <p><br></p>
+        <p>Mobs/Bosses</p>
+        <ul>
+            <li>
+                <p>Taking Damage</p>
+            </li>
+            <li>
+                <p>Dying</p>
+            </li>
+            <li>
+                <p>Attacking</p>
+            </li>
+            <li>
+                <p>Moving</p>
+            </li>
+        </ul>
+        <p><br></p>
+        <p>Level</p>
+        <ul>
+            <li>
+                <p>Level starting</p>
+            </li>
+            <li>
+                <p>Level ending</p>
+            </li>
+        </ul>
+        <br>
+        <h3>MUSIC</h3>
+        <p>There will be separate tracks for each level, conveying the theme of each level. There will be a unique track to be played whenever a boss fight is initiated</p>
+            </div>
+          </body>
+        </html>
