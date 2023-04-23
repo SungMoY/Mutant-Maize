@@ -20,6 +20,7 @@ import Grapple from "./Grapple";
 import Queue from "../../Wolfie2D/DataTypes/Queue";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import Timer from "../../Wolfie2D/Timing/Timer";
+import Color from "../../Wolfie2D/Utils/Color";
 
 // TODO play your heros animations
 
@@ -247,7 +248,6 @@ export default class PlayerController extends StateMachineAI {
             this.owner.animation.stop();
             this.owner.animation.playIfNotAlready(PlayerAnimations.TAKING_DAMAGE, false);
             this.owner.animation.queue(PlayerAnimations.IDLE, true);
-            console.log("Player health: " + this.health);
             this.invincibleTimer.start();
         }
     }
@@ -257,6 +257,7 @@ export default class PlayerController extends StateMachineAI {
         let particle = particles.find(particle => particle.id === particleId);
         if (particle !== undefined) {
             particle.position = Vec2.ZERO;
+            particle.color = Color.TRANSPARENT;
         }
     }
 
@@ -265,7 +266,7 @@ export default class PlayerController extends StateMachineAI {
         let particle = particles.find(particle => particle.id === particleId);
         if (particle !== undefined) {
             particle.position = Vec2.ZERO;
-            
+            particle.color = Color.TRANSPARENT;
         }
     }
 
@@ -287,7 +288,7 @@ export default class PlayerController extends StateMachineAI {
 
             //console.log(reachTile.y)
             //console.log(fromPosition.y)
-            console.log(this.tilemap.getColRowAt(new Vec2(reachTile.x, reachTile.y - 48)))
+            //console.log(this.tilemap.getColRowAt(new Vec2(reachTile.x, reachTile.y - 48)))
 
             // create 10 coords between the two positions, enqueue them to grappleCoords
             let numCoords = 15;

@@ -1,0 +1,164 @@
+{
+    "name": "rat",
+    "spriteSheetImage": "rat.png",
+    "spriteWidth": 32,
+    "spriteHeight": 32,
+    "leftBuffer": 0,
+    "rightBuffer": 0,
+    "topBuffer": 0,
+    "bottomBuffer": 0,
+    "columns": 6,
+    "rows": 5,
+    "animations": [
+        {
+            "name": "IDLE",
+            "repeat": false,
+            "frames": [
+                {
+                    "index": 0,
+                    "duration": 7
+                },
+                {
+                    "index": 1,
+                    "duration": 7
+                },
+                {
+                    "index": 2,
+                    "duration": 7
+                },
+                {
+                    "index": 3,
+                    "duration": 7
+                },
+                {
+                    "index": 4,
+                    "duration": 7
+                },
+                {
+                    "index": 5,
+                    "duration": 7
+                }
+            ]
+        },
+        {
+            "name": "RUN_RIGHT",
+            "repeat": false,
+            "frames": [
+                {
+                    "index": 6,
+                    "duration": 6
+                },
+                {
+                    "index": 7,
+                    "duration": 6
+                },
+                {
+                    "index": 8,
+                    "duration": 6
+                },
+                {
+                    "index": 9,
+                    "duration": 6
+                },
+                {
+                    "index": 10,
+                    "duration": 6
+                },
+                {
+                    "index": 11,
+                    "duration": 6
+                }
+            ]
+        },
+        {
+            "name": "RUN_LEFT",
+            "repeat": false,
+            "frames": [
+                {
+                    "index": 12,
+                    "duration": 6
+                },
+                {
+                    "index": 13,
+                    "duration": 6
+                },
+                {
+                    "index": 14,
+                    "duration": 6
+                },
+                {
+                    "index": 15,
+                    "duration": 6
+                },
+                {
+                    "index": 16,
+                    "duration": 6
+                },
+                {
+                    "index": 17,
+                    "duration": 6
+                }
+            ]
+        },
+        {
+            "name": "TAKING_DAMAGE",
+            "repeat": false,
+            "frames": [
+                {
+                    "index": 18,
+                    "duration": 3
+                },
+                {
+                    "index": 19,
+                    "duration": 3
+                },
+                {
+                    "index": 20,
+                    "duration": 3
+                },
+                {
+                    "index": 21,
+                    "duration": 3
+                },
+                {
+                    "index": 22,
+                    "duration": 3
+                },
+                {
+                    "index": 23,
+                    "duration": 3
+                }
+            ]
+        },
+        {
+            "name": "DYING",
+            "repeat": false,
+            "frames": [
+                {
+                    "index": 24,
+                    "duration": 6
+                },
+                {
+                    "index": 25,
+                    "duration": 6
+                },
+                {
+                    "index": 26,
+                    "duration": 6
+                },
+                {
+                    "index": 27,
+                    "duration": 6
+                },
+                {
+                    "index": 28,
+                    "duration": 6
+                },
+                {
+                    "index": 29,
+                    "duration": 1000
+                }
+            ]
+        }
+    ]
+}

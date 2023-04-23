@@ -38,7 +38,7 @@ export default class Level1 extends Level {
     public static readonly POPCORN_SPRITE_PATH = "game_assets/sprites/popcorn.png";
 
     public static readonly RAT_SPRITE_KEY = "RAT_SPRITE_KEY";
-    public static readonly RAT_SPRITE_PATH = "game_assets/spritesheets/UFO_alien.json";
+    public static readonly RAT_SPRITE_PATH = "game_assets/spritesheets/rat.json";
 
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
         super(viewport, sceneManager, renderingManager, options);

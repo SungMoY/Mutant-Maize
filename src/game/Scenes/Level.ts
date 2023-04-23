@@ -192,6 +192,9 @@ export default abstract class Level extends Scene {
         while (this.receiver.hasNextEvent()) {
             this.handleEvent(this.receiver.getNextEvent());
         }
+
+        this.lockPlayer(this.player, this.viewport.getCenter(), this.viewport.getHalfSize());
+
         if (Input.isPressed(GameControls.CHEAT_ONE)) {
             this.sceneManager.changeToScene(Level1);
         }
@@ -251,6 +254,15 @@ export default abstract class Level extends Scene {
         this.healthBarMissing.position = new Vec2(this.healthBarHealth.position.x + this.healthBarHealth.size.x / 2 + this.healthBarMissing.size.x / 2, this.healthBarMissing.position.y);
     
     }
+
+    protected lockPlayer(player: AnimatedSprite, viewportCenter: Vec2, viewportHalfSize: Vec2): void {
+		if (player.position.x - player.boundary.getHalfSize().x < viewportCenter.x - viewportHalfSize.x) {
+			player.position.x = viewportCenter.x - viewportHalfSize.x + player.boundary.getHalfSize().x ;
+		}
+		if (player.position.x + player.boundary.getHalfSize().x > viewportCenter.x + viewportHalfSize.x) {
+			player.position.x = viewportCenter.x + viewportHalfSize.x - player.boundary.getHalfSize().x;
+		}
+	}
 
     protected initLayers(): void {
         // potentially add some parallax for y
@@ -388,8 +400,6 @@ export default abstract class Level extends Scene {
             throw new Error("Player spawn must be set before initializing the player!");
         }
 
-
-
         // Add the player to the scene
         this.player = this.add.animatedSprite(key, LevelLayers.PRIMARY);
 
@@ -398,7 +408,8 @@ export default abstract class Level extends Scene {
         
         // Give the player physics
         //this.player.addPhysics(new AABB(this.player.position.clone(), this.player.boundary.getHalfSize().clone()));
-        this.player.addPhysics(new AABB(this.player.position.clone(), new Vec2 (this.player.boundary.getHalfSize().clone().x * 0.75, this.player.boundary.getHalfSize().clone().y)), undefined, false);
+        this.player.addPhysics(new AABB(this.player.position.clone(), new Vec2 (this.player.boundary.getHalfSize().clone().x * 0.75, this.player.boundary.getHalfSize().clone().y)), 
+        undefined, false);
 
         // Add player to player physics group
         this.player.setGroup(GamePhysicsGroups.PLAYER);
@@ -458,15 +469,15 @@ export default abstract class Level extends Scene {
     protected initializeNPCs(): void {
         for (let i = 0; i < this.ratPositions.length; i++) {
             let rat = this.add.animatedSprite(this.ratSpriteKey, LevelLayers.PRIMARY);
+            rat.position.set(this.ratPositions[i].x, this.ratPositions[i].y-24);
+            rat.scale.set(2, 2);       
+            let center = new Vec2(rat.position.x, rat.position.y);
 
-            rat.position.set(this.ratPositions[i].x, this.ratPositions[i].y);
+            // i hate that these values are hard coded but it seems to work
+            let halfSize = new Vec2(rat.boundary.getHalfSize().x, 24);
+            rat.addPhysics(new AABB(center, halfSize), undefined, false, false);
+            rat.colliderOffset.set(0, 7);
 
-            // change based on new sprite
-            rat.scale.set(0.3, 0.3);
-            //rat.addPhysics(new AABB(rat.position.clone(), new Vec2(rat.boundary.getHalfSize().x, rat.boundary.getHalfSize().y)));
-            rat.addPhysics(undefined, undefined, false, false)
-            // set new group to deal with collisions bw player/player particles and rats
-            //rat.setGroup(GamePhysicsGroups.PLAYER)
             rat.addAI(RatAI, { tilemap: "Main" });
             rat.setGroup(GamePhysicsGroups.ENTITY);
             rat.setTrigger(GamePhysicsGroups.RIFLE, GameEvents.RIFLE_HIT, null);
@@ -475,11 +486,6 @@ export default abstract class Level extends Scene {
             rat.setTrigger(GamePhysicsGroups.PLAYER, GameEvents.PLAYER_HIT, null);
         }
     }
-
-    protected intializeCheatCodes(): void {
-        
-    }
-
 
     // Get the key of the player's jump audio file
     public getJumpAudioKey(): string {
