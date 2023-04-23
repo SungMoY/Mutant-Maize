@@ -1,5 +1,6 @@
 import StateMachineAI from "../../../Wolfie2D/AI/StateMachineAI";
 import AABB from "../../../Wolfie2D/DataTypes/Shapes/AABB";
+import Shape from "../../../Wolfie2D/DataTypes/Shapes/Shape";
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import GameEvent from "../../../Wolfie2D/Events/GameEvent";
 import OrthogonalTilemap from "../../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
@@ -50,10 +51,19 @@ export default class RatAI extends StateMachineAI {
         }, false);
 
         this.deathTimer = new Timer(1000, () => {
+            this.owner.visible = false;
             this.owner.destroy();
         }, false);
 
-        this.grappleStunTimer = new Timer(1000, () => {}, false);
+        this.grappleStunTimer = new Timer(1000, () => {
+            if (this._health <= 0) {
+                this.owner.collisionShape = new AABB(Vec2.ZERO, Vec2.ZERO);
+                this.owner.animation.play("DYING", false);
+                this.deathTimer.start();
+            } else {
+                this.changeState("MOVE")
+            }
+        }, false);
 
         this.addState("MOVE", new RatMove(this, this.owner));
         this.addState("TAKING_DAMAGE", new RatTakingDamage(this, this.owner));
@@ -67,7 +77,6 @@ export default class RatAI extends StateMachineAI {
 
     public update(deltaT: number): void {
         super.update(deltaT);
-
     }
 
     handleEvent(event: GameEvent): void {
@@ -107,7 +116,6 @@ export default class RatAI extends StateMachineAI {
     }
 
     protected handleGrappleHit(node: number, other: number): void {
-        // i cant implement a stun mechanic because it is difficult to retrieve which rat was hit
         if (this.owner.id === other) {
             this.changeState("GRAPPLE_STUNNED");
         }

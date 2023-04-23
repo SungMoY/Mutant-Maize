@@ -6,6 +6,7 @@ import SceneManager from "../../Wolfie2D/Scene/SceneManager";
 import Viewport from "../../Wolfie2D/SceneGraph/Viewport";
 
 import MainMenu from "./MainMenu";
+import Level2 from "./Level2";
 
 /**
  * The first level for HW4 - should be the one with the grass and the clouds.
@@ -94,7 +95,7 @@ export default class Level1 extends Level {
 
     public startScene(): void {
         super.startScene();
-        this.nextLevel = MainMenu;
+        this.nextLevel = Level2;
     }
 
     protected initializeViewport(): void {
