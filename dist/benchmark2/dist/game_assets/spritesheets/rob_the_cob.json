@@ -1,0 +1,296 @@
+{
+	"name": "rob_the_cob",
+	"spriteSheetImage": "rob_the_cob.png",
+	"spriteWidth": 32,
+	"spriteHeight": 32,
+	"leftBuffer": 0,
+	"rightBuffer": 0,
+	"topBuffer": 0,
+	"bottomBuffer": 0,
+	"columns": 5,
+	"rows": 7,
+	"animations": [
+		{
+			"name": "RUN_RIGHT",
+			"repeat": false,
+			"frames": [
+				{
+					"index": 0,
+					"duration": 6
+				},
+				{
+					"index": 1,
+					"duration": 6
+				},
+				{
+					"index": 2,
+					"duration": 6
+				},
+				{
+					"index": 3,
+					"duration": 6
+				},
+				{
+					"index": 4,
+					"duration": 6
+				}
+			]
+		},
+		{
+			"name": "RUN_LEFT",
+			"repeat": false,
+			"frames": [
+				{
+					"index": 5,
+					"duration": 6
+				},
+				{
+					"index": 6,
+					"duration": 6
+				},
+				{
+					"index": 7,
+					"duration": 6
+				},
+				{
+					"index": 8,
+					"duration": 6
+				},
+				{
+					"index": 9,
+					"duration": 6
+				}
+			]
+		},
+		{
+			"name": "IDLE",
+			"repeat": false,
+			"frames": [
+				{
+					"index": 10,
+					"duration": 10
+				},
+				{
+					"index": 11,
+					"duration": 10
+				},
+				{
+					"index": 12,
+					"duration": 10
+				},
+				{
+					"index": 13,
+					"duration": 10
+				}
+			]
+		},
+		{
+			"name": "JUMP",
+			"repeat": false,
+			"frames": [
+				{
+					"index": 15,
+					"duration": 3
+				},
+				{
+					"index": 16,
+					"duration": 3
+				},
+				{
+					"index": 17,
+					"duration": 40
+				},
+				{
+					"index": 18,
+					"duration": 3
+				},
+				{
+					"index": 19,
+					"duration": 3
+				}
+			]
+		},
+		{
+			"name": "GRAPPLING",
+			"repeat": false,
+			"frames": [
+				{
+					"index": 20,
+					"duration": 6
+				},
+				{
+					"index": 21,
+					"duration": 6
+				},
+				{
+					"index": 22,
+					"duration": 3
+				},
+				{
+					"index": 23,
+					"duration": 12
+				},
+				{
+					"index": 24,
+					"duration": 12
+				}
+			]
+		},
+		{
+			"name": "ATTACKING_RIGHT",
+			"repeat": false,
+			"frames": [
+				{
+					"index": 25,
+					"duration": 6
+				},
+				{
+					"index": 26,
+					"duration": 6
+				},
+				{
+					"index": 27,
+					"duration": 6
+				},
+				{
+					"index": 28,
+					"duration": 6
+				},
+				{
+					"index": 29,
+					"duration": 6
+				}
+			]
+		},
+		{
+			"name": "ATTACKING_LEFT",
+			"repeat": false,
+			"frames": [
+				{
+					"index": 30,
+					"duration": 6
+				},
+				{
+					"index": 31,
+					"duration": 6
+				},
+				{
+					"index": 32,
+					"duration": 6
+				},
+				{
+					"index": 33,
+					"duration": 6
+				},
+				{
+					"index": 34,
+					"duration": 6
+				}
+			]
+		},
+		{
+			"name": "TAKING_DAMAGE",
+			"repeat": false,
+			"frames": [
+				{
+					"index": 35,
+					"duration": 5
+				},
+				{
+					"index": 36,
+					"duration": 5
+				},
+				{
+					"index": 37,
+					"duration": 5
+				},
+				{
+					"index": 38,
+					"duration": 5
+				},
+				{
+					"index": 39,
+					"duration": 5
+				}
+			]
+		},
+		{
+			"name": "SHOTGUN_LEFT",
+			"repeat": false,
+			"frames": [
+				{
+					"index": 50,
+					"duration": 6
+				},
+				{
+					"index": 51,
+					"duration": 6
+				},
+				{
+					"index": 52,
+					"duration": 6
+				},
+				{
+					"index": 53,
+					"duration": 6
+				},
+				{
+					"index": 54,
+					"duration": 6
+				}
+			]
+		},
+		{
+			"name": "SHOTGUN_RIGHT",
+			"repeat": false,
+			"frames": [
+				{
+					"index": 55,
+					"duration": 6
+				},
+				{
+					"index": 56,
+					"duration": 6
+				},
+				{
+					"index": 57,
+					"duration": 6
+				},
+				{
+					"index": 58,
+					"duration": 6
+				},
+				{
+					"index": 59,
+					"duration": 6
+				}
+			]
+		},
+		{
+			"name": "DYING",
+			"repeat": false,
+			"frames": [
+				{
+					"index": 60,
+					"duration": 6
+				},
+				{
+					"index": 61,
+					"duration": 6
+				},
+				{
+					"index": 62,
+					"duration": 6
+				},
+				{
+					"index": 63,
+					"duration": 6
+				},
+				{
+					"index": 64,
+					"duration": 3000
+				}
+			]
+		}
+	]
+}
