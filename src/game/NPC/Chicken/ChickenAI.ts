@@ -9,12 +9,12 @@ import HW3AnimatedSprite from "../../Nodes/HW3AnimatedSprite";
 import ChickenIdle from "./ChickenIdle";
 import ChickenCharge from "./ChickenCharge";
 import ChickenEgg from "./ChickenEgg";
-import Game from "../../../Wolfie2D/Loop/Game";
 import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
+import Egg from "./Egg";
 
 export default class ChickenAI extends StateMachineAI {
     
-    public readonly MAX_SPEED: number = 400;
+    public readonly MAX_SPEED: number = 500;
     public readonly MIN_SPEED: number = 275;
 
     protected owner: HW3AnimatedSprite;
@@ -29,11 +29,14 @@ export default class ChickenAI extends StateMachineAI {
 
     protected isDead: boolean;
 
+    protected eggSystem: Egg;
+
     public initializeAI(owner: HW3AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;
         this._velocity = new Vec2(0, 0)
         this._health = 500;
         this.goLeft = true;
+        this.eggSystem = options.eggSystem;
 
         this.addState("IDLE", new ChickenIdle(this, this.owner));
         this.addState("CHARGE", new ChickenCharge(this, this.owner));
@@ -55,16 +58,22 @@ export default class ChickenAI extends StateMachineAI {
                 this.chargeTimer.start();
             } else {
                 this.changeState("EGG");
+                // fire egg here, customize its properties
+                let position = new Vec2(this.owner.position.x, this.owner.position.y +50)
+                let direction
+                if (this.goLeft) { direction = new Vec2(-500, 0) } else { direction = new Vec2(500, 0)}
+                this.eggSystem.startSystem(1000, 0, position, direction);
                 this.eggTimer.start();
             }
         }, false);
 
-        this.chargeTimer = new Timer(1900, () => {
+        this.chargeTimer = new Timer(1500, () => {
             this.changeState("IDLE")
             this.idleTimer.start();
         }, false);
 
         this.eggTimer = new Timer(1000, () => {
+            this.eggSystem.stopSystem();
             this.changeState("IDLE")
             this.idleTimer.start();
         }, false);
@@ -89,6 +98,7 @@ export default class ChickenAI extends StateMachineAI {
             this.eggTimer.pause();
             this.owner.destroy();
             }
+        
     }
 
     handleEvent(event: GameEvent): void {
