@@ -1,6 +1,5 @@
 import StateMachineAI from "../../../Wolfie2D/AI/StateMachineAI";
 import AABB from "../../../Wolfie2D/DataTypes/Shapes/AABB";
-import Shape from "../../../Wolfie2D/DataTypes/Shapes/Shape";
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import GameEvent from "../../../Wolfie2D/Events/GameEvent";
 import OrthogonalTilemap from "../../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
@@ -8,13 +7,12 @@ import Timer from "../../../Wolfie2D/Timing/Timer";
 import Color from "../../../Wolfie2D/Utils/Color";
 import { GameEvents } from "../../GameEvents";
 import HW3AnimatedSprite from "../../Nodes/HW3AnimatedSprite";
-import { LevelLayers } from "../../Scenes/Level";
-import RatGrappleStunned from "./RatGrappleStunned";
-import RatMove from "./RatMove";
-import RatTakingDamage from "./RatTakingDamage";
+import BirdGrappleStunned from "./BirdGrappleStunned";
+import BirdMove from "./BirdMove";
+import BirdTakingDamage from "./BirdTakingDamage";
 
 export default class RatAI extends StateMachineAI {
-
+    
     public readonly MAX_SPEED: number = 400;
     public readonly MIN_SPEED: number = 275;
 
@@ -34,11 +32,18 @@ export default class RatAI extends StateMachineAI {
 
     public grappleStunTimer: Timer;
 
+    public directionTimer: Timer;
+
     public initializeAI(owner: HW3AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;
-        this._velocity = new Vec2(150, 275)
+        this._velocity = new Vec2(150, 0)
         this._health = 50;
         this.tilemap = this.owner.getScene().getTilemap(options.tilemap) as OrthogonalTilemap;
+
+        this.directionTimer = new Timer(5000, () => {
+            this.velocity.x *= -1;
+        }, true);
+        this.directionTimer.start();
 
         this.hurtTimer = new Timer(360, () => {
             if (this.health > 0) {
@@ -57,9 +62,9 @@ export default class RatAI extends StateMachineAI {
             }
         }, false);
 
-        this.addState("MOVE", new RatMove(this, this.owner));
-        this.addState("TAKING_DAMAGE", new RatTakingDamage(this, this.owner));
-        this.addState("GRAPPLE_STUNNED", new RatGrappleStunned(this, this.owner));
+        this.addState("MOVE", new BirdMove(this, this.owner));
+        this.addState("TAKING_DAMAGE", new BirdTakingDamage(this, this.owner));
+        this.addState("GRAPPLE_STUNNED", new BirdGrappleStunned(this, this.owner));
         this.initialize("MOVE")
 
         this.receiver.subscribe(GameEvents.RIFLE_HIT);
@@ -84,7 +89,6 @@ export default class RatAI extends StateMachineAI {
                 break;
         }
     }
-
     protected handleRifleHit(particleId: number): void {
         let particles = this.owner.getScene().getRifleParticlePool();
         let particle = particles.find(particle => particle.id === particleId);
@@ -94,7 +98,6 @@ export default class RatAI extends StateMachineAI {
             particle.position = Vec2.ZERO;
             particle.color = Color.TRANSPARENT;
             particle.collisionShape = new AABB(Vec2.ZERO, Vec2.ZERO);
-
         }
     }
 
@@ -107,7 +110,6 @@ export default class RatAI extends StateMachineAI {
             particle.position = Vec2.ZERO;
             particle.color = Color.TRANSPARENT;
             particle.collisionShape = new AABB(Vec2.ZERO, Vec2.ZERO);
-
         }
     }
 

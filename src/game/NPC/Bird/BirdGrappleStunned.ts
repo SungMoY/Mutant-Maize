@@ -1,7 +1,7 @@
 import GameEvent from "../../../Wolfie2D/Events/GameEvent";
-import RatState from "./RatState";
+import BirdState from "./BirdState";
 
-export default class RatGrappleStunned extends RatState {
+export default class BirdGrappleStunned extends BirdState {
 
     handleInput(event: GameEvent): void {
         throw new Error("Method not implemented.");
@@ -13,6 +13,7 @@ export default class RatGrappleStunned extends RatState {
 
     public update(deltaT: number): void {
         super.update(deltaT);
+        this.owner.move(this.parent.velocity.scaled(deltaT));
 
     }
 

@@ -1,0 +1,196 @@
+{
+    "name": "bird",
+    "spriteSheetImage": "bird.png",
+    "spriteWidth": 32,
+    "spriteHeight": 32,
+    "leftBuffer": 0,
+    "rightBuffer": 0,
+    "topBuffer": 0,
+    "bottomBuffer": 0,
+    "columns": 5,
+    "rows": 4,
+    "animations": [
+        {
+            "name": "RUN_RIGHT",
+            "repeat": false,
+            "frames": [
+                {
+                    "index": 0,
+                    "duration": 6
+                },
+                {
+                    "index": 1,
+                    "duration": 6
+                },
+                {
+                    "index": 2,
+                    "duration": 6
+                },
+                {
+                    "index": 3,
+                    "duration": 6
+                },
+                {
+                    "index": 4,
+                    "duration": 6
+                }
+            ]
+        },
+        {
+            "name": "RUN_LEFT",
+            "repeat": false,
+            "frames": [
+                {
+                    "index": 5,
+                    "duration": 6
+                },
+                {
+                    "index": 6,
+                    "duration": 6
+                },
+                {
+                    "index": 7,
+                    "duration": 6
+                },
+                {
+                    "index": 8,
+                    "duration": 6
+                },
+                {
+                    "index": 9,
+                    "duration": 6
+                }
+            ]
+        },
+        {
+            "name": "TAKING_DAMAGE",
+            "repeat": false,
+            "frames": [
+                {
+                    "index": 10,
+                    "duration": 3
+                },
+                {
+                    "index": 11,
+                    "duration": 3
+                },
+                {
+                    "index": 12,
+                    "duration": 3
+                },
+                {
+                    "index": 13,
+                    "duration": 3
+                },
+                {
+                    "index": 14,
+                    "duration": 3
+                }
+            ]
+        },
+        {
+            "name": "DYING",
+            "repeat": false,
+            "frames": [
+                {
+                    "index": 15,
+                    "duration": 6
+                },
+                {
+                    "index": 16,
+                    "duration": 6
+                },
+                {
+                    "index": 17,
+                    "duration": 6
+                },
+                {
+                    "index": 18,
+                    "duration": 6
+                },
+                {
+                    "index": 19,
+                    "duration": 1000
+                }
+            ]
+        },
+        {
+            "name": "STUNNED",
+            "repeat": true,
+            "frames": [
+                {
+                    "index": 10,
+                    "duration": 3
+                },
+                {
+                    "index": 11,
+                    "duration": 3
+                },
+                {
+                    "index": 12,
+                    "duration": 3
+                },
+                {
+                    "index": 13,
+                    "duration": 3
+                },
+                {
+                    "index": 12,
+                    "duration": 3
+                },
+                {
+                    "index": 13,
+                    "duration": 3
+                },
+                {
+                    "index": 12,
+                    "duration": 3
+                },
+                {
+                    "index": 13,
+                    "duration": 3
+                },
+                {
+                    "index": 12,
+                    "duration": 3
+                },
+                {
+                    "index": 13,
+                    "duration": 3
+                },
+                {
+                    "index": 12,
+                    "duration": 3
+                },
+                {
+                    "index": 13,
+                    "duration": 3
+                },
+                {
+                    "index": 12,
+                    "duration": 3
+                },
+                {
+                    "index": 13,
+                    "duration": 3
+                },
+                {
+                    "index": 12,
+                    "duration": 3
+                },
+                {
+                    "index": 13,
+                    "duration": 3
+                },
+                {
+                    "index": 12,
+                    "duration": 3
+                },
+                {
+                    "index": 13,
+                    "duration": 3
+                }
+            ]
+        }
+    ]
+}
