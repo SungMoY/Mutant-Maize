@@ -15,6 +15,9 @@ export default class Level1 extends Level {
     public static readonly TILEMAP_PATH = "game_assets/tilemaps/Level_1/level1_map.json";
     public static readonly WALLS_LAYER_KEY = "Main";
 
+    public static readonly HAZARD_LAYER_KEY = "Hazard"
+
+
     public static readonly LEVEL1_BACKGROUND_KEY = "LEVEL1_BACKGROUND";
     public static readonly LEVEL1_BACKGROUND_PATH = "game_assets/images/level1_background.png";
 
@@ -80,6 +83,7 @@ export default class Level1 extends Level {
         this.tilemapKey = Level1.TILEMAP_KEY;
         this.tilemapScale = new Vec2(3, 3);
         this.wallsLayerKey = Level1.WALLS_LAYER_KEY;
+        this.hazardsLayerKey = Level1.HAZARD_LAYER_KEY;
 
         this.playerSpriteKey = Level1.PLAYER_SPRITE_KEY;
         this.playerSpawn = new Vec2(100, 500);
