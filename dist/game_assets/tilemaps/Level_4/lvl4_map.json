@@ -415,10 +415,21 @@
  "tiledversion":"1.10.0",
  "tileheight":16,
  "tilesets":[
-        {
-         "firstgid":1,
-         "source":"lvl4_tileset.json"
-        }],
+       { "columns":4,
+       "firstgid":1,
+       "image":"lvl4_tileset.png",
+       "imageheight":48,
+       "imagewidth":64,
+       "margin":0,
+       "name":"lvl1_tileset",
+       "spacing":0,
+       "tilecount":12,
+       "tiledversion":"1.10.0",
+       "tileheight":16,
+       "tilewidth":16,
+       "type":"tileset",
+       "version":"1.10"
+      }],
  "tilewidth":16,
  "type":"map",
  "version":"1.10",

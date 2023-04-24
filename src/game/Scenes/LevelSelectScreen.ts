@@ -5,8 +5,8 @@ import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
+import Level from "./Level";
 import Level1 from "./Level1";
-//import Level2 from "./Level2";
 import MainMenu from "./MainMenu";
 
 export default class LevelSelectScreen extends Scene {
@@ -25,6 +25,27 @@ export default class LevelSelectScreen extends Scene {
         this.load.audio(LevelSelectScreen.MUSIC_KEY, LevelSelectScreen.MUSIC_PATH);
         this.load.image(LevelSelectScreen.BACKGROUND_KEY, LevelSelectScreen.BACKGROUND_PATH);
         this.load.image(LevelSelectScreen.LOGO_KEY, LevelSelectScreen.LOGO_PATH);
+    }
+
+    public addLevel(text: string, level: any, position: Vec2): void {
+        let box = <Button>this.add.uiElement(UIElementType.BUTTON, "MAIN", {position: position, text: ""});
+        box.backgroundColor = new Color(0, 0, 0, 0.9)
+        box.setPadding(new Vec2(150, 20));
+        box.onClick = () => {
+            if (level) {
+                box.onClickEventId = "goto";
+                this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: MainMenu.MUSIC_KEY, holdReference: false});
+                this.sceneManager.changeToScene(level);
+            }
+        }
+        // create text
+        let line = <Label>this.add.uiElement(UIElementType.LABEL, "MAIN", {position: position, text: text});
+        line.textColor = Color.WHITE;
+        line.font = "Verdana";
+        line.fontSize = 36;
+        line.setPadding(new Vec2(10, 10));
+        line.backgroundColor = Color.TRANSPARENT
+        line.borderColor = Color.TRANSPARENT
     }
 
     public startScene(): void {
@@ -50,56 +71,24 @@ export default class LevelSelectScreen extends Scene {
         lvlSelectText.backgroundColor = Color.TRANSPARENT;
         lvlSelectText.setPadding(new Vec2(450, 93));
         //levels text per line NOTE THAT THEY ARE NOT IN NUMERICAL ORDER
-        let lvlSelectTextLines = [
-            {text: "1. Cornfield", goto: Level1},
-            {text: "3. Barn"},
-            {text: "5. House Wall"},
-            {text: "2. Barn Wall"},
-            {text: "4. Garden"},
-            {text: "6. House"},
-        ]
-        for (let i = 0; i < lvlSelectTextLines.length/2; i++) {
-            // create box around it
-            let box = <Button>this.add.uiElement(UIElementType.BUTTON, "MAIN", {position: new Vec2(size.x-175, size.y-140 + (i*100)), text: ""});
-            box.backgroundColor = new Color(0, 0, 0, 0.9)
-            box.setPadding(new Vec2(150, 20));
-            box.onClick = () => {
-                if (lvlSelectTextLines[i].goto) {
-                    box.onClickEventId = "goto";
-                    this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: MainMenu.MUSIC_KEY, holdReference: false});
-                    this.sceneManager.changeToScene(lvlSelectTextLines[i].goto);
-                }
-            }
-            // create text
-            let line = <Label>this.add.uiElement(UIElementType.LABEL, "MAIN", {position: new Vec2(size.x-175, size.y-140 + (i*100)), text: lvlSelectTextLines[i].text});
-            line.textColor = Color.WHITE;
-            line.font = "Verdana";
-            line.fontSize = 36;
-            line.setPadding(new Vec2(10, 10));
-            line.backgroundColor = Color.TRANSPARENT
-            line.borderColor = Color.TRANSPARENT
+
+
+        // I'm so sorry for this.
+        let positions = []
+        for (let i = 0; i < 3; i++) {
+            positions.push(new Vec2(size.x-175, size.y-140 + (i*100)))
         }
-        for (let i = 3; i < lvlSelectTextLines.length; i++) {
-            // create box around it
-            let box = <Button>this.add.uiElement(UIElementType.BUTTON, "MAIN", {position: new Vec2(size.x+175, size.y-140 + ((i-3)*100)), text: ""});
-            box.backgroundColor = new Color(0, 0, 0, 0.9)
-            box.setPadding(new Vec2(150, 20));
-            box.onClick = () => {
-                if (lvlSelectTextLines[i].goto) {
-                    box.onClickEventId = "goto";
-                    this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: MainMenu.MUSIC_KEY, holdReference: false});
-                    this.sceneManager.changeToScene(lvlSelectTextLines[i].goto);
-                }
-            }
-            // create text
-            let line = <Label>this.add.uiElement(UIElementType.LABEL, "MAIN", {position: new Vec2(size.x+175, size.y-140 + ((i-3)*100)), text: lvlSelectTextLines[i].text});
-            line.textColor = Color.WHITE;
-            line.font = "Verdana";
-            line.fontSize = 36;
-            line.setPadding(new Vec2(10, 10));
-            line.backgroundColor = Color.TRANSPARENT
-            line.borderColor = Color.TRANSPARENT
+        for (let i = 3; i < 6; i++) {
+            positions.push(new Vec2(size.x+175, size.y-140 + ((i-3)*100)))
         }
+
+        this.addLevel("1. Cornfield", Level1, positions[0]);
+        this.addLevel("2. Barn Wall", null, positions[3]);
+        this.addLevel("3. Barn", null, positions[1]);
+        this.addLevel("4. Garden", null, positions[4]);
+        this.addLevel("5. House Wall", null, positions[2]);
+        this.addLevel("6. House", null, positions[5]);
+        
 
         // Create a back button
         let backBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "MAIN", {position: new Vec2(size.x, size.y + 275), text: "BACK"});
