@@ -33,6 +33,7 @@ import { GameControls } from "../GameControls";
 import Level1 from "./Level1";
 import BirdAI from "../NPC/Bird/BirdAI";
 import ChickenAI from "../NPC/Chicken/ChickenAI";
+import Egg from "../NPC/Chicken/Egg";
 
 
 /**
@@ -156,6 +157,7 @@ export default abstract class Level extends Scene {
 
     protected chickenSpriteKey: string;
     protected chickenPosition: Vec2;
+    protected eggParticlesSystem: Egg;
 
     protected dogSpiteKey: string;
     protected dogPosition: Vec2;
@@ -476,6 +478,9 @@ export default abstract class Level extends Scene {
 
         this.grappleParticlesSystem = new Grapple(100, Vec2.ZERO, 500, 10, 0, 1); // for 1 particle
         this.grappleParticlesSystem.initializePool(this, LevelLayers.PRIMARY);
+
+        this.eggParticlesSystem = new Egg(1, Vec2.ZERO, 2000, 10, 0, 1); // for 1 particle
+        this.eggParticlesSystem.initializePool(this, LevelLayers.PRIMARY);
     }
     /**
      * Initializes the player, setting the player's initial position to the given position.
@@ -605,7 +610,9 @@ export default abstract class Level extends Scene {
             chicken.scale.set(6, 6);
             chicken.addPhysics(new AABB(chicken.position.clone(), new Vec2(chicken.boundary.getHalfSize().clone().x*0.75, chicken.boundary.getHalfSize().clone().y))
                  ,undefined, false, false);
-            chicken.addAI(ChickenAI);
+            chicken.addAI(ChickenAI, {
+                eggSystem: this.eggParticlesSystem
+            });
             chicken.setGroup(GamePhysicsGroups.ENTITY);
             chicken.setTrigger(GamePhysicsGroups.RIFLE, GameEvents.RIFLE_HIT, null);
             chicken.setTrigger(GamePhysicsGroups.SHOTGUN, GameEvents.SHOTGUN_HIT, null);
