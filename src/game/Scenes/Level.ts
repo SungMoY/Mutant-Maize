@@ -102,8 +102,29 @@ export default abstract class Level extends Scene {
 
     /** Sound and music */
     protected levelMusicKey: string;
-    protected jumpAudioKey: string;
-    protected dyingAudioKey: string;
+    protected jumpAudioKey: string; //
+    protected dyingAudioKey: string; //
+
+    protected playerDamageAudioKey: string;
+    protected playerDeathAudioKey: string;
+    protected playerGrappleAudioKey: string;
+    protected playerJumpAudioKey: string;
+    protected playerRifleAudioKey: string;
+    protected playerShotgunAudioKey: string;
+    protected playerWalkAudioKey: string;
+
+    protected bossChargeAudioKey: string;
+
+    protected chickenDyingAudioKey: string;
+    protected chickenEggAudioKey: string;
+    protected chickenWalkAudioKey: string;
+
+    protected dogBiteAudioKey: string;
+    protected dogDyingAudioKey: string;
+    protected dogWalkAudioKey: string;
+
+    protected HitAudioKey: string;
+    protected mobDyingAudioKey: string;
 
     // sets viewport dynamically for each level
     // map length in tiles * tile dimension in pixels * tilemap scale
@@ -377,11 +398,11 @@ export default abstract class Level extends Scene {
     }
 
     protected initializeWeaponSystem(): void {
-        //this.kernel = this.add.sprite(this.kernelSpriteKey, LevelLayers.PRIMARY);
+        this.kernel = this.add.sprite(this.kernelSpriteKey, LevelLayers.PRIMARY);
         this.rifleParticlesSystem = new Rifle(1, Vec2.ZERO, 500, 10, 0, 1); // for 1 particle
         this.rifleParticlesSystem.initializePool(this, LevelLayers.PRIMARY);
 
-        this.shotgunParticlesSystem = new Shotgun(5, Vec2.ZERO, 500, 10, 0, 5); // for 1 particle
+        this.shotgunParticlesSystem = new Shotgun(10, Vec2.ZERO, 500, 10, 0, 10); // for 10 particle
         this.shotgunParticlesSystem.initializePool(this, LevelLayers.PRIMARY);
 
         this.grappleParticlesSystem = new Grapple(100, Vec2.ZERO, 500, 10, 0, 1); // for 1 particle
@@ -467,7 +488,7 @@ export default abstract class Level extends Scene {
         this.levelEndArea.addPhysics(undefined, undefined, false, true);
         this.levelEndArea.setGroup(GamePhysicsGroups.GROUND)
         this.levelEndArea.setTrigger(GamePhysicsGroups.PLAYER, GameEvents.PLAYER_ENTERED_LEVEL_END, null);
-        this.levelEndArea.color = Color.YELLOW;
+        this.levelEndArea.color = new Color(0,0,0,0.1);
         
     }
 
@@ -509,6 +530,7 @@ export default abstract class Level extends Scene {
         }
     }
 
+    /*
     // Get the key of the player's jump audio file
     public getJumpAudioKey(): string {
         return this.jumpAudioKey
@@ -517,6 +539,52 @@ export default abstract class Level extends Scene {
     // Get the key of the player's death audio file
     public getDyingAudioKey(): string {
         return this.dyingAudioKey
+    }
+    */
+
+    // Gets the key of the player hurt audio
+    public getPlayerDamageAudioKey(): string {
+        return this.playerDamageAudioKey;
+    }
+
+    // Gets the key of the player death audio
+    public getPlayerDyingAudioKey(): string {
+        return this.playerDeathAudioKey;
+    }
+
+    // Gets the key of the player grapple
+    public getPlayerGrappleAudioKey(): string {
+        return this.playerGrappleAudioKey;
+    }
+
+    // Gets the key of the player jump
+    public getPlayerJumpAudioKey(): string {
+        return this.playerJumpAudioKey;
+    }
+
+    // Gets the key of the player rifle
+    public getPlayerRifleAudioKey(): string {
+        return this.playerRifleAudioKey;
+    }
+
+    // Gets the key of the player shotgun
+    public getPlayerShotgunAudioKey(): string {
+        return this.playerShotgunAudioKey;
+    }
+
+    // Gets the key of the player walking
+    public getPlayerWalkAudioKey(): string {
+        return this.playerWalkAudioKey;
+    }
+
+    // Gets the key of mob damage
+    public getHitAudioKey(): string {
+        return this.HitAudioKey;
+    }
+
+    // Gets the key of mob damage
+    public getMobDeathAudioKey(): string {
+        return this.mobDyingAudioKey;
     }
 
     public getRifleParticlePool() {

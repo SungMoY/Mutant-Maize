@@ -6,7 +6,7 @@ import Color from "../../Wolfie2D/Utils/Color";
 import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
 import RandUtils from "../../Wolfie2D/Utils/RandUtils";
 import { GamePhysicsGroups } from "../GamePhysicsGroups";
-
+import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
  
 
 /**
@@ -21,6 +21,8 @@ export default class Rifle extends ParticleSystem {
 
     //facedir variable
     private faceDir: Vec2;
+
+    private particleSprite: Sprite;
 
     public getPool(): Readonly<Array<Particle>> {
         return this.particlePool;
@@ -65,7 +67,7 @@ export default class Rifle extends ParticleSystem {
         particle.setGroup(GamePhysicsGroups.RIFLE);
 
         particle.color = Color.YELLOW;
-        particle.size = new Vec2(20, 20)
+        particle.size = new Vec2(20, 20);
 
         particle.tweens.add("active", {
             startDelay: 0,

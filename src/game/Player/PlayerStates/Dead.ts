@@ -16,7 +16,7 @@ export default class Dead extends PlayerState {
         this.owner.animation.playIfNotAlready("DYING", false)
         // play dying.mp3
         // Get the dying audio key for the player
-        let dyingAudio = this.owner.getScene().getDyingAudioKey();
+        let dyingAudio = this.owner.getScene().getPlayerDyingAudioKey();
         // Play the dying sound for the player
         this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: dyingAudio, loop: false, holdReference: false});
 
