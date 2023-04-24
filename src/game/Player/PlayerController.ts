@@ -117,7 +117,7 @@ export default class PlayerController extends StateMachineAI {
 
         this.readCoords = true;
 
-        this.invincibleTimer = new Timer(2000);
+        this.invincibleTimer = new Timer(1000);
 
 
         // Add the different states the player can be in to the PlayerController 

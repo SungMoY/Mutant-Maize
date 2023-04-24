@@ -32,6 +32,7 @@ import RatAI from "../NPC/Rat/RatAI";
 import { GameControls } from "../GameControls";
 import Level1 from "./Level1";
 import BirdAI from "../NPC/Bird/BirdAI";
+import AudioManager, { AudioChannelType } from "../../Wolfie2D/Sound/AudioManager";
 
 
 /**
@@ -242,7 +243,7 @@ export default abstract class Level extends Scene {
             }
             // When the level ends, change the scene to the next level
             case GameEvents.LEVEL_END: {
-                this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: this.levelMusicKey, loop: true, holdReference: true});
+                this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: this.levelMusicKey});
                 this.sceneManager.changeToScene(this.nextLevel, {}, this.sceneOptions.physics);
                 break;
             }
@@ -251,6 +252,7 @@ export default abstract class Level extends Scene {
                 break;
             }
             case GameEvents.PLAYER_DEAD: {
+                this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: this.levelMusicKey});
                 this.sceneManager.changeToScene(MainMenu);
                 break;
             }
@@ -542,18 +544,6 @@ export default abstract class Level extends Scene {
             bird.setTrigger(GamePhysicsGroups.PLAYER, GameEvents.PLAYER_HIT, null);
         }
     }
-
-    /*
-    // Get the key of the player's jump audio file
-    public getJumpAudioKey(): string {
-        return this.jumpAudioKey
-    }
-
-    // Get the key of the player's death audio file
-    public getDyingAudioKey(): string {
-        return this.dyingAudioKey
-    }
-    */
 
     // Gets the key of the player hurt audio
     public getPlayerDamageAudioKey(): string {
