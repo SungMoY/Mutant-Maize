@@ -92,10 +92,12 @@ export default abstract class Level extends Scene {
     /** The keys to the tilemap and different tilemap layers */
     protected tilemapKey: string;
     protected wallsLayerKey: string;
+    protected hazardsLayerKey: string;
     /** The scale for the tilemap */
     protected tilemapScale: Vec2;
     /** The wall layer of the tilemap */
     protected walls: OrthogonalTilemap;
+    protected hazards: OrthogonalTilemap;
 
     // background image
     protected backgroundKey: string;
@@ -138,6 +140,7 @@ export default abstract class Level extends Scene {
         super(viewport, sceneManager, renderingManager, {...options, physics: {
             groupNames: [
                 GamePhysicsGroups.GROUND,
+                GamePhysicsGroups.HAZARD,
                 GamePhysicsGroups.PLAYER,
                 GamePhysicsGroups.RIFLE,
                 GamePhysicsGroups.SHOTGUN,
@@ -145,12 +148,13 @@ export default abstract class Level extends Scene {
                 GamePhysicsGroups.ENTITY,
             ],
             collisions: [
-                [0, 1, 1, 1, 1, 1],
-                [1, 0, 0, 0, 0, 1],
-                [1, 0, 0, 0, 0, 1],
-                [1, 0, 0, 0, 0, 1],
-                [1, 0, 0, 0, 0, 1],
-                [1, 1, 1, 1, 1, 0]
+                [0, 1, 1, 1, 1, 1, 1],
+                [1, 0, 1, 1, 1, 1, 1],
+                [1, 1, 0, 0, 0, 0, 1],
+                [1, 1, 0, 0, 0, 0, 1],
+                [1, 1, 0, 0, 0, 0, 1],
+                [1, 1, 0, 0, 0, 0, 1],
+                [1, 1, 1, 1, 1, 1, 0]
             ]
          }});
         this.add = new HW3FactoryManager(this, this.tilemaps);
@@ -306,6 +310,15 @@ export default abstract class Level extends Scene {
         this.walls.setTrigger(GamePhysicsGroups.GRAPPLE, GameEvents.GRAPPLE_COLLISION, null);
         this.walls.setTrigger(GamePhysicsGroups.RIFLE, GameEvents.RIFLE_COLLISION, null);
         this.walls.setTrigger(GamePhysicsGroups.SHOTGUN, GameEvents.SHOTGUN_COLLISION, null);
+
+        // Get hazards layer
+        this.hazards = this.getTilemap(this.hazardsLayerKey) as OrthogonalTilemap;
+        this.hazards.addPhysics();
+        this.hazards.setTrigger(GamePhysicsGroups.GRAPPLE, GameEvents.GRAPPLE_COLLISION, null);
+        this.hazards.setTrigger(GamePhysicsGroups.RIFLE, GameEvents.RIFLE_COLLISION, null);
+        this.hazards.setTrigger(GamePhysicsGroups.SHOTGUN, GameEvents.SHOTGUN_COLLISION, null);
+        this.hazards.setTrigger(GamePhysicsGroups.PLAYER, GameEvents.PLAYER_HIT, null);
+
     }
 
     protected subscribeToEvents(): void {
