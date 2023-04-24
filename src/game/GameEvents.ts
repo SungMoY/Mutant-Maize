@@ -31,5 +31,9 @@ export const GameEvents = {
     GRAPPLE_HIT: "GRAPPLE_HIT",
 
     PLAYER_HIT: "PLAYER_HIT",
+
+    START_BOSS_FIGHT: "START_BOSS_FIGHT",
+
+    BOSS_DEAD: "BOSS_DEAD",
     
 } as const;

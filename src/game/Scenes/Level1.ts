@@ -34,21 +34,33 @@ export default class Level1 extends Level {
     public static readonly BIRD_SPRITE_KEY = "BIRD_SPRITE_KEY";
     public static readonly BIRD_SPRITE_PATH = "game_assets/spritesheets/bird.json";
 
+    public static readonly CHICKEN_SPRITE_KEY = "CHICKEN_SPRITE_KEY";
+    public static readonly CHICKEN_SPRITE_PATH = "game_assets/spritesheets/chicken.json";
+
     // General Audio & Music
-    //public static readonly LEVEL_MUSIC_KEY = "LEVEL_MUSIC";
-    //public static readonly LEVEL_MUSIC_PATH = "game_assets/music/hw5_level_music.wav";
-    //
     public static readonly JUMP_AUDIO_KEY = "PLAYER_JUMP";
     public static readonly JUMP_AUDIO_PATH = "game_assets/sounds/jump.wav";
 
     public static readonly DYING_AUDIO_KEY = "DYING_AUDIO";
     public static readonly DYING_AUDIO_PATH = "game_assets/music/dying.mp3";
-    //
+    
     public static readonly LEVEL_MUSIC_KEY = "LEVEL_MUSIC";
     public static readonly LEVEL_MUSIC_PATH = "game_assets/music/BGM/MainBGM.mp3";
 
     public static readonly HIT_AUDIO_KEY = "HIT";
     public static readonly HIT_AUDIO_PATH = "game_assets/sounds/General/Hit_Sound.wav";
+
+    public static readonly BOSS_MUSIC_KEY = "BOSS_MUSIC";
+    public static readonly BOSS_MUSIC_PATH = "game_assets/music/BGM/BossBGM.mp3";
+
+    public static readonly CHICKEN_DYING_AUDIO_KEY = "CHICKEN_DYING_AUDIO";
+    public static readonly CHICKEN_DYING_AUDIO_PATH = "game_assets/sounds/Chicken/Chicken_Dying.wav";
+
+    public static readonly CHICKEN_EGG_AUDIO_KEY = "CHICKEN_GG_AUDIO";
+    public static readonly CHICKEN_EGG_AUDIO_PATH = "game_assets/sounds/Chicken/Chicken_Egg.wav";
+
+    public static readonly CHICKEN_WALK_AUDIO_KEY = "CHICKEN_WALK_AUDIO";
+    public static readonly CHICKEN_WALK_AUDIO_PATH = "game_assets/sounds/Chicken/Chicken_Walk.wav";
 
     // Player Audio
     public static readonly PLAYER_DAMAGE_AUDIO_KEY = "PLAYER_DAMAGE";
@@ -76,7 +88,6 @@ export default class Level1 extends Level {
     public static readonly MOB_DEATH_AUDIO_KEY = "MOB_DEATH";
     public static readonly MOB_DEATH_AUDIO_PATH = "game_assets/sounds/General/Mob_Dying.wav";
 
-
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
         super(viewport, sceneManager, renderingManager, options);
         
@@ -91,6 +102,11 @@ export default class Level1 extends Level {
         this.backgroundKey = Level1.LEVEL1_BACKGROUND_KEY;
         // Audio
         this.levelMusicKey = Level1.LEVEL_MUSIC_KEY;
+        this.bossMusicKey = Level1.BOSS_MUSIC_KEY;
+
+        this.chickenDyingAudioKey = Level1.CHICKEN_DYING_AUDIO_KEY;
+        this.chickenEggAudioKey = Level1.CHICKEN_EGG_AUDIO_KEY;
+        this.chickenWalkAudioKey = Level1.CHICKEN_WALK_AUDIO_KEY;
 
         this.playerDamageAudioKey = Level1.PLAYER_DAMAGE_AUDIO_KEY;
         this.playerDeathAudioKey = Level1.PLAYER_DEATH_AUDIO_KEY;
@@ -116,7 +132,6 @@ export default class Level1 extends Level {
             new Vec2(6000, 630),
             new Vec2(7000, 630),
             new Vec2(7578, 270),
-            new Vec2(10500, 630),
         ]
 
         this.birdSpriteKey = Level1.BIRD_SPRITE_KEY;
@@ -127,8 +142,11 @@ export default class Level1 extends Level {
             new Vec2(4704, 141),
             new Vec2(5616, 480),
             new Vec2(7059, 285),
-            new Vec2(9987, 228),
         ]
+
+        this.chickenSpriteKey = Level1.CHICKEN_SPRITE_KEY;
+        this.chickenPosition = new Vec2(10938, 560),
+        this.bossViewport = [10008, 10558, 768]
 
         // map length in tiles * tile dimension in pixels * tilemap scale
         // 240 * 16 * 3 = 11520
@@ -164,9 +182,15 @@ export default class Level1 extends Level {
 
         this.load.spritesheet(Level1.RAT_SPRITE_KEY, Level1.RAT_SPRITE_PATH);
         this.load.spritesheet(Level1.BIRD_SPRITE_KEY, Level1.BIRD_SPRITE_PATH);
+        this.load.spritesheet(Level1.CHICKEN_SPRITE_KEY, Level1.CHICKEN_SPRITE_PATH);
 
         // loads Audio
         this.load.audio(this.levelMusicKey, Level1.LEVEL_MUSIC_PATH);
+        this.load.audio(this.bossMusicKey, Level1.BOSS_MUSIC_PATH)
+
+        this.load.audio(this.chickenDyingAudioKey, Level1.CHICKEN_DYING_AUDIO_PATH);
+        this.load.audio(this.chickenEggAudioKey, Level1.CHICKEN_EGG_AUDIO_PATH);
+        this.load.audio(this.chickenWalkAudioKey, Level1.CHICKEN_WALK_AUDIO_PATH);
 
         this.load.audio(this.playerDamageAudioKey, Level1.PLAYER_DAMAGE_AUDIO_PATH);
         this.load.audio(this.playerDeathAudioKey, Level1.PLAYER_DEATH_AUDIO_PATH);
