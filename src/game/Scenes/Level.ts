@@ -106,6 +106,7 @@ export default abstract class Level extends Scene {
     protected dyingAudioKey: string;
 
     // sets viewport dynamically for each level
+    // map length in tiles * tile dimension in pixels * tilemap scale
     protected levelxbound: number;
     protected levelybound: number;
 
@@ -130,6 +131,8 @@ export default abstract class Level extends Scene {
 
     protected bossSpriteKey: string;
     protected bossPosition: Vec2;
+
+    protected parallaxBackground: boolean;
 
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
         super(viewport, sceneManager, renderingManager, {...options, physics: {
@@ -263,13 +266,17 @@ export default abstract class Level extends Scene {
 	}
 
     protected initLayers(): void {
+        // Add a layer for the background
         // potentially add some parallax for y
-        this.addParallaxLayer(LevelLayers.BACKGROUND, new Vec2(0.25, 0), -1);
+        if (this.parallaxBackground) {
+            this.addParallaxLayer(LevelLayers.BACKGROUND, new Vec2(0.25, 0), -1);
+        } else {
+            this.addLayer(LevelLayers.BACKGROUND);
+        }
         // Add a layer for UI
         this.addUILayer(LevelLayers.UI);
         // Add a layer for players and enemies
         this.addLayer(LevelLayers.PRIMARY);
-        // Add a layer for the background
     }
 
     protected initializeBackground(): void {

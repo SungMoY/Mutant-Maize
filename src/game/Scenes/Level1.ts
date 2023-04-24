@@ -1,16 +1,11 @@
-import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import Level from "./Level";
 import RenderingManager from "../../Wolfie2D/Rendering/RenderingManager";
 import SceneManager from "../../Wolfie2D/Scene/SceneManager";
 import Viewport from "../../Wolfie2D/SceneGraph/Viewport";
-
 import MainMenu from "./MainMenu";
-import Level2 from "./Level2";
 
-/**
- * The first level for HW4 - should be the one with the grass and the clouds.
- */
+
 export default class Level1 extends Level {
 
     public static readonly PLAYER_SPRITE_KEY = "PLAYER_SPRITE_KEY";
@@ -46,17 +41,21 @@ export default class Level1 extends Level {
 
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
         super(viewport, sceneManager, renderingManager, options);
+        
         this.tilemapKey = Level1.TILEMAP_KEY;
         this.tilemapScale = new Vec2(3, 3);
         this.wallsLayerKey = Level1.WALLS_LAYER_KEY;
+
         this.playerSpriteKey = Level1.PLAYER_SPRITE_KEY;
         this.playerSpawn = new Vec2(100, 500);
-        // this.levelMusicKey = Level1.LEVEL_MUSIC_KEY
+
         this.jumpAudioKey = Level1.JUMP_AUDIO_KEY;
         this.dyingAudioKey = Level1.DYING_AUDIO_KEY;
         this.backgroundKey = Level1.LEVEL1_BACKGROUND_KEY;
+
         this.levelEndPosition = new Vec2(11328, 528)
         this.levelEndHalfSize = new Vec2(96, 96)
+
         this.kernelSpriteKey = Level1.KERNEL_SPRITE_KEY;
         this.popcornSpriteKey = Level1.POPCORN_SPRITE_KEY;
 
@@ -84,12 +83,23 @@ export default class Level1 extends Level {
             new Vec2(9987, 228),
         ]
 
-        this.levelxbound = 3840
-        this.levelybound = 720
+        // map length in tiles * tile dimension in pixels * tilemap scale
+        // 240 * 16 * 3 = 11520
+        this.levelxbound = 11520
+        // 16 * 16 * 3 = 768
+        this.levelybound = 768
         // due to parallax of the background image, levelxbound does not equal viewport size
         // therefore, background image position and viewport bounds must be set differently
-        this.backgroundImagePosition = new Vec2(this.levelxbound/2, this.levelybound/2);
-        this.viewportBounds = new Vec2(this.levelxbound*3, this.levelybound+48)
+        // i think its length of image / 2
+        // the background for level 1 is 3840 by 720
+        // it is also map length in tiles * tile dimension in pixels to get total map pixel length
+        // then divide that by 2 to get the pixel mid point of the map
+        // 240 * 16 = 3840 / 2 = 1920
+        // 16 * 16 = 720 / 2 = 360
+        this.backgroundImagePosition = new Vec2(1920, 360);
+        this.viewportBounds = new Vec2(this.levelxbound, this.levelybound)
+
+        this.parallaxBackground = true;
     }
 
     public loadScene(): void {
@@ -109,10 +119,9 @@ export default class Level1 extends Level {
 
     public unloadScene(): void {
         // By default, resouceManager unloads everything, so just keep what is same for all levels
-        this.load.keepSpritesheet(this.playerSpriteKey);
-        this.load.keepAudio(this.jumpAudioKey);
-        this.load.keepAudio(this.dyingAudioKey);
-
+        // this.load.keepSpritesheet(this.playerSpriteKey);
+        // this.load.keepAudio(this.jumpAudioKey);
+        // this.load.keepAudio(this.dyingAudioKey);
     }
 
     public startScene(): void {
