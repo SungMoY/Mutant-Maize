@@ -4,6 +4,7 @@
 export const GamePhysicsGroups = {
     // Physics groups for the player, player weapons, ground, and mobs/entities
     PLAYER: "PLAYER",
+    HAZARD: "HAZARD",
     GROUND: "GROUND",
     ENTITY: "ENTITY",
     RIFLE: "RIFLE",
