@@ -8,7 +8,7 @@ export default class Jump extends PlayerState {
 
 	public onEnter(options: Record<string, any>): void {
         // Get the jump audio key for the player
-        let jumpAudio = this.owner.getScene().getJumpAudioKey();
+        let jumpAudio = this.owner.getScene().getPlayerJumpAudioKey();
         // Give the player a burst of upward momentum
         this.parent.velocity.y = -550;
         // Play the jump sound for the player
@@ -23,6 +23,10 @@ export default class Jump extends PlayerState {
         // If the player hit the ground, start idling
         if (this.owner.onGround) {
 			this.finished(PlayerStates.IDLE);
+            
+            // Get the jump audio key for the player
+            //let landAudio = this.owner.getScene().getPlayerJumpAudioKey();
+            //this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: landAudio, loop: false, holdReference: false});
 		} 
         // If the player hit the ceiling or their velocity is >= to zero, 
         else if(this.owner.onCeiling || this.parent.velocity.y >= 0){

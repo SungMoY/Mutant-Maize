@@ -14,6 +14,7 @@ import { GameControls } from "../GameControls";
 import HW3AnimatedSprite from "../Nodes/HW3AnimatedSprite";
 import MathUtils from "../../Wolfie2D/Utils/MathUtils";
 import { GameEvents } from "../GameEvents";
+import { GameEventType } from "../../Wolfie2D/Events/GameEventType"
 import Dead from "./PlayerStates/Dead";
 import Shotgun from "./Shotgun";
 import Grapple from "./Grapple";
@@ -86,7 +87,6 @@ export default class PlayerController extends StateMachineAI {
     protected shotgun: Shotgun;
     protected grapple: Grapple;
     protected grappleCoords: Queue<Vec2>;
-
 
     protected isDead: boolean;
     protected readCoords: boolean;
@@ -189,6 +189,10 @@ export default class PlayerController extends StateMachineAI {
                 this.owner.animation.play(PlayerAnimations.ATTACKING_RIGHT);
                 this.owner.animation.queue(PlayerAnimations.IDLE, true);
             }
+
+            // plays rifle sound
+            let gunAudio = this.owner.getScene().getPlayerRifleAudioKey();
+            this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: gunAudio, loop: false, holdReference: false});
         }
 
         if ((Input.isMouseJustPressed(2) && !this.shotgun.isSystemRunning()) && !this.inGrapple) {
@@ -204,6 +208,10 @@ export default class PlayerController extends StateMachineAI {
                 this.owner.animation.play(PlayerAnimations.SHOTGUN_RIGHT);
                 this.owner.animation.queue(PlayerAnimations.IDLE, true);
             }
+
+            // plays shotgun sound
+            let gunAudio = this.owner.getScene().getPlayerShotgunAudioKey();
+            this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: gunAudio, loop: false, holdReference: false});
         }
 
         if (Input.isJustPressed(GameControls.GRAPPLE) || Input.isMouseJustPressed(4) && !this.inGrapple) {
@@ -213,6 +221,10 @@ export default class PlayerController extends StateMachineAI {
             this.grapple.startSystem(500, 0, this.owner.position, this.faceDir);
             this.owner.animation.play(PlayerAnimations.GRAPPLING);
             this.owner.animation.queue(PlayerAnimations.IDLE, true);
+
+            // plays grapple sound
+            let gunAudio = this.owner.getScene().getPlayerGrappleAudioKey();
+            this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: gunAudio, loop: false, holdReference: false});
         }
 
         // if the player is dead, enter the dead state
@@ -250,6 +262,10 @@ export default class PlayerController extends StateMachineAI {
             this.owner.animation.playIfNotAlready(PlayerAnimations.TAKING_DAMAGE, false);
             this.owner.animation.queue(PlayerAnimations.IDLE, true);
             this.invincibleTimer.start();
+            
+            // plays damage sound
+            let damageAudio = this.owner.getScene().getPlayerDamageAudioKey()
+            this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: damageAudio, loop: false, holdReference: false});
         }
     }
 
@@ -260,7 +276,6 @@ export default class PlayerController extends StateMachineAI {
             particle.position = Vec2.ZERO;
             particle.color = Color.TRANSPARENT;
             particle.collisionShape = new AABB(Vec2.ZERO, Vec2.ZERO);
-
         }
     }
 
@@ -271,7 +286,6 @@ export default class PlayerController extends StateMachineAI {
             particle.position = Vec2.ZERO;
             particle.color = Color.TRANSPARENT;
             particle.collisionShape = new AABB(Vec2.ZERO, Vec2.ZERO);
-
         }
     }
 
@@ -302,11 +316,11 @@ export default class PlayerController extends StateMachineAI {
             let yDiff = reachTile.y - fromPosition.y + 24;
             if ((fromPosition.y - reachTile.y) <= 100 && (fromPosition.y > reachTile.y)) {
                 yDiff = reachTile.y - fromPosition.y + 48; // * (1 - ((fromPosition.y - reachTile.y)/48))
-                console.log("c1")
+                //console.log("c1")
             }
             else if (reachTile.y >= fromPosition.y) {
                 yDiff = reachTile.y - fromPosition.y;
-                console.log("c2")
+                //console.log("c2")
             }
 
             let xStep = xDiff / numCoords;
