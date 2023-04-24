@@ -38,5 +38,5 @@ import SplashScreen from "./game/Scenes/SplashScreen";
     const game = new Game(options);
 
     // Start our game
-    game.start(SplashScreen, {});
+    game.start(Level1, {});
 })();
