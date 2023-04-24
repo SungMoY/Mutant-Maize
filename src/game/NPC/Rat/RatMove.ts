@@ -8,30 +8,48 @@ export default class RatWalk extends RatState {
         throw new Error("Method not implemented.");
     }
     public onEnter(options: Record<string, any>): void {
-        if (this.parent.velocity.x < 0) {
-            this.owner.animation.playIfNotAlready("RUN_LEFT", true);
-        } else if (this.parent.velocity.x > 0) {
-            this.owner.animation.playIfNotAlready("RUN_RIGHT", true);
-        } else {
-            this.owner.animation.playIfNotAlready("IDLE", false);
+        if (this.parent.health <= 0) {
+            if (this.parent.velocity.x < 0) {
+                this.owner.animation.playIfNotAlready("RUN_LEFT", true);
+            } else if (this.parent.velocity.x > 0) {
+                this.owner.animation.playIfNotAlready("RUN_RIGHT", true);
+            } else {
+                this.owner.animation.playIfNotAlready("IDLE", false);
+            }
         }
     }
 
     public update(deltaT: number): void {
         super.update(deltaT);
 
+        let leftCornerTile = this.parent.tilemap.getTileAtWorldPosition(new Vec2(this.owner.position.x - this.owner.collisionShape.halfSize.x-1, 
+            this.owner.position.y + this.owner.collisionShape.halfSize.y+16));
+        let rightCornerTile = this.parent.tilemap.getTileAtWorldPosition(new Vec2(this.owner.position.x + this.owner.collisionShape.halfSize.x+1,
+            this.owner.position.y + this.owner.collisionShape.halfSize.y+16));
+
+        let leftTile = this.parent.tilemap.getTileAtWorldPosition(new Vec2(this.owner.position.x - this.owner.collisionShape.halfSize.x-1,
+            this.owner.position.y));
+        let rightTile = this.parent.tilemap.getTileAtWorldPosition(new Vec2(this.owner.position.x + this.owner.collisionShape.halfSize.x+1,
+            this.owner.position.y));
+
         if (this.parent.velocity.x < 0) {
             this.owner.animation.playIfNotAlready("RUN_LEFT", true);
-            if (this.parent.tilemap.getTileAtWorldPosition(new Vec2(this.owner.position.x - this.owner.collisionShape.halfSize.x-1, this.owner.position.y)) !== 0) {
+            if (leftTile !== 0) {
                 this.parent.velocity.x = -this.parent.velocity.x;
+            } else {
+                if (leftCornerTile === 0) {
+                    this.parent.velocity.x = -this.parent.velocity.x;
+                }
             }
         } else if (this.parent.velocity.x > 0) {
             this.owner.animation.playIfNotAlready("RUN_RIGHT", true);
-            if (this.parent.tilemap.getTileAtWorldPosition(new Vec2(this.owner.position.x + this.owner.collisionShape.halfSize.x+1, this.owner.position.y)) !== 0) {
+            if (rightTile !== 0) {
                 this.parent.velocity.x = -this.parent.velocity.x;
+            } else {
+                if (rightCornerTile === 0) {
+                    this.parent.velocity.x = -this.parent.velocity.x;
+                }
             }
-        } else {
-            this.owner.animation.playIfNotAlready("IDLE", false);
         }
 
         this.owner.move(this.parent.velocity.scaled(deltaT));

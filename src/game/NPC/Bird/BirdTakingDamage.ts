@@ -1,9 +1,9 @@
 import AABB from "../../../Wolfie2D/DataTypes/Shapes/AABB";
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import GameEvent from "../../../Wolfie2D/Events/GameEvent";
-import RatState from "./RatState";
+import BirdState from "./BirdState";
 
-export default class RatTakingDamage extends RatState {
+export default class BirdTakingDamage extends BirdState {
 
     handleInput(event: GameEvent): void {
         throw new Error("Method not implemented.");
@@ -17,7 +17,6 @@ export default class RatTakingDamage extends RatState {
             this.owner.animation.play("TAKING_DAMAGE", false);
             this.parent.hurtTimer.start();
         }
-
     }
 
     public update(deltaT: number): void {

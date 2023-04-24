@@ -41,6 +41,9 @@ export default class Level1 extends Level {
     public static readonly RAT_SPRITE_KEY = "RAT_SPRITE_KEY";
     public static readonly RAT_SPRITE_PATH = "game_assets/spritesheets/rat.json";
 
+    public static readonly BIRD_SPRITE_KEY = "BIRD_SPRITE_KEY";
+    public static readonly BIRD_SPRITE_PATH = "game_assets/spritesheets/bird.json";
+
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
         super(viewport, sceneManager, renderingManager, options);
         this.tilemapKey = Level1.TILEMAP_KEY;
@@ -52,15 +55,33 @@ export default class Level1 extends Level {
         this.jumpAudioKey = Level1.JUMP_AUDIO_KEY;
         this.dyingAudioKey = Level1.DYING_AUDIO_KEY;
         this.backgroundKey = Level1.LEVEL1_BACKGROUND_KEY;
-        this.levelEndPosition = new Vec2(11232, 528)
+        this.levelEndPosition = new Vec2(11328, 528)
         this.levelEndHalfSize = new Vec2(96, 96)
         this.kernelSpriteKey = Level1.KERNEL_SPRITE_KEY;
         this.popcornSpriteKey = Level1.POPCORN_SPRITE_KEY;
 
         this.ratSpriteKey = Level1.RAT_SPRITE_KEY;
         this.ratPositions = [
-            new Vec2(250, 720 - 48 - 48),
-            new Vec2(900, 720 - 96),
+            new Vec2(900, 624),
+            new Vec2(800, 432),
+            new Vec2(2064, 180),
+            new Vec2(3684, 630),
+            new Vec2(4740, 630),
+            new Vec2(6000, 630),
+            new Vec2(7000, 630),
+            new Vec2(7578, 270),
+            new Vec2(10500, 630),
+        ]
+
+        this.birdSpriteKey = Level1.BIRD_SPRITE_KEY;
+        this.birdPositions = [
+            new Vec2(100, 300),
+            new Vec2(1260, 172),
+            new Vec2(3100, 350),
+            new Vec2(4704, 141),
+            new Vec2(5616, 480),
+            new Vec2(7059, 285),
+            new Vec2(9987, 228),
         ]
 
         this.levelxbound = 3840
@@ -83,6 +104,7 @@ export default class Level1 extends Level {
         this.load.image(Level1.POPCORN_SPRITE_KEY, Level1.POPCORN_SPRITE_PATH)
 
         this.load.spritesheet(Level1.RAT_SPRITE_KEY, Level1.RAT_SPRITE_PATH);
+        this.load.spritesheet(Level1.BIRD_SPRITE_KEY, Level1.BIRD_SPRITE_PATH);
     }
 
     public unloadScene(): void {
@@ -95,7 +117,7 @@ export default class Level1 extends Level {
 
     public startScene(): void {
         super.startScene();
-        this.nextLevel = Level2;
+        this.nextLevel = MainMenu;
     }
 
     protected initializeViewport(): void {

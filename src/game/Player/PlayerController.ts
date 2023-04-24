@@ -21,6 +21,7 @@ import Queue from "../../Wolfie2D/DataTypes/Queue";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import Timer from "../../Wolfie2D/Timing/Timer";
 import Color from "../../Wolfie2D/Utils/Color";
+import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 
 // TODO play your heros animations
 
@@ -106,8 +107,8 @@ export default class PlayerController extends StateMachineAI {
         this.speed = 400;
         this.velocity = Vec2.ZERO;
 
-        this.health = 100;
-        this.maxHealth = 100;
+        this.health = 50;
+        this.maxHealth = 50;
 
         this.isDead = false;
         this.inGrapple = false;
@@ -244,7 +245,7 @@ export default class PlayerController extends StateMachineAI {
 
     protected handlePlayerHit() {
         if (this.invincibleTimer.isStopped()) {
-            this.health -= 1;
+            this.health -= 5;
             this.owner.animation.stop();
             this.owner.animation.playIfNotAlready(PlayerAnimations.TAKING_DAMAGE, false);
             this.owner.animation.queue(PlayerAnimations.IDLE, true);
@@ -258,6 +259,8 @@ export default class PlayerController extends StateMachineAI {
         if (particle !== undefined) {
             particle.position = Vec2.ZERO;
             particle.color = Color.TRANSPARENT;
+            particle.collisionShape = new AABB(Vec2.ZERO, Vec2.ZERO);
+
         }
     }
 
@@ -267,11 +270,13 @@ export default class PlayerController extends StateMachineAI {
         if (particle !== undefined) {
             particle.position = Vec2.ZERO;
             particle.color = Color.TRANSPARENT;
+            particle.collisionShape = new AABB(Vec2.ZERO, Vec2.ZERO);
+
         }
     }
 
     protected handleGrappleCollision(particleId: number) {
-
+        this.invincibleTimer.start();
         let particles = this.grapple.getPool();
         let particle = particles.find(particle => particle.id === particleId);
         if (particle !== undefined) {
