@@ -16,7 +16,7 @@ import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 export default class MainMenu extends Scene {
 
     public static readonly MUSIC_KEY = "MAIN_MENU_MUSIC";
-    public static readonly MUSIC_PATH = "game_assets/music/BGM/LobbyBGM.mp3";
+    public static readonly MUSIC_PATH = "game_assets/music/menu2.mp3";
 
     public static readonly BACKGROUND_KEY = "BACKGROUND";
     public static readonly BACKGROUND_PATH = "game_assets/images/background.png";

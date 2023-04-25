@@ -49,9 +49,6 @@ export default class HelpScreen extends Scene {
         cheatsText.setPadding(new Vec2(450, 93));
         //cheats text per line
         let cheatsTextLine = [
-            "1: Go to Level 1",
-            "2: Teleport to end of Level 1",
-            "3: Something",
             "G: Debug Screen",
             "I: invulnerable",
             "M: Spawn Mouse",
