@@ -273,6 +273,7 @@ export default abstract class Level extends Scene {
             // When the level ends, change the scene to the next level
             case GameEvents.LEVEL_END: {
                 this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: this.levelMusicKey});
+                this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: this.bossMusicKey})
                 this.sceneManager.changeToScene(this.nextLevel, {}, this.sceneOptions.physics);
                 break;
             }
@@ -282,6 +283,7 @@ export default abstract class Level extends Scene {
             }
             case GameEvents.PLAYER_DEAD: {
                 this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: this.levelMusicKey});
+                this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: this.bossMusicKey})
                 this.sceneManager.changeToScene(MainMenu);
                 break;
             }
