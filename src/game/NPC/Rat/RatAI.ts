@@ -12,6 +12,7 @@ import { LevelLayers } from "../../Scenes/Level";
 import RatGrappleStunned from "./RatGrappleStunned";
 import RatMove from "./RatMove";
 import RatTakingDamage from "./RatTakingDamage";
+import MathUtils from "../../../Wolfie2D/Utils/MathUtils";
 
 export default class RatAI extends StateMachineAI {
 
@@ -25,6 +26,7 @@ export default class RatAI extends StateMachineAI {
     protected isDead: boolean;
 
     protected _health: number;
+    protected _maxHealth: number;
 
     public tilemap: OrthogonalTilemap;
 
@@ -37,7 +39,8 @@ export default class RatAI extends StateMachineAI {
     public initializeAI(owner: HW3AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;
         this._velocity = new Vec2(150, 275)
-        this._health = 50;
+        this.health = 50;
+        this.maxHealth = 50;
         this.tilemap = this.owner.getScene().getTilemap(options.tilemap) as OrthogonalTilemap;
 
         this.hurtTimer = new Timer(360, () => {
@@ -82,6 +85,9 @@ export default class RatAI extends StateMachineAI {
             case GameEvents.GRAPPLE_HIT:
                 this.handleGrappleHit(event.data.get("node"), event.data.get("other"));
                 break;
+            case GameEvents.MOB_HEALTH_CHANGE:
+                this.handleMobHealth(); //
+                break;
         }
     }
 
@@ -117,16 +123,29 @@ export default class RatAI extends StateMachineAI {
         }
     }
 
+    ////
+    protected handleMobHealth() {
+        this.health = this.health;
+    }
+
     public get velocity(): Vec2 {
         return this._velocity;
     }
     public set velocity(velocity: Vec2) {
         this._velocity = velocity;
     }
-    public get health(): number {
-        return this._health;
+
+    public get maxHealth(): number { return this._maxHealth; }
+    public set maxHealth(maxHealth: number) { 
+        this._maxHealth = maxHealth; 
+        // When the health changes, fire an event up to the scene.
+        this.emitter.fireEvent(GameEvents.MOB_HEALTH_CHANGE, {curhp: this.health, maxhp: this.maxHealth});
     }
+
+    public get health(): number { return this._health; }
     public set health(health: number) {
-        this._health = health;
+        this._health = MathUtils.clamp(health, 0, this.maxHealth);
+        // When the health changes, fire an event up to the scene.
+        this.emitter.fireEvent(GameEvents.MOB_HEALTH_CHANGE, {curhp: this.health, maxhp: this.maxHealth})
     }
 }   

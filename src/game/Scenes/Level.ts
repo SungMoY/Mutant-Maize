@@ -75,7 +75,6 @@ export default abstract class Level extends Scene {
 	private healthBarHealth: Label;
 	private healthBarMissing: Label;
 
-
     /** The end of level stuff */
 
     protected levelEndPosition: Vec2;
@@ -156,6 +155,10 @@ export default abstract class Level extends Scene {
     protected bossSpriteKey: string;
     protected bossPosition: Vec2;
 
+    private mobHealthBar: Label;
+	private mobHealthBarHealth: Label;
+	private mobHealthBarMissing: Label;
+
     protected parallaxBackground: boolean;
 
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
@@ -188,9 +191,9 @@ export default abstract class Level extends Scene {
         this.initializeBackground();
         this.initializeTilemap();
         this.initializeWeaponSystem();
-        this.initializeUI();
         this.initializePlayer(this.playerSpriteKey);
         this.initializeNPCs();
+        this.initializeUI();
         this.initializeViewport();
         this.subscribeToEvents();
         this.initializeLevelEnds();
@@ -256,6 +259,12 @@ export default abstract class Level extends Scene {
                 this.sceneManager.changeToScene(MainMenu);
                 break;
             }
+            ////
+            case GameEvents.MOB_HEALTH_CHANGE: {
+                //this.handleMobHealthChange(event.data.get("curhp"), event.data.get("maxhp"));
+                //console.log("handled event");
+                break;
+            }
             // Default: Throw an error! No unhandled events allowed.
             default: {
                 throw new Error(`Unhandled event caught in scene with type ${event.type}`)
@@ -282,6 +291,25 @@ export default abstract class Level extends Scene {
         this.healthBarMissing.position = new Vec2(this.healthBarHealth.position.x + this.healthBarHealth.size.x / 2 + this.healthBarMissing.size.x / 2, this.healthBarMissing.position.y);
     
     }
+    
+    /*
+    // mob health bar attempt
+    protected handleMobHealthChange(currentHealth: number, maxHealth: number): void {
+		let unit = this.mobHealthBar.size.x / maxHealth;
+        this.mobHealthBarHealth.size = new Vec2(currentHealth * unit, this.mobHealthBarHealth.size.y);
+        this.mobHealthBarHealth.position = new Vec2(this.mobHealthBar.position.x - this.mobHealthBar.size.x / 2 + this.mobHealthBarHealth.size.x / 2, this.mobHealthBarHealth.position.y);
+	
+        this.mobHealthBarMissing.size = new Vec2((maxHealth - currentHealth) * unit, this.mobHealthBarMissing.size.y);
+        this.mobHealthBarMissing.position = new Vec2(this.mobHealthBarHealth.position.x + this.mobHealthBarHealth.size.x / 2 + this.mobHealthBarMissing.size.x / 2, this.mobHealthBarMissing.position.y);
+        //console.log("passed here");
+        if (currentHealth <= 0) {
+            this.mobHealthBar.backgroundColor = Color.TRANSPARENT;
+            this.mobHealthBarHealth.backgroundColor = Color.TRANSPARENT;
+            this.mobHealthBarMissing.backgroundColor = Color.TRANSPARENT;
+            console.log("dedge");
+        }
+    }
+    */
 
     protected lockPlayer(player: AnimatedSprite, viewportCenter: Vec2, viewportHalfSize: Vec2): void {
 		if (player.position.x - player.boundary.getHalfSize().x < viewportCenter.x - viewportHalfSize.x) {
@@ -325,10 +353,7 @@ export default abstract class Level extends Scene {
 
         // Get the wall layers 
         this.walls = this.getTilemap(this.wallsLayerKey) as OrthogonalTilemap;
-
-        // Add physicss to the wall layer
         this.walls.addPhysics();
-
         this.walls.setGroup(GamePhysicsGroups.GROUND);
         this.walls.setTrigger(GamePhysicsGroups.GRAPPLE, GameEvents.GRAPPLE_COLLISION, null);
         this.walls.setTrigger(GamePhysicsGroups.RIFLE, GameEvents.RIFLE_COLLISION, null);
@@ -350,6 +375,7 @@ export default abstract class Level extends Scene {
         this.receiver.subscribe(GameEvents.LEVEL_END);
         this.receiver.subscribe(GameEvents.HEALTH_CHANGE);
         this.receiver.subscribe(GameEvents.PLAYER_DEAD);
+        this.receiver.subscribe(GameEvents.MOB_HEALTH_CHANGE);
     }
     /**
      * Adds in any necessary UI to the game
@@ -525,6 +551,29 @@ export default abstract class Level extends Scene {
             rat.setTrigger(GamePhysicsGroups.SHOTGUN, GameEvents.SHOTGUN_HIT, null);
             rat.setTrigger(GamePhysicsGroups.GRAPPLE, GameEvents.GRAPPLE_HIT, null);
             rat.setTrigger(GamePhysicsGroups.PLAYER, GameEvents.PLAYER_HIT, null);
+
+            /*
+            // attempt at health bars for mobs
+            let ratHealthPosition = new Vec2(rat.position.x, rat.position.y);
+            // using ratHealthPosition make hp static, but rat.position follows
+            this.mobHealthBar =  <Label>this.add.uiElement(UIElementType.LABEL, LevelLayers.PRIMARY, {position: rat.position, text: ""});
+            this.mobHealthBar.size = new Vec2(20, 5);
+            this.mobHealthBar.backgroundColor = Color.BLUE;
+            this.mobHealthBar.borderColor = Color.BLACK;
+            this.mobHealthBar.borderRadius = 0;
+
+            // HealthBarHealth
+		    this.mobHealthBarHealth = <Label>this.add.uiElement(UIElementType.LABEL, LevelLayers.PRIMARY, {position: rat.position, text: ""});
+		    this.mobHealthBarHealth.size = new Vec2(20, 5);
+            this.mobHealthBarHealth.backgroundColor = Color.BLUE;
+            this.mobHealthBarHealth.borderRadius = 0;
+
+            // HealthBarMissing
+		    this.mobHealthBarMissing = <Label>this.add.uiElement(UIElementType.LABEL, LevelLayers.PRIMARY, {position: rat.position, text: ""});
+		    this.mobHealthBarMissing.size = new Vec2(20, 5);
+		    this.mobHealthBarMissing.backgroundColor = Color.RED;
+            this.mobHealthBarMissing.borderRadius = 0;
+            */
         }
         for (let i = 0; i < this.birdPositions.length; i++) {
             let bird = this.add.animatedSprite(this.birdSpriteKey, LevelLayers.PRIMARY);
@@ -542,6 +591,29 @@ export default abstract class Level extends Scene {
             bird.setTrigger(GamePhysicsGroups.SHOTGUN, GameEvents.SHOTGUN_HIT, null);
             bird.setTrigger(GamePhysicsGroups.GRAPPLE, GameEvents.GRAPPLE_HIT, null);
             bird.setTrigger(GamePhysicsGroups.PLAYER, GameEvents.PLAYER_HIT, null);
+
+            /*
+            // attempt at health bars for mobs
+            // using ratHealthPosition make hp static, but rat.position follows
+            // health is there but at the center of the bird
+            this.mobHealthBar =  <Label>this.add.uiElement(UIElementType.LABEL, LevelLayers.PRIMARY, {position: bird.position, text: ""});
+            this.mobHealthBar.size = new Vec2(20, 5);
+            this.mobHealthBar.backgroundColor = Color.BLUE;
+            this.mobHealthBar.borderColor = Color.BLACK;
+            this.mobHealthBar.borderRadius = 0;
+
+            // HealthBarHealth
+		    this.mobHealthBarHealth = <Label>this.add.uiElement(UIElementType.LABEL, LevelLayers.PRIMARY, {position: bird.position, text: ""});
+		    this.mobHealthBarHealth.size = new Vec2(20, 5);
+            this.mobHealthBarHealth.backgroundColor = Color.BLUE;
+            this.mobHealthBarHealth.borderRadius = 0;
+
+            // HealthBarMissing
+		    this.mobHealthBarMissing = <Label>this.add.uiElement(UIElementType.LABEL, LevelLayers.PRIMARY, {position: bird.position, text: ""});
+		    this.mobHealthBarMissing.size = new Vec2(20, 5);
+		    this.mobHealthBarMissing.backgroundColor = Color.RED;
+            this.mobHealthBarMissing.borderRadius = 0;
+            */
         }
     }
 

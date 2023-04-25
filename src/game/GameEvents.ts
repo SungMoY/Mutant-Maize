@@ -31,5 +31,7 @@ export const GameEvents = {
     GRAPPLE_HIT: "GRAPPLE_HIT",
 
     PLAYER_HIT: "PLAYER_HIT",
+
+    MOB_HEALTH_CHANGE: "MOB_HEALTH_CHANGE",
     
 } as const;

@@ -17,7 +17,7 @@ export default class Walk extends PlayerState {
             this.owner.animation.play(PlayerAnimations.RUN_RIGHT, true);
         }
 
-        this.walkAudioTimer = new Timer(400);
+        this.walkAudioTimer = new Timer(500);
 	}
 
 	update(deltaT: number): void {
