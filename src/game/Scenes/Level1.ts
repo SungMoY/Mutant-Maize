@@ -17,7 +17,6 @@ export default class Level1 extends Level {
 
     public static readonly HAZARD_LAYER_KEY = "Hazard"
 
-
     public static readonly LEVEL1_BACKGROUND_KEY = "LEVEL1_BACKGROUND";
     public static readonly LEVEL1_BACKGROUND_PATH = "game_assets/images/level1_background.png";
 
@@ -129,7 +128,9 @@ export default class Level1 extends Level {
             new Vec2(2064, 180),
             new Vec2(3684, 630),
             new Vec2(4740, 630),
+            new Vec2(5950, 290), // 
             new Vec2(6000, 630),
+            new Vec2(6816, 290), // 
             new Vec2(7000, 630),
             new Vec2(7578, 270),
         ]
@@ -141,6 +142,7 @@ export default class Level1 extends Level {
             new Vec2(3100, 350),
             new Vec2(4704, 141),
             new Vec2(5616, 480),
+            new Vec2(5950, 290), // 
             new Vec2(7059, 285),
         ]
 
