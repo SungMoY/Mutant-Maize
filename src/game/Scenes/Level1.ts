@@ -132,6 +132,9 @@ export default class Level1 extends Level {
             new Vec2(6000, 630),
             new Vec2(7000, 630),
             new Vec2(7578, 270),
+            new Vec2(5950, 290),
+            new Vec2(6960, 290)
+
         ]
 
         this.birdSpriteKey = Level1.BIRD_SPRITE_KEY;
@@ -142,6 +145,7 @@ export default class Level1 extends Level {
             new Vec2(4704, 141),
             new Vec2(5616, 480),
             new Vec2(7059, 285),
+            new Vec2(5950, 290),
         ]
 
         this.chickenSpriteKey = Level1.CHICKEN_SPRITE_KEY;

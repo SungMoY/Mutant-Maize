@@ -43,7 +43,7 @@ export default class ChickenAI extends StateMachineAI {
         this.addState("EGG", new ChickenEgg(this, this.owner));
         this.initialize("IDLE");
 
-        this.idleTimer = new Timer(3000, () => {
+        this.idleTimer = new Timer(1500, () => {
             let random = Math.random();
             console.log("random: " + random)
             if (random < 0.5) {
