@@ -49,13 +49,10 @@ export default class HelpScreen extends Scene {
         cheatsText.setPadding(new Vec2(450, 93));
         //cheats text per line
         let cheatsTextLine = [
-            "G: Debug Screen",
-            "I: invulnerable",
-            "M: Spawn Mouse",
-            "B: Spawn Bird",
-            "H: Spawn Chicken",
-            "J: Spawn Dog",
-            "K: Kill All Enemy"
+            "1: Load Level 1",
+            "2: Skip to Level 1 Boss",
+            "3: Print Viewport's origin x-coord"
+
         ]
         for (let i = 0; i < cheatsTextLine.length; i++) {
             let cheatsLine = <Label>this.add.uiElement(UIElementType.LABEL, "MAIN", {position: new Vec2(size.x, size.y-120 + (i*30)), text: cheatsTextLine[i]});

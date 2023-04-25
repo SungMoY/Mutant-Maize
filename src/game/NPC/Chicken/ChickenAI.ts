@@ -130,7 +130,8 @@ export default class ChickenAI extends StateMachineAI {
             this._health -= 10;
             particle.position = Vec2.ZERO;
             particle.color = Color.TRANSPARENT;
-            particle.collisionShape = new AABB(Vec2.ZERO, Vec2.ZERO);
+            //particle.collisionShape = new AABB(Vec2.ZERO, Vec2.ZERO);
+            particle.vel = Vec2.ZERO;
             let hitAudio = this.owner.getScene().getHitAudioKey();
             this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: hitAudio, loop: false, holdReference: false});
         }
@@ -144,7 +145,8 @@ export default class ChickenAI extends StateMachineAI {
             this._health -= 5;
             particle.position = Vec2.ZERO;
             particle.color = Color.TRANSPARENT;
-            particle.collisionShape = new AABB(Vec2.ZERO, Vec2.ZERO);
+            //.collisionShape = new AABB(Vec2.ZERO, Vec2.ZERO);
+            particle.vel = Vec2.ZERO;
             let hitAudio = this.owner.getScene().getHitAudioKey();
             this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: hitAudio, loop: false, holdReference: false});
         }

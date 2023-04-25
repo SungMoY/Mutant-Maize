@@ -97,7 +97,8 @@ export default class BirdAI extends StateMachineAI {
             this.changeState("TAKING_DAMAGE");
             particle.position = Vec2.ZERO;
             particle.color = Color.TRANSPARENT;
-            particle.collisionShape = new AABB(Vec2.ZERO, Vec2.ZERO);
+            //particle.collisionShape = new AABB(Vec2.ZERO, Vec2.ZERO);
+            particle.vel = Vec2.ZERO;
         }
     }
 
@@ -109,7 +110,8 @@ export default class BirdAI extends StateMachineAI {
             this.changeState("TAKING_DAMAGE");
             particle.position = Vec2.ZERO;
             particle.color = Color.TRANSPARENT;
-            particle.collisionShape = new AABB(Vec2.ZERO, Vec2.ZERO);
+            //particle.collisionShape = new AABB(Vec2.ZERO, Vec2.ZERO);
+            particle.vel = Vec2.ZERO;
         }
     }
 
