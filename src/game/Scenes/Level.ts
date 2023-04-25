@@ -203,7 +203,8 @@ export default abstract class Level extends Scene {
         this.subscribeToEvents();
         this.initializeLevelEnds();
 
-        this.levelTransitionTimer = new Timer(500);
+        this.levelTransitionTimer = new Timer(500, null, false);
+        this.levelTransitionTimer.start();
         this.levelEndTimer = new Timer(500, () => {
             // After the level end timer ends, fade to black and then go to the next scene
             this.levelTransitionScreen.tweens.play("fadeIn");
@@ -239,11 +240,19 @@ export default abstract class Level extends Scene {
         if (Input.isPressed(GameControls.CHEAT_THREE)) {
             console.log(this.viewport.getOrigin().x);
         }
+        if (Input.isPressed(GameControls.CHEAT_FOUR)) {
+            this.player.position.copy(this.playerSpawn);
+        }
 
         if (this.bossViewport && this.viewport.getOrigin().x >= this.bossViewport[0]) {
             console.log("CHANGING TO BOSS SCENE")
             this.emitter.fireEvent(GameEvents.START_BOSS_FIGHT, {});
         }
+        if (!this.levelTransitionTimer.hasRun()) {
+            this.player.position.copy(this.playerSpawn);
+        }
+
+
     }
 
     /**
@@ -504,7 +513,9 @@ export default abstract class Level extends Scene {
         this.player = this.add.animatedSprite(key, LevelLayers.PRIMARY);
 
         this.player.scale.set(2, 3);
+        console.log("spawn:", this.playerSpawn.x, this.playerSpawn.y)
         this.player.position.copy(this.playerSpawn);
+
         
         // Give the player physics
         //this.player.addPhysics(new AABB(this.player.position.clone(), this.player.boundary.getHalfSize().clone()));
@@ -542,7 +553,6 @@ export default abstract class Level extends Scene {
             grappleSystem: this.grappleParticlesSystem,
             tilemap: "Main",
         });
-        
     }
 
     protected initializeViewport(): void {

@@ -97,7 +97,7 @@ export default class Level1 extends Level {
         this.hazardsLayerKey = Level1.HAZARD_LAYER_KEY;
 
         this.playerSpriteKey = Level1.PLAYER_SPRITE_KEY;
-        this.playerSpawn = new Vec2(100, 500);
+        this.playerSpawn = new Vec2(100, 570);
 
         this.backgroundKey = Level1.LEVEL1_BACKGROUND_KEY;
         // Audio
