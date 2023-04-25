@@ -283,6 +283,8 @@ export default abstract class Level extends Scene {
             case GameEvents.MOB_HEALTH_CHANGE: {
                 //this.handleMobHealthChange(event.data.get("curhp"), event.data.get("maxhp"));
                 //console.log("handled event");
+                break;
+            }
             case GameEvents.START_BOSS_FIGHT: {
                 this.handleStartBossFight();
                 break;
