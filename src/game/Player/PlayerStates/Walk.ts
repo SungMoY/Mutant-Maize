@@ -47,6 +47,7 @@ export default class Walk extends PlayerState {
             this.owner.move(this.parent.velocity.scaled(deltaT));
         }
 
+        // this can be updated to be better. use the engine's looping instead of timer
         if (this.parent.velocity.x != 0 && this.owner.onGround && this.walkAudioTimer.isStopped()) {
             // plays walking sound
             let walkAudio = this.owner.getScene().getPlayerWalkAudioKey();

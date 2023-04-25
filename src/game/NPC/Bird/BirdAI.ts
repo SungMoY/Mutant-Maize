@@ -11,7 +11,7 @@ import BirdGrappleStunned from "./BirdGrappleStunned";
 import BirdMove from "./BirdMove";
 import BirdTakingDamage from "./BirdTakingDamage";
 
-export default class RatAI extends StateMachineAI {
+export default class BirdAI extends StateMachineAI {
     
     public readonly MAX_SPEED: number = 400;
     public readonly MIN_SPEED: number = 275;

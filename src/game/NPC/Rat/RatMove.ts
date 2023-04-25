@@ -2,7 +2,7 @@ import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import GameEvent from "../../../Wolfie2D/Events/GameEvent";
 import RatState from "./RatState";
 
-export default class RatWalk extends RatState {
+export default class RatMove extends RatState {
 
     handleInput(event: GameEvent): void {
         throw new Error("Method not implemented.");

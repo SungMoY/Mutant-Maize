@@ -33,5 +33,8 @@ export const GameEvents = {
     PLAYER_HIT: "PLAYER_HIT",
 
     MOB_HEALTH_CHANGE: "MOB_HEALTH_CHANGE",
+    START_BOSS_FIGHT: "START_BOSS_FIGHT",
+
+    BOSS_DEAD: "BOSS_DEAD",
     
 } as const;

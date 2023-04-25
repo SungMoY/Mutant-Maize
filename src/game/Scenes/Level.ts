@@ -32,7 +32,8 @@ import RatAI from "../NPC/Rat/RatAI";
 import { GameControls } from "../GameControls";
 import Level1 from "./Level1";
 import BirdAI from "../NPC/Bird/BirdAI";
-import AudioManager, { AudioChannelType } from "../../Wolfie2D/Sound/AudioManager";
+import ChickenAI from "../NPC/Chicken/ChickenAI";
+import Egg from "../NPC/Chicken/Egg";
 
 
 /**
@@ -116,6 +117,7 @@ export default abstract class Level extends Scene {
     protected playerWalkAudioKey: string;
 
     protected bossChargeAudioKey: string;
+    protected bossMusicKey: string;
 
     protected chickenDyingAudioKey: string;
     protected chickenEggAudioKey: string;
@@ -152,8 +154,14 @@ export default abstract class Level extends Scene {
     protected birdSpriteKey: string;
     protected birdPositions: Array<Vec2>;
 
-    protected bossSpriteKey: string;
-    protected bossPosition: Vec2;
+    protected chickenSpriteKey: string;
+    protected chickenPosition: Vec2;
+    protected eggParticlesSystem: Egg;
+
+    protected dogSpiteKey: string;
+    protected dogPosition: Vec2;
+
+    protected bossViewport: Array<number>;
 
     private mobHealthBar: Label;
 	private mobHealthBarHealth: Label;
@@ -195,6 +203,7 @@ export default abstract class Level extends Scene {
         this.initializeNPCs();
         this.initializeUI();
         this.initializeViewport();
+        this.initializeNPCs();
         this.subscribeToEvents();
         this.initializeLevelEnds();
 
@@ -210,8 +219,9 @@ export default abstract class Level extends Scene {
         // Start the black screen fade out
         this.levelTransitionScreen.tweens.play("fadeOut");
         
-        // Start playing the level music for the HW4 level
+        // Start playing the level music
         this.emitter.fireEvent(GameEventType.PLAY_MUSIC, {key: this.levelMusicKey, loop: true, holdReference: true});
+
     }
 
     /* Update method for the scene */
@@ -226,6 +236,17 @@ export default abstract class Level extends Scene {
 
         if (Input.isPressed(GameControls.CHEAT_ONE)) {
             this.sceneManager.changeToScene(Level1);
+        }
+        if (Input.isPressed(GameControls.CHEAT_TWO)) {
+            this.player.position.copy(new Vec2(9912, 624));
+        }
+        if (Input.isPressed(GameControls.CHEAT_THREE)) {
+            console.log(this.viewport.getOrigin().x);
+        }
+
+        if (this.bossViewport && this.viewport.getOrigin().x >= this.bossViewport[0]) {
+            console.log("CHANGING TO BOSS SCENE")
+            this.emitter.fireEvent(GameEvents.START_BOSS_FIGHT, {});
         }
     }
 
@@ -259,10 +280,15 @@ export default abstract class Level extends Scene {
                 this.sceneManager.changeToScene(MainMenu);
                 break;
             }
-            ////
             case GameEvents.MOB_HEALTH_CHANGE: {
                 //this.handleMobHealthChange(event.data.get("curhp"), event.data.get("maxhp"));
                 //console.log("handled event");
+            case GameEvents.START_BOSS_FIGHT: {
+                this.handleStartBossFight();
+                break;
+            }
+            case GameEvents.BOSS_DEAD: {
+                this.handleBossDead();
                 break;
             }
             // Default: Throw an error! No unhandled events allowed.
@@ -273,6 +299,32 @@ export default abstract class Level extends Scene {
     }
 
     /* Handlers for the different events the scene is subscribed to */
+
+    protected handleStartBossFight(): void {
+        // lock the viewport
+        // stop level music
+        // play boss music
+        // this will change bc rn, we are temp spawning boss at end of level 1
+        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: this.levelMusicKey});
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: this.bossMusicKey, loop: true, holdReference: true});
+
+        this.viewport.setFocus(new Vec2(this.bossViewport[1], this.bossViewport[2]));
+        this.viewport.follow(null);
+        this.bossViewport = null;
+    }
+
+    protected handleBossDead(): void {
+        // unlock the viewport
+        // stop boss music
+        // play level music
+        // this will change bc rn, we are temp spawning boss at end of level 1
+        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: this.bossMusicKey});
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: this.levelMusicKey, loop: true, holdReference: true});
+
+        this.viewport.follow(this.player);
+
+
+    }
 
     protected handleEnteredLevelEnd(): void {
         // If the timer hasn't run yet, start the end level animation
@@ -376,6 +428,8 @@ export default abstract class Level extends Scene {
         this.receiver.subscribe(GameEvents.HEALTH_CHANGE);
         this.receiver.subscribe(GameEvents.PLAYER_DEAD);
         this.receiver.subscribe(GameEvents.MOB_HEALTH_CHANGE);
+        this.receiver.subscribe(GameEvents.START_BOSS_FIGHT);
+        this.receiver.subscribe(GameEvents.BOSS_DEAD);
     }
     /**
      * Adds in any necessary UI to the game
@@ -439,7 +493,7 @@ export default abstract class Level extends Scene {
     }
 
     protected initializeWeaponSystem(): void {
-        this.kernel = this.add.sprite(this.kernelSpriteKey, LevelLayers.PRIMARY);
+        //this.kernel = this.add.sprite(this.kernelSpriteKey, LevelLayers.PRIMARY);
         this.rifleParticlesSystem = new Rifle(1, Vec2.ZERO, 500, 10, 0, 1); // for 1 particle
         this.rifleParticlesSystem.initializePool(this, LevelLayers.PRIMARY);
 
@@ -448,6 +502,9 @@ export default abstract class Level extends Scene {
 
         this.grappleParticlesSystem = new Grapple(100, Vec2.ZERO, 500, 10, 0, 1); // for 1 particle
         this.grappleParticlesSystem.initializePool(this, LevelLayers.PRIMARY);
+
+        this.eggParticlesSystem = new Egg(1, Vec2.ZERO, 2000, 10, 0, 1); // for 1 particle
+        this.eggParticlesSystem.initializePool(this, LevelLayers.PRIMARY);
     }
     /**
      * Initializes the player, setting the player's initial position to the given position.
@@ -475,8 +532,8 @@ export default abstract class Level extends Scene {
         
         // Give the player physics
         //this.player.addPhysics(new AABB(this.player.position.clone(), this.player.boundary.getHalfSize().clone()));
-        this.player.addPhysics(new AABB(this.player.position.clone(), new Vec2 (this.player.boundary.getHalfSize().clone().x * 0.75, this.player.boundary.getHalfSize().clone().y)), 
-        undefined, false);
+        this.player.addPhysics(new AABB(this.player.position.clone(), new Vec2 (this.player.boundary.getHalfSize().clone().x * 0.75, this.player.boundary.getHalfSize().clone().y))
+        , undefined, false);
 
         // Add player to player physics group
         this.player.setGroup(GamePhysicsGroups.PLAYER);
@@ -519,6 +576,7 @@ export default abstract class Level extends Scene {
         this.viewport.follow(this.player);
         this.viewport.setZoomLevel(1);
         this.viewport.setBounds(0, 0, this.viewportBounds.x, this.viewportBounds.y);
+
     }
 
     protected initializeLevelEnds(): void {
@@ -615,6 +673,35 @@ export default abstract class Level extends Scene {
             this.mobHealthBarMissing.borderRadius = 0;
             */
         }
+        if (this.chickenSpriteKey) {
+            console.log("SPAWNING CHICKEN BOSS")
+            let chicken = this.add.animatedSprite(this.chickenSpriteKey, LevelLayers.PRIMARY);
+            chicken.position.set(this.chickenPosition.x, this.chickenPosition.y);
+            chicken.scale.set(6, 6);
+            chicken.addPhysics(new AABB(chicken.position.clone(), new Vec2(chicken.boundary.getHalfSize().clone().x*0.75, chicken.boundary.getHalfSize().clone().y))
+                 ,undefined, false, false);
+            chicken.addAI(ChickenAI, {
+                eggSystem: this.eggParticlesSystem
+            });
+            chicken.setGroup(GamePhysicsGroups.ENTITY);
+            chicken.setTrigger(GamePhysicsGroups.RIFLE, GameEvents.RIFLE_HIT, null);
+            chicken.setTrigger(GamePhysicsGroups.SHOTGUN, GameEvents.SHOTGUN_HIT, null);
+            chicken.setTrigger(GamePhysicsGroups.GRAPPLE, GameEvents.GRAPPLE_HIT, null);
+            chicken.setTrigger(GamePhysicsGroups.PLAYER, GameEvents.PLAYER_HIT, null);
+        }
+        if (this.dogSpiteKey) {
+            console.log("SPAWNING DOG BOSS")
+            let dog = this.add.animatedSprite(this.dogSpiteKey, LevelLayers.PRIMARY);
+            dog.position.set(this.dogPosition.x, this.dogPosition.y);
+            dog.scale.set(2, 2);
+            dog.addPhysics(undefined, undefined, false, false);
+            //dog.addAI()
+            dog.setGroup(GamePhysicsGroups.ENTITY);
+            dog.setTrigger(GamePhysicsGroups.RIFLE, GameEvents.RIFLE_HIT, null);
+            dog.setTrigger(GamePhysicsGroups.SHOTGUN, GameEvents.SHOTGUN_HIT, null);
+            dog.setTrigger(GamePhysicsGroups.GRAPPLE, GameEvents.GRAPPLE_HIT, null);
+            dog.setTrigger(GamePhysicsGroups.PLAYER, GameEvents.PLAYER_HIT, null);
+        }
     }
 
     // Gets the key of the player hurt audio
@@ -672,5 +759,17 @@ export default abstract class Level extends Scene {
 
     public getGrappleParticlePool() {
         return this.grappleParticlesSystem.getPool();
+    }
+
+    public getChickenDyingAudioKey() {
+        return this.chickenDyingAudioKey;
+    }
+
+    public getChickenEggAudioKey() {
+        return this.chickenEggAudioKey;
+    }
+
+    public getChickenWalkingAudioKey() {
+        return this.chickenWalkAudioKey;
     }
 }
