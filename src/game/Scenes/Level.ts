@@ -34,6 +34,7 @@ import Level1 from "./Level1";
 import BirdAI from "../NPC/Bird/BirdAI";
 import ChickenAI from "../NPC/Chicken/ChickenAI";
 import Egg from "../NPC/Chicken/Egg";
+import Bite from "../NPC/Dog/Bite";
 
 
 /**
@@ -161,6 +162,7 @@ export default abstract class Level extends Scene {
 
     protected dogSpiteKey: string;
     protected dogPosition: Vec2;
+    protected biteParticlesSystem: Bite;
 
     protected bossViewport: Array<number>;
 
@@ -492,6 +494,9 @@ export default abstract class Level extends Scene {
 
         this.eggParticlesSystem = new Egg(1, Vec2.ZERO, 2000, 10, 0, 1); // for 1 particle
         this.eggParticlesSystem.initializePool(this, LevelLayers.PRIMARY);
+
+        this.biteParticlesSystem = new Bite(1, Vec2.ZERO, 2000, 10, 0, 1); // for 1 particle
+        this.biteParticlesSystem.initializePool(this, LevelLayers.PRIMARY);
     }
     /**
      * Initializes the player, setting the player's initial position to the given position.
@@ -635,9 +640,9 @@ export default abstract class Level extends Scene {
             console.log("SPAWNING DOG BOSS")
             let dog = this.add.animatedSprite(this.dogSpiteKey, LevelLayers.PRIMARY);
             dog.position.set(this.dogPosition.x, this.dogPosition.y);
-            dog.scale.set(2, 2);
+            dog.scale.set(6, 6);
             dog.addPhysics(undefined, undefined, false, false);
-            //dog.addAI()
+            //dog.addAI(DogAI, { biteSystem: this.biteParticlesSystem })
             dog.setGroup(GamePhysicsGroups.ENTITY);
             dog.setTrigger(GamePhysicsGroups.RIFLE, GameEvents.RIFLE_HIT, null);
             dog.setTrigger(GamePhysicsGroups.SHOTGUN, GameEvents.SHOTGUN_HIT, null);
