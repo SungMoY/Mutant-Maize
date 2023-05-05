@@ -37,6 +37,9 @@ export default class Level1 extends Level {
     public static readonly CHICKEN_SPRITE_KEY = "CHICKEN_SPRITE_KEY";
     public static readonly CHICKEN_SPRITE_PATH = "game_assets/spritesheets/chicken.json";
 
+    public static readonly DOG_SPRITE_KEY = "DOG_SPRITE_KEY";
+    public static readonly DOG_SPRITE_PATH = "game_assets/spritesheets/dog.json";
+
     // General Audio & Music
     public static readonly JUMP_AUDIO_KEY = "PLAYER_JUMP";
     public static readonly JUMP_AUDIO_PATH = "game_assets/sounds/jump.wav";
@@ -61,6 +64,16 @@ export default class Level1 extends Level {
 
     public static readonly CHICKEN_WALK_AUDIO_KEY = "CHICKEN_WALK_AUDIO";
     public static readonly CHICKEN_WALK_AUDIO_PATH = "game_assets/sounds/Chicken/Chicken_Walk.wav";
+
+    public static readonly DOG_DYING_AUDIO_KEY = "DOG_DYING_AUDIO";
+    public static readonly DOG_DYING_AUDIO_PATH = "game_assets/sounds/Dog/Dog_Dying.wav";
+
+    public static readonly DOG_WALK_AUDIO_KEY = "DOG_WALK_AUDIO";
+    public static readonly DOG_WALK_AUDIO_PATH = "game_assets/sounds/Dog/Dog_Walk.wav";
+
+    public static readonly DOG_BITE_AUDIO_KEY = "DOG_BITE_AUDIO";
+    public static readonly DOG_BITE_AUDIO_PATH = "game_assets/sounds/Dog/Dog_Bite.wav";
+
 
     // Player Audio
     public static readonly PLAYER_DAMAGE_AUDIO_KEY = "PLAYER_DAMAGE";
@@ -108,6 +121,10 @@ export default class Level1 extends Level {
         this.chickenEggAudioKey = Level1.CHICKEN_EGG_AUDIO_KEY;
         this.chickenWalkAudioKey = Level1.CHICKEN_WALK_AUDIO_KEY;
 
+        this.dogDyingAudioKey = Level1.DOG_DYING_AUDIO_KEY;
+        this.dogWalkAudioKey = Level1.DOG_WALK_AUDIO_KEY;
+        this.dogBiteAudioKey = Level1.DOG_BITE_AUDIO_KEY;
+
         this.playerDamageAudioKey = Level1.PLAYER_DAMAGE_AUDIO_KEY;
         this.playerDeathAudioKey = Level1.PLAYER_DEATH_AUDIO_KEY;
         this.playerGrappleAudioKey = Level1.PLAYER_GRAPPLE_AUDIO_KEY;
@@ -148,8 +165,13 @@ export default class Level1 extends Level {
             new Vec2(5950, 290),
         ]
 
-        this.chickenSpriteKey = Level1.CHICKEN_SPRITE_KEY;
-        this.chickenPosition = new Vec2(10938, 560),
+        // this.chickenSpriteKey = Level1.CHICKEN_SPRITE_KEY;
+        // this.chickenPosition = new Vec2(10938, 560),
+        // this.bossViewport = [10008, 10558, 768]
+
+        this.dogSpiteKey = Level1.DOG_SPRITE_KEY;
+        this.dogPosition = new Vec2(10906, 360)
+        //this.dogPosition = new Vec2(100, 370);
         this.bossViewport = [10008, 10558, 768]
 
         // map length in tiles * tile dimension in pixels * tilemap scale
@@ -187,6 +209,7 @@ export default class Level1 extends Level {
         this.load.spritesheet(Level1.RAT_SPRITE_KEY, Level1.RAT_SPRITE_PATH);
         this.load.spritesheet(Level1.BIRD_SPRITE_KEY, Level1.BIRD_SPRITE_PATH);
         this.load.spritesheet(Level1.CHICKEN_SPRITE_KEY, Level1.CHICKEN_SPRITE_PATH);
+        this.load.spritesheet(Level1.DOG_SPRITE_KEY, Level1.DOG_SPRITE_PATH);
 
         // loads Audio
         this.load.audio(this.levelMusicKey, Level1.LEVEL_MUSIC_PATH);
@@ -195,6 +218,10 @@ export default class Level1 extends Level {
         this.load.audio(this.chickenDyingAudioKey, Level1.CHICKEN_DYING_AUDIO_PATH);
         this.load.audio(this.chickenEggAudioKey, Level1.CHICKEN_EGG_AUDIO_PATH);
         this.load.audio(this.chickenWalkAudioKey, Level1.CHICKEN_WALK_AUDIO_PATH);
+
+        this.load.audio(this.dogBiteAudioKey, Level1.DOG_BITE_AUDIO_PATH);
+        this.load.audio(this.dogDyingAudioKey, Level1.DOG_DYING_AUDIO_PATH);
+        this.load.audio(this.dogWalkAudioKey, Level1.DOG_WALK_AUDIO_PATH);
 
         this.load.audio(this.playerDamageAudioKey, Level1.PLAYER_DAMAGE_AUDIO_PATH);
         this.load.audio(this.playerDeathAudioKey, Level1.PLAYER_DEATH_AUDIO_PATH);

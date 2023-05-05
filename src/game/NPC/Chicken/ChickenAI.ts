@@ -45,7 +45,7 @@ export default class ChickenAI extends StateMachineAI {
 
         this.idleTimer = new Timer(1500, () => {
             let random = Math.random();
-            console.log("random: " + random)
+            //console.log("random: " + random)
             if (random < 0.5) {
                 if (this.goLeft) {
                     this.velocity.x = -this.MAX_SPEED;
@@ -126,7 +126,7 @@ export default class ChickenAI extends StateMachineAI {
         let particles = this.owner.getScene().getRifleParticlePool();
         let particle = particles.find(particle => particle.id === particleId);
         if (this.owner.collisionShape.getBoundingRect().overlaps(particle.collisionShape.getBoundingRect())) {
-            console.log("RIFLE HIT CHICKEN")
+            //console.log("RIFLE HIT CHICKEN")
             this._health -= 10;
             particle.position = Vec2.ZERO;
             particle.color = Color.TRANSPARENT;
@@ -141,7 +141,7 @@ export default class ChickenAI extends StateMachineAI {
         let particles = this.owner.getScene().getShotgunParticlePool();
         let particle = particles.find(particle => particle.id === particleId);
         if (this.owner.collisionShape.getBoundingRect().overlaps(particle.collisionShape.getBoundingRect())) {
-            console.log("SHOTGUN HIT CHICKEN")
+            //console.log("SHOTGUN HIT CHICKEN")
             this._health -= 5;
             particle.position = Vec2.ZERO;
             particle.color = Color.TRANSPARENT;
@@ -154,7 +154,7 @@ export default class ChickenAI extends StateMachineAI {
 
     protected handleGrappleHit(node: number, other: number): void {
         if (this.owner.id === other) {
-            console.log("GRAPPLE HIT CHICKEN")
+            //console.log("GRAPPLE HIT CHICKEN")
         }
     }
 
