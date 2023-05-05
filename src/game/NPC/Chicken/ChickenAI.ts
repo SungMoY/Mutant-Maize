@@ -92,6 +92,8 @@ export default class ChickenAI extends StateMachineAI {
             this.emitter.fireEvent(GameEvents.BOSS_DEAD);
             // handle all boss dying related stuff here
             this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: this.owner.getScene().getChickenDyingAudioKey(), loop: false, holdReference: true})
+            this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: this.owner.getScene().getChickenEggAudioKey()});
+            this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: this.owner.getScene().getChickenWalkingAudioKey()});
             this.isDead = true;
             this.idleTimer.pause();
             this.chargeTimer.pause();

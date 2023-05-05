@@ -176,6 +176,8 @@ export default class DogAI extends StateMachineAI {
             this.emitter.fireEvent(GameEvents.BOSS_DEAD);
             // handle all boss dying related stuff here
             this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: this.owner.getScene().getDogDyingAudioKey(), loop: false, holdReference: true})
+            this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: this.owner.getScene().getDogBiteAudioKey()});
+            this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: this.owner.getScene().getDogWalkingAudioKey()});
             this.isDead = true;
             this.idleTimer.pause();
             this.chargeTimer.pause();
