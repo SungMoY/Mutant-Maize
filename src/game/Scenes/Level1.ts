@@ -14,9 +14,7 @@ export default class Level1 extends Level {
     public static readonly TILEMAP_KEY = "LEVEL1";
     public static readonly TILEMAP_PATH = "game_assets/tilemaps/Level_1/level1_map.json";
     public static readonly WALLS_LAYER_KEY = "Main";
-
     public static readonly HAZARD_LAYER_KEY = "Hazard"
-
 
     public static readonly LEVEL1_BACKGROUND_KEY = "LEVEL1_BACKGROUND";
     public static readonly LEVEL1_BACKGROUND_PATH = "game_assets/images/level1_background.png";
@@ -113,9 +111,9 @@ export default class Level1 extends Level {
         this.playerSpawn = new Vec2(100, 570);
 
         this.backgroundKey = Level1.LEVEL1_BACKGROUND_KEY;
+
         // Audio
         this.levelMusicKey = Level1.LEVEL_MUSIC_KEY;
-
         this.playerDamageAudioKey = Level1.PLAYER_DAMAGE_AUDIO_KEY;
         this.playerDeathAudioKey = Level1.PLAYER_DEATH_AUDIO_KEY;
         this.playerGrappleAudioKey = Level1.PLAYER_GRAPPLE_AUDIO_KEY;
@@ -123,7 +121,6 @@ export default class Level1 extends Level {
         this.playerRifleAudioKey = Level1.PLAYER_Rifle_AUDIO_KEY;
         this.playerShotgunAudioKey = Level1.PLAYER_SHOTGUN_AUDIO_KEY;
         this.playerWalkAudioKey = Level1.PLAYER_WALK_AUDIO_KEY;
-
         this.HitAudioKey = Level1.HIT_AUDIO_KEY;
         this.mobDyingAudioKey = Level1.MOB_DEATH_AUDIO_KEY;
 
@@ -142,9 +139,7 @@ export default class Level1 extends Level {
             new Vec2(7578, 270),
             new Vec2(5950, 290),
             new Vec2(6960, 290)
-
         ]
-
         this.birdSpriteKey = Level1.BIRD_SPRITE_KEY;
         this.birdPositions = [
             new Vec2(100, 300),

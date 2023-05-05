@@ -369,7 +369,7 @@ export default abstract class Level extends Scene {
         if (this.parallaxBackground) {
             this.addParallaxLayer(LevelLayers.BACKGROUND, new Vec2(0.25, 0), -1);
         } else {
-            this.addLayer(LevelLayers.BACKGROUND);
+            this.addLayer(LevelLayers.BACKGROUND, -1);
         }
         // Add a layer for UI
         this.addUILayer(LevelLayers.UI);
@@ -407,11 +407,13 @@ export default abstract class Level extends Scene {
 
         // Get hazards layer
         this.hazards = this.getTilemap(this.hazardsLayerKey) as OrthogonalTilemap;
-        this.hazards.addPhysics();
-        this.hazards.setTrigger(GamePhysicsGroups.GRAPPLE, GameEvents.GRAPPLE_COLLISION, null);
-        this.hazards.setTrigger(GamePhysicsGroups.RIFLE, GameEvents.RIFLE_COLLISION, null);
-        this.hazards.setTrigger(GamePhysicsGroups.SHOTGUN, GameEvents.SHOTGUN_COLLISION, null);
-        this.hazards.setTrigger(GamePhysicsGroups.PLAYER, GameEvents.PLAYER_HIT, null);
+        if (this.hazards) {
+            this.hazards.addPhysics();
+            this.hazards.setTrigger(GamePhysicsGroups.GRAPPLE, GameEvents.GRAPPLE_COLLISION, null);
+            this.hazards.setTrigger(GamePhysicsGroups.RIFLE, GameEvents.RIFLE_COLLISION, null);
+            this.hazards.setTrigger(GamePhysicsGroups.SHOTGUN, GameEvents.SHOTGUN_COLLISION, null);
+            this.hazards.setTrigger(GamePhysicsGroups.PLAYER, GameEvents.PLAYER_HIT, null);
+        }
 
     }
 
