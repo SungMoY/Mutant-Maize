@@ -627,40 +627,44 @@ export default abstract class Level extends Scene {
     }
 
     protected initializeNPCs(): void {
-        for (let i = 0; i < this.ratPositions.length; i++) {
-            let rat = this.add.animatedSprite(this.ratSpriteKey, LevelLayers.PRIMARY);
-            rat.position.set(this.ratPositions[i].x, this.ratPositions[i].y);
-            rat.scale.set(2, 2);       
-            let center = new Vec2(rat.position.x, rat.position.y);
+        if (this.ratPositions) {
+            for (let i = 0; i < this.ratPositions.length; i++) {
+                let rat = this.add.animatedSprite(this.ratSpriteKey, LevelLayers.PRIMARY);
+                rat.position.set(this.ratPositions[i].x, this.ratPositions[i].y);
+                rat.scale.set(2, 2);       
+                let center = new Vec2(rat.position.x, rat.position.y);
 
-            // i hate that these values are hard coded but it seems to work
-            let halfSize = new Vec2(rat.boundary.getHalfSize().x, 20);
-            rat.addPhysics(new AABB(center, halfSize), undefined, false, false);
-            rat.colliderOffset.set(0, 12);
+                // i hate that these values are hard coded but it seems to work
+                let halfSize = new Vec2(rat.boundary.getHalfSize().x, 20);
+                rat.addPhysics(new AABB(center, halfSize), undefined, false, false);
+                rat.colliderOffset.set(0, 12);
 
-            rat.addAI(RatAI, { tilemap: "Main" });
-            rat.setGroup(GamePhysicsGroups.ENTITY);
-            rat.setTrigger(GamePhysicsGroups.RIFLE, GameEvents.RIFLE_HIT, null);
-            rat.setTrigger(GamePhysicsGroups.SHOTGUN, GameEvents.SHOTGUN_HIT, null);
-            rat.setTrigger(GamePhysicsGroups.GRAPPLE, GameEvents.GRAPPLE_HIT, null);
-            rat.setTrigger(GamePhysicsGroups.PLAYER, GameEvents.PLAYER_HIT, null);
+                rat.addAI(RatAI, { tilemap: "Main" });
+                rat.setGroup(GamePhysicsGroups.ENTITY);
+                rat.setTrigger(GamePhysicsGroups.RIFLE, GameEvents.RIFLE_HIT, null);
+                rat.setTrigger(GamePhysicsGroups.SHOTGUN, GameEvents.SHOTGUN_HIT, null);
+                rat.setTrigger(GamePhysicsGroups.GRAPPLE, GameEvents.GRAPPLE_HIT, null);
+                rat.setTrigger(GamePhysicsGroups.PLAYER, GameEvents.PLAYER_HIT, null);
+            }
         }
-        for (let i = 0; i < this.birdPositions.length; i++) {
-            let bird = this.add.animatedSprite(this.birdSpriteKey, LevelLayers.PRIMARY);
-            bird.position.set(this.birdPositions[i].x, this.birdPositions[i].y-24);
-            bird.scale.set(2, 2);
-            let center = new Vec2(bird.position.x, bird.position.y);
+        if (this.birdPositions) {
+            for (let i = 0; i < this.birdPositions.length; i++) {
+                let bird = this.add.animatedSprite(this.birdSpriteKey, LevelLayers.PRIMARY);
+                bird.position.set(this.birdPositions[i].x, this.birdPositions[i].y-24);
+                bird.scale.set(2, 2);
+                let center = new Vec2(bird.position.x, bird.position.y);
 
-            // i hate that these values are hard coded but it seems to work
-            let halfSize = new Vec2(bird.boundary.getHalfSize().x, 24);
-            bird.addPhysics(new AABB(center, halfSize), undefined, false, false);
+                // i hate that these values are hard coded but it seems to work
+                let halfSize = new Vec2(bird.boundary.getHalfSize().x, 24);
+                bird.addPhysics(new AABB(center, halfSize), undefined, false, false);
 
-            bird.addAI(BirdAI, { tilemap: "Main" });
-            bird.setGroup(GamePhysicsGroups.ENTITY);
-            bird.setTrigger(GamePhysicsGroups.RIFLE, GameEvents.RIFLE_HIT, null);
-            bird.setTrigger(GamePhysicsGroups.SHOTGUN, GameEvents.SHOTGUN_HIT, null);
-            bird.setTrigger(GamePhysicsGroups.GRAPPLE, GameEvents.GRAPPLE_HIT, null);
-            bird.setTrigger(GamePhysicsGroups.PLAYER, GameEvents.PLAYER_HIT, null);
+                bird.addAI(BirdAI, { tilemap: "Main" });
+                bird.setGroup(GamePhysicsGroups.ENTITY);
+                bird.setTrigger(GamePhysicsGroups.RIFLE, GameEvents.RIFLE_HIT, null);
+                bird.setTrigger(GamePhysicsGroups.SHOTGUN, GameEvents.SHOTGUN_HIT, null);
+                bird.setTrigger(GamePhysicsGroups.GRAPPLE, GameEvents.GRAPPLE_HIT, null);
+                bird.setTrigger(GamePhysicsGroups.PLAYER, GameEvents.PLAYER_HIT, null);
+            }
         }
         if (this.chickenSpriteKey) {
             console.log("SPAWNING CHICKEN BOSS")

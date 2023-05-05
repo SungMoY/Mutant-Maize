@@ -8,6 +8,7 @@ import Color from "../../Wolfie2D/Utils/Color";
 import Level from "./Level";
 import Level1 from "./Level1";
 import Level2 from "./Level2";
+import Level3 from "./Level3";
 import MainMenu from "./MainMenu";
 
 export default class LevelSelectScreen extends Scene {
@@ -85,7 +86,7 @@ export default class LevelSelectScreen extends Scene {
 
         this.addLevel("1. Cornfield", Level1, positions[0]);
         this.addLevel("2. Barn Wall", Level2, positions[3]);
-        this.addLevel("3. Barn", null, positions[1]);
+        this.addLevel("3. Barn", Level3, positions[1]);
         this.addLevel("4. Garden", null, positions[4]);
         this.addLevel("5. House Wall", null, positions[2]);
         this.addLevel("6. House", null, positions[5]);
@@ -105,7 +106,7 @@ export default class LevelSelectScreen extends Scene {
         }
 
         // REMOVE LATER
-        this.sceneManager.changeToScene(Level2);
+        this.sceneManager.changeToScene(Level3);
         
     }
 
