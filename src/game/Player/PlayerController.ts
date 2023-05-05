@@ -174,7 +174,7 @@ export default class PlayerController extends StateMachineAI {
 
         // If the player hits the attack button and the weapon system isn't running, restart the system and fire!
         if ((Input.isMouseJustPressed(0) && !this.rifle.isSystemRunning()) && !this.inGrapple && !Input.isMouseJustPressed(1) && !Input.isMouseJustPressed(2)&& !Input.isMouseJustPressed(4)) {
-            console.log("FIRING RIFLE")
+            //console.log("FIRING RIFLE")
             // Start the particle system at the player's current position
             this.rifle.startSystem(500, 0, this.owner.position, this.faceDir);
             //this.weapon.startSystem(100, 0, this.owner.position, this.faceDir); // fast fire but no travel
@@ -196,7 +196,7 @@ export default class PlayerController extends StateMachineAI {
         }
 
         if ((Input.isMouseJustPressed(2) && !this.shotgun.isSystemRunning()) && !this.inGrapple) {
-            console.log("FIRING SHOTGUN")
+            //console.log("FIRING SHOTGUN")
             this.shotgun.startSystem(500, 0, this.owner.position, this.faceDir);
             let direction = this.faceDir;
             if (direction.x > 0) {
@@ -215,7 +215,7 @@ export default class PlayerController extends StateMachineAI {
         }
 
         if (Input.isJustPressed(GameControls.GRAPPLE) || Input.isMouseJustPressed(4) && !this.inGrapple) {
-            console.log("FIRING GRAPPLE")
+            //console.log("FIRING GRAPPLE")
             // send a vector outwards. check if it collides a tile or entity. if it does, move the player to that position. if nothing is hit, do nothing
             //this.grapple.startSystem(500, 0, new Vec2(this.owner.position.x, this.owner.position.y - this.owner.collisionShape.halfSize.y), this.faceDir);
             this.grapple.startSystem(500, 0, this.owner.position, this.faceDir);

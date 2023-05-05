@@ -1,7 +1,9 @@
 import StateMachineAI from "../../../Wolfie2D/AI/StateMachineAI";
+import AABB from "../../../Wolfie2D/DataTypes/Shapes/AABB";
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import GameEvent from "../../../Wolfie2D/Events/GameEvent";
 import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
+import Viewport from "../../../Wolfie2D/SceneGraph/Viewport";
 import Timer from "../../../Wolfie2D/Timing/Timer";
 import Color from "../../../Wolfie2D/Utils/Color";
 import { GameEvents } from "../../GameEvents";
@@ -21,6 +23,8 @@ export default class DogAI extends StateMachineAI {
     protected _health: number;
 
     protected _goLeft: boolean
+    protected _biteLeft: boolean;
+    protected dirTracker: number;
 
     protected idleTimer: Timer;
     protected chargeTimer: Timer;
@@ -30,45 +34,109 @@ export default class DogAI extends StateMachineAI {
 
     protected biteSystem: Bite;
 
+    protected viewport: Array<number>;
+
     public initializeAI(owner: HW3AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;
         this._velocity = new Vec2(0, 0)
         this._health = 500;
         this.goLeft = true;
         this.biteSystem = options.biteSystem;
+        this.viewport = options.viewport;
+        this.biteLeft = true;
+        this.dirTracker = 0;
 
         this.addState("IDLE", new DogIdle(this, this.owner));
         this.addState("CHARGE", new DogCharge(this, this.owner));
         this.addState("BITE", new DogBite(this, this.owner));
         this.initialize("IDLE");
 
+        // i want to loop the following
+        // bite left        0
+        // go to middle     1
+        // bite right       2
+        // bite left        3
+        // to to left       4
+        // bite right       5
+        // go to middle     6
+        // bite left        7
+        // bite right       8
+        // go to right      9
+        // repeat           0
+
+        // if (this.goLeft) {
+        //     this.velocity.x = -this.MAX_SPEED;
+        //     this.goLeft = false;
+        // } else {
+        //     this.velocity.x = this.MAX_SPEED;
+        //     this.goLeft = true;
+        // }
+
+        // lord forgive me for what i am about to do
         this.idleTimer = new Timer(1500, () => {
-            let random = Math.random();
-            console.log("random: " + random)
-            if (random < 0.5) {
-                if (this.goLeft) {
+            if (this.dirTracker > 9) {
+                this.dirTracker = 0;
+            }
+            switch (this.dirTracker) {
+                case 0: {
+                    this.doBite();
+                    break;
+                } 
+                case 1: {
                     this.velocity.x = -this.MAX_SPEED;
-                    this.goLeft = false;
-                } else {
-                    this.velocity.x = this.MAX_SPEED;
-                    this.goLeft = true;
+                    this.doCharge();
+                    break;
                 }
-                this.changeState("CHARGE");
-                this.chargeTimer.start();
-            } else {
-                this.changeState("BITE");
-                this.biteTimer.start();
+                case 2: {
+                    this.doBite();
+                    break;
+                }
+                case 3: {
+                    this.doBite();
+                    break;
+                }
+                case 4: {
+                    this.velocity.x = -this.MAX_SPEED;
+                    this.doCharge();
+                    break;
+                }
+                case 5: {
+                    this.doBite();
+                    break;
+                }
+                case 6: {
+                    this.velocity.x = this.MAX_SPEED;
+                    this.doCharge();
+                    break;
+                }
+                case 7: {
+                    this.doBite();
+                    break;
+                }
+                case 8: {
+                    this.doBite();
+                    break;
+                }
+                case 9: {
+                    this.velocity.x = this.MAX_SPEED;
+                    this.doCharge();
+                    break;
+                }
             }
         }, false);
 
-        this.chargeTimer = new Timer(1000, () => {
+        this.chargeTimer = new Timer(700, () => {
+            // finished charge, go to idle
+            this.dirTracker++;
             this.velocity.x = 0;
             this.changeState("IDLE");
             this.idleTimer.start();
         }, false);
 
         this.biteTimer = new Timer(1000, () => {
-            this.velocity.x = 0;
+            // finished bite, go to idle
+            this.dirTracker++;
+            this.biteLeft = !this.biteLeft;
             this.changeState("IDLE");
             this.idleTimer.start();
         }, false);
@@ -79,19 +147,45 @@ export default class DogAI extends StateMachineAI {
         this.receiver.subscribe(GameEvents.START_BOSS_FIGHT);
     }
 
+    protected doCharge(): void {
+        this.changeState("CHARGE");
+        this.chargeTimer.start();
+    }
+
+    protected doBite(): void {
+        this.changeState("BITE");
+        // bite here, customize its properties
+        // the bite particle goes into the ground but i think its fine
+        let position;
+        let direction;
+        if (this.biteLeft) { 
+            position = new Vec2(this.owner.position.x - this.owner.collisionShape.halfSize.x, this.owner.position.y + this.owner.collisionShape.halfSize.y);
+            direction = new Vec2(-1, 0); 
+        } else { 
+            direction = new Vec2(1, 0);
+            position = new Vec2(this.owner.position.x + this.owner.collisionShape.halfSize.x, this.owner.position.y + this.owner.collisionShape.halfSize.y);
+        }
+        this.biteSystem.startSystem(1000, 0, position, direction);
+        this.biteTimer.start();
+    }
+
     public update(deltaT: number): void {
         super.update(deltaT);
-        this.owner.move(this.velocity.scaled(deltaT));
 
         if (this._health <= 0 && !this.isDead) {
             this.emitter.fireEvent(GameEvents.BOSS_DEAD);
             // handle all boss dying related stuff here
+            this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: this.owner.getScene().getDogDyingAudioKey(), loop: false, holdReference: true})
             this.isDead = true;
             this.idleTimer.pause();
             this.chargeTimer.pause();
             this.biteTimer.pause();
-            this.owner.destroy();
+            this.owner.visible = false;
+            this.owner.isCollidable = false;
+            this.owner.collisionShape = new AABB(Vec2.ZERO, Vec2.ZERO);
         }
+        this.owner.move(this.velocity.scaled(deltaT));
+
     }
 
     handleEvent(event: GameEvent): void {
@@ -120,7 +214,7 @@ export default class DogAI extends StateMachineAI {
         let particles = this.owner.getScene().getRifleParticlePool();
         let particle = particles.find(particle => particle.id === particleId);
         if (this.owner.collisionShape.getBoundingRect().overlaps(particle.collisionShape.getBoundingRect())) {
-            console.log("RIFLE HIT DOG")
+            //console.log("RIFLE HIT DOG")
             this._health -= 10;
             particle.position = Vec2.ZERO;
             particle.color = Color.TRANSPARENT;
@@ -135,7 +229,7 @@ export default class DogAI extends StateMachineAI {
         let particles = this.owner.getScene().getShotgunParticlePool();
         let particle = particles.find(particle => particle.id === particleId);
         if (this.owner.collisionShape.getBoundingRect().overlaps(particle.collisionShape.getBoundingRect())) {
-            console.log("SHOTGUN HIT DOG")
+            //console.log("SHOTGUN HIT DOG")
             this._health -= 5;
             particle.position = Vec2.ZERO;
             particle.color = Color.TRANSPARENT;
@@ -148,7 +242,7 @@ export default class DogAI extends StateMachineAI {
 
     protected handleGrappleHit(node: number, other: number): void {
         if (this.owner.id === other) {
-            console.log("GRAPPLE HIT DOG")
+            //console.log("GRAPPLE HIT DOG")
         }
     }
 
@@ -169,5 +263,11 @@ export default class DogAI extends StateMachineAI {
     }
     public set goLeft(goLeft: boolean) {
         this._goLeft = goLeft;
+    }
+    public get biteLeft(): boolean {
+        return this._biteLeft;
+    }
+    public set biteLeft(biteLeft: boolean) {
+        this._biteLeft = biteLeft;
     }
 }   

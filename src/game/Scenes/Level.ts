@@ -35,6 +35,7 @@ import BirdAI from "../NPC/Bird/BirdAI";
 import ChickenAI from "../NPC/Chicken/ChickenAI";
 import Egg from "../NPC/Chicken/Egg";
 import Bite from "../NPC/Dog/Bite";
+import DogAI from "../NPC/Dog/DogAI";
 
 
 /**
@@ -520,7 +521,6 @@ export default abstract class Level extends Scene {
         this.player = this.add.animatedSprite(key, LevelLayers.PRIMARY);
 
         this.player.scale.set(2, 3);
-        console.log("spawn:", this.playerSpawn.x, this.playerSpawn.y)
         this.player.position.copy(this.playerSpawn);
 
         
@@ -640,9 +640,17 @@ export default abstract class Level extends Scene {
             console.log("SPAWNING DOG BOSS")
             let dog = this.add.animatedSprite(this.dogSpiteKey, LevelLayers.PRIMARY);
             dog.position.set(this.dogPosition.x, this.dogPosition.y);
-            dog.scale.set(6, 6);
-            dog.addPhysics(undefined, undefined, false, false);
-            //dog.addAI(DogAI, { biteSystem: this.biteParticlesSystem })
+            dog.scale.set(8, 8);
+
+            let center = new Vec2(dog.position.x, dog.position.y);
+
+            // i hate that these values are hard coded but it seems to work
+            let halfSize = new Vec2(dog.boundary.getHalfSize().x-20, 90);
+            dog.addPhysics(new AABB(center, halfSize), undefined, false, false);
+            dog.colliderOffset.set(0, 37);
+
+            dog.addAI(DogAI, { biteSystem: this.biteParticlesSystem,
+            viewport: this.bossViewport })
             dog.setGroup(GamePhysicsGroups.ENTITY);
             dog.setTrigger(GamePhysicsGroups.RIFLE, GameEvents.RIFLE_HIT, null);
             dog.setTrigger(GamePhysicsGroups.SHOTGUN, GameEvents.SHOTGUN_HIT, null);
@@ -718,5 +726,17 @@ export default abstract class Level extends Scene {
 
     public getChickenWalkingAudioKey() {
         return this.chickenWalkAudioKey;
+    }
+
+    public getDogBiteAudioKey() {
+        return this.dogBiteAudioKey;
+    }
+
+    public getDogDyingAudioKey() {
+        return this.dogDyingAudioKey;
+    }
+
+    public getDogWalkingAudioKey() {
+        return this.dogWalkAudioKey;
     }
 }
