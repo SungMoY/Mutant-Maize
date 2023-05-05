@@ -84,7 +84,7 @@ export default class Level1 extends Level {
     // public static readonly CHICKEN_DYING_AUDIO_KEY = "CHICKEN_DYING_AUDIO";
     // public static readonly CHICKEN_DYING_AUDIO_PATH = "game_assets/sounds/Chicken/Chicken_Dying.wav";
 
-    // public static readonly CHICKEN_EGG_AUDIO_KEY = "CHICKEN_GG_AUDIO";
+    // public static readonly CHICKEN_EGG_AUDIO_KEY = "CHICKEN_EGG_AUDIO";
     // public static readonly CHICKEN_EGG_AUDIO_PATH = "game_assets/sounds/Chicken/Chicken_Egg.wav";
 
     // public static readonly CHICKEN_WALK_AUDIO_KEY = "CHICKEN_WALK_AUDIO";
