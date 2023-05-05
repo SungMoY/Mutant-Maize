@@ -169,6 +169,9 @@ export default abstract class Level extends Scene {
 
     protected parallaxBackground: boolean;
 
+    protected isLevel1: boolean;
+    protected isLevel2: boolean;
+
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
         super(viewport, sceneManager, renderingManager, {...options, physics: {
             groupNames: [
@@ -480,6 +483,43 @@ export default abstract class Level extends Scene {
             ],
             onEnd: GameEvents.LEVEL_START
         });
+
+        if (this.isLevel1) {
+            // add label for WASD, spacebar instructions
+            let wasdLabel = <Label>this.add.uiElement(UIElementType.LABEL, LevelLayers.PRIMARY, {position: new Vec2(200, 350), text: "Use WASD and SPACE to move"});
+            wasdLabel.backgroundColor = new Color(0, 0, 0, 0.9)
+            wasdLabel.fontSize = 16;
+            wasdLabel.font = "Verdana";
+            wasdLabel.textColor = Color.WHITE;
+            wasdLabel.setPadding(new Vec2(20, 10));
+
+            // add label for Mouse1, Mouse2 instructions
+            let m1Label = <Label>this.add.uiElement(UIElementType.LABEL, LevelLayers.PRIMARY, {position: new Vec2(200, 400), text: "Use Left and Right Mouse to shoot"});
+            m1Label.backgroundColor = new Color(0, 0, 0, 0.9)
+            m1Label.fontSize = 16;
+            m1Label.font = "Verdana";
+            m1Label.textColor = Color.WHITE;
+            m1Label.setPadding(new Vec2(20, 10));
+
+            // add label for SHIFT instructions
+            let shiftLabel = <Label>this.add.uiElement(UIElementType.LABEL, LevelLayers.PRIMARY, {position: new Vec2(2064, 320), text: "Use SHIFT to grapple"});
+            shiftLabel.backgroundColor = new Color(0, 0, 0, 0.9)
+            shiftLabel.fontSize = 16;
+            shiftLabel.font = "Verdana";
+            shiftLabel.textColor = Color.WHITE;
+            shiftLabel.setPadding(new Vec2(20, 10));
+
+            let shiftLabel2 = <Label>this.add.uiElement(UIElementType.LABEL, LevelLayers.PRIMARY, {position: new Vec2(4900, 50), text: "Use SHIFT to grapple"});
+            shiftLabel2.backgroundColor = new Color(0, 0, 0, 0.9)
+            shiftLabel2.fontSize = 16;
+            shiftLabel2.font = "Verdana";
+            shiftLabel2.textColor = Color.WHITE;
+            shiftLabel2.setPadding(new Vec2(20, 10));
+        }
+        if (this.isLevel2) {
+            // add label for SHIFT to mobs instructions
+        }
+
     }
 
     protected initializeWeaponSystem(): void {
