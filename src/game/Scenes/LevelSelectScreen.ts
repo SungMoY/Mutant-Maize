@@ -9,6 +9,7 @@ import Level from "./Level";
 import Level1 from "./Level1";
 import Level2 from "./Level2";
 import Level3 from "./Level3";
+import Level6 from "./Level6";
 import MainMenu from "./MainMenu";
 
 export default class LevelSelectScreen extends Scene {
@@ -89,7 +90,7 @@ export default class LevelSelectScreen extends Scene {
         this.addLevel("3. Barn", Level3, positions[1]);
         this.addLevel("4. Garden", null, positions[4]);
         this.addLevel("5. House Wall", null, positions[2]);
-        this.addLevel("6. House", null, positions[5]);
+        this.addLevel("6. House", Level6, positions[5]);
         
 
         // Create a back button
@@ -104,9 +105,6 @@ export default class LevelSelectScreen extends Scene {
             this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: MainMenu.MUSIC_KEY, holdReference: false});
             this.sceneManager.changeToScene(MainMenu);
         }
-
-        // REMOVE LATER
-        this.sceneManager.changeToScene(Level3);
         
     }
 
