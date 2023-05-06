@@ -152,9 +152,9 @@ export default class Level6 extends Level {
          // Boss Content
         this.load.spritesheet(Level6.DOG_SPRITE_KEY, Level6.DOG_SPRITE_PATH);
         this.load.audio(this.bossMusicKey, Level6.BOSS_MUSIC_PATH)
-        this.load.audio(this.chickenDyingAudioKey, Level6.DOG_DYING_AUDIO_PATH);
-        this.load.audio(this.chickenEggAudioKey, Level6.DOG_BITE_AUDIO_PATH);
-        this.load.audio(this.chickenWalkAudioKey, Level6.DOG_WALK_AUDIO_PATH);
+        this.load.audio(this.dogBiteAudioKey, Level6.DOG_BITE_AUDIO_PATH);
+        this.load.audio(this.dogDyingAudioKey, Level6.DOG_DYING_AUDIO_PATH);
+        this.load.audio(this.dogWalkAudioKey, Level6.DOG_WALK_AUDIO_PATH);
 
     }
 
