@@ -161,7 +161,7 @@ export default abstract class Level extends Scene {
     protected chickenPosition: Vec2;
     protected eggParticlesSystem: Egg;
 
-    protected dogSpiteKey: string;
+    protected dogSpriteKey: string;
     protected dogPosition: Vec2;
     protected biteParticlesSystem: Bite;
 
@@ -682,9 +682,9 @@ export default abstract class Level extends Scene {
             chicken.setTrigger(GamePhysicsGroups.GRAPPLE, GameEvents.GRAPPLE_HIT, null);
             chicken.setTrigger(GamePhysicsGroups.PLAYER, GameEvents.PLAYER_HIT, null);
         }
-        if (this.dogSpiteKey) {
+        if (this.dogSpriteKey) {
             console.log("SPAWNING DOG BOSS")
-            let dog = this.add.animatedSprite(this.dogSpiteKey, LevelLayers.PRIMARY);
+            let dog = this.add.animatedSprite(this.dogSpriteKey, LevelLayers.PRIMARY);
             dog.position.set(this.dogPosition.x, this.dogPosition.y);
             dog.scale.set(8, 8);
 
