@@ -517,6 +517,20 @@ export default abstract class Level extends Scene {
             shiftLabel2.font = "Verdana";
             shiftLabel2.textColor = Color.WHITE;
             shiftLabel2.setPadding(new Vec2(20, 10));
+
+            let shiftLabel3 = <Label>this.add.uiElement(UIElementType.LABEL, LevelLayers.PRIMARY, {position: new Vec2(3504, 416), text: "Try grappling to mobs"});
+            shiftLabel3.backgroundColor = new Color(0, 0, 0, 0.9)
+            shiftLabel3.fontSize = 16;
+            shiftLabel3.font = "Verdana";
+            shiftLabel3.textColor = Color.WHITE;
+            shiftLabel3.setPadding(new Vec2(20, 10));
+
+            let shiftLabel4 = <Label>this.add.uiElement(UIElementType.LABEL, LevelLayers.PRIMARY, {position: new Vec2(3504, 466), text: "Grappling provides brief protection"});
+            shiftLabel4.backgroundColor = new Color(0, 0, 0, 0.9)
+            shiftLabel4.fontSize = 16;
+            shiftLabel4.font = "Verdana";
+            shiftLabel4.textColor = Color.WHITE;
+            shiftLabel4.setPadding(new Vec2(20, 10));
         }
         if (this.isLevel2) {
             // add label for SHIFT to mobs instructions

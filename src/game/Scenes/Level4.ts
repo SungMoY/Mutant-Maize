@@ -4,7 +4,6 @@ import RenderingManager from "../../Wolfie2D/Rendering/RenderingManager";
 import SceneManager from "../../Wolfie2D/Scene/SceneManager";
 import Viewport from "../../Wolfie2D/SceneGraph/Viewport";
 import MainMenu from "./MainMenu";
-import Level2 from "./Level2";
 
 
 export default class Level4 extends Level {
@@ -73,32 +72,6 @@ export default class Level4 extends Level {
     public static readonly MOB_DEATH_AUDIO_PATH = "game_assets/sounds/General/Mob_Dying.wav";
 
     // Boss Content
-    // public static readonly CHICKEN_SPRITE_KEY = "CHICKEN_SPRITE_KEY";
-    // public static readonly CHICKEN_SPRITE_PATH = "game_assets/spritesheets/chicken.json";
-
-    // public static readonly DOG_SPRITE_KEY = "DOG_SPRITE_KEY";
-    // public static readonly DOG_SPRITE_PATH = "game_assets/spritesheets/dog.json";
-
-    // public static readonly BOSS_MUSIC_KEY = "BOSS_MUSIC";
-    // public static readonly BOSS_MUSIC_PATH = "game_assets/music/BGM/BossBGM.mp3";
-
-    // public static readonly CHICKEN_DYING_AUDIO_KEY = "CHICKEN_DYING_AUDIO";
-    // public static readonly CHICKEN_DYING_AUDIO_PATH = "game_assets/sounds/Chicken/Chicken_Dying.wav";
-
-    // public static readonly CHICKEN_EGG_AUDIO_KEY = "CHICKEN_EGG_AUDIO";
-    // public static readonly CHICKEN_EGG_AUDIO_PATH = "game_assets/sounds/Chicken/Chicken_Egg.wav";
-
-    // public static readonly CHICKEN_WALK_AUDIO_KEY = "CHICKEN_WALK_AUDIO";
-    // public static readonly CHICKEN_WALK_AUDIO_PATH = "game_assets/sounds/Chicken/Chicken_Walk.wav";
-
-    // public static readonly DOG_DYING_AUDIO_KEY = "DOG_DYING_AUDIO";
-    // public static readonly DOG_DYING_AUDIO_PATH = "game_assets/sounds/Dog/Dog_Dying.wav";
-
-    // public static readonly DOG_WALK_AUDIO_KEY = "DOG_WALK_AUDIO";
-    // public static readonly DOG_WALK_AUDIO_PATH = "game_assets/sounds/Dog/Dog_Walk.wav";
-
-    // public static readonly DOG_BITE_AUDIO_KEY = "DOG_BITE_AUDIO";
-    // public static readonly DOG_BITE_AUDIO_PATH = "game_assets/sounds/Dog/Dog_Bite.wav";
 
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
         super(viewport, sceneManager, renderingManager, options);
@@ -175,25 +148,8 @@ export default class Level4 extends Level {
         this.levelEndHalfSize = new Vec2(96, this.levelybound)//Vec2(96, 96)
 
         // check to show labels or not
-        this.isLevel1 = true;
+        this.isLevel1 = false;
         this.isLevel2 = false;
-
-
-        // Boss Content
-        // this.bossMusicKey = Level1.BOSS_MUSIC_KEY;
-        // this.chickenDyingAudioKey = Level1.CHICKEN_DYING_AUDIO_KEY;
-        // this.chickenEggAudioKey = Level1.CHICKEN_EGG_AUDIO_KEY;
-        // this.chickenWalkAudioKey = Level1.CHICKEN_WALK_AUDIO_KEY;
-        // this.dogDyingAudioKey = Level1.DOG_DYING_AUDIO_KEY;
-        // this.dogWalkAudioKey = Level1.DOG_WALK_AUDIO_KEY;
-        // this.dogBiteAudioKey = Level1.DOG_BITE_AUDIO_KEY;
-        // this.chickenSpriteKey = Level1.CHICKEN_SPRITE_KEY;
-        // this.chickenPosition = new Vec2(10938, 560),
-        // this.bossViewport = [10008, 10558, 768]
-
-        // this.dogSpiteKey = Level1.DOG_SPRITE_KEY;
-        // this.dogPosition = new Vec2(10906, 360)
-        // this.bossViewport = [10008, 10558, 768]
     }
 
     public loadScene(): void {
@@ -221,17 +177,6 @@ export default class Level4 extends Level {
         this.load.audio(this.mobDyingAudioKey, Level4.MOB_DEATH_AUDIO_PATH);
 
         // Boss Content
-        // this.load.spritesheet(Level1.CHICKEN_SPRITE_KEY, Level1.CHICKEN_SPRITE_PATH);
-        // this.load.spritesheet(Level1.DOG_SPRITE_KEY, Level1.DOG_SPRITE_PATH);
-        // this.load.audio(this.bossMusicKey, Level1.BOSS_MUSIC_PATH)
-
-        // this.load.audio(this.chickenDyingAudioKey, Level1.CHICKEN_DYING_AUDIO_PATH);
-        // this.load.audio(this.chickenEggAudioKey, Level1.CHICKEN_EGG_AUDIO_PATH);
-        // this.load.audio(this.chickenWalkAudioKey, Level1.CHICKEN_WALK_AUDIO_PATH);
-
-        // this.load.audio(this.dogBiteAudioKey, Level1.DOG_BITE_AUDIO_PATH);
-        // this.load.audio(this.dogDyingAudioKey, Level1.DOG_DYING_AUDIO_PATH);
-        // this.load.audio(this.dogWalkAudioKey, Level1.DOG_WALK_AUDIO_PATH);
     }
 
     public unloadScene(): void {
