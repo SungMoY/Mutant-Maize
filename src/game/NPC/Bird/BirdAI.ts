@@ -93,7 +93,7 @@ export default class BirdAI extends StateMachineAI {
         let particles = this.owner.getScene().getRifleParticlePool();
         let particle = particles.find(particle => particle.id === particleId);
         if (this.owner.collisionShape.getBoundingRect().overlaps(particle.collisionShape.getBoundingRect())) {
-            this._health -= 20;
+            this._health -= 13;
             this.changeState("TAKING_DAMAGE");
             particle.position = Vec2.ZERO;
             particle.color = Color.TRANSPARENT;
@@ -106,7 +106,7 @@ export default class BirdAI extends StateMachineAI {
         let particles = this.owner.getScene().getShotgunParticlePool();
         let particle = particles.find(particle => particle.id === particleId);
         if (this.owner.collisionShape.getBoundingRect().overlaps(particle.collisionShape.getBoundingRect())) {
-            this._health -= 10;
+            this._health -= 5;
             this.changeState("TAKING_DAMAGE");
             particle.position = Vec2.ZERO;
             particle.color = Color.TRANSPARENT;
