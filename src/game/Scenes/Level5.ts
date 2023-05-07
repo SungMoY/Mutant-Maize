@@ -5,13 +5,13 @@ import Viewport from "../../Wolfie2D/SceneGraph/Viewport";
 import RenderingManager from "../../Wolfie2D/Rendering/RenderingManager";
 import SceneManager from "../../Wolfie2D/Scene/SceneManager";
 
-export default class Level2 extends Level {
+export default class Level5 extends Level {
 
     public static readonly PLAYER_SPRITE_KEY = "PLAYER_SPRITE_KEY";
     public static readonly PLAYER_SPRITE_PATH = "game_assets/spritesheets/rob_the_cob.json";
 
-    public static readonly TILEMAP_KEY = "LEVEL2";
-    public static readonly TILEMAP_PATH = "game_assets/tilemaps/level2_map.json";
+    public static readonly TILEMAP_KEY = "LEVEL5";
+    public static readonly TILEMAP_PATH = "game_assets/tilemaps/level5_map.json";
     public static readonly WALLS_LAYER_KEY = "Main";
     public static readonly HAZARD_LAYER_KEY = "Hazard"
 
@@ -74,36 +74,36 @@ export default class Level2 extends Level {
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
         super(viewport, sceneManager, renderingManager, options);
 
-        this.tilemapKey = Level2.TILEMAP_KEY;
+        this.tilemapKey = Level5.TILEMAP_KEY;
         this.tilemapScale = new Vec2(3, 3);
-        this.wallsLayerKey = Level2.WALLS_LAYER_KEY;
-        this.hazardsLayerKey = Level2.HAZARD_LAYER_KEY;
+        this.wallsLayerKey = Level5.WALLS_LAYER_KEY;
+        this.hazardsLayerKey = Level5.HAZARD_LAYER_KEY;
 
-        this.playerSpriteKey = Level2.PLAYER_SPRITE_KEY;
+        this.playerSpriteKey = Level5.PLAYER_SPRITE_KEY;
         this.playerSpawn = new Vec2(220, 5550);
 
-        this.backgroundKey = Level2.LEVEL2_BACKGROUND_KEY;
+        this.backgroundKey = Level5.LEVEL2_BACKGROUND_KEY;
 
         // Audio
-        this.levelMusicKey = Level2.LEVEL_MUSIC_KEY
-        this.playerDamageAudioKey = Level2.PLAYER_DAMAGE_AUDIO_KEY;
-        this.playerDeathAudioKey = Level2.PLAYER_DEATH_AUDIO_KEY;
-        this.playerGrappleAudioKey = Level2.PLAYER_GRAPPLE_AUDIO_KEY;
-        this.playerJumpAudioKey = Level2.PLAYER_JUMP_AUDIO_KEY;
-        this.playerRifleAudioKey = Level2.PLAYER_Rifle_AUDIO_KEY;
-        this.playerShotgunAudioKey = Level2.PLAYER_SHOTGUN_AUDIO_KEY;
-        this.playerWalkAudioKey = Level2.PLAYER_WALK_AUDIO_KEY;
-        this.HitAudioKey = Level2.HIT_AUDIO_KEY;
-        this.mobDyingAudioKey = Level2.MOB_DEATH_AUDIO_KEY;
+        this.levelMusicKey = Level5.LEVEL_MUSIC_KEY
+        this.playerDamageAudioKey = Level5.PLAYER_DAMAGE_AUDIO_KEY;
+        this.playerDeathAudioKey = Level5.PLAYER_DEATH_AUDIO_KEY;
+        this.playerGrappleAudioKey = Level5.PLAYER_GRAPPLE_AUDIO_KEY;
+        this.playerJumpAudioKey = Level5.PLAYER_JUMP_AUDIO_KEY;
+        this.playerRifleAudioKey = Level5.PLAYER_Rifle_AUDIO_KEY;
+        this.playerShotgunAudioKey = Level5.PLAYER_SHOTGUN_AUDIO_KEY;
+        this.playerWalkAudioKey = Level5.PLAYER_WALK_AUDIO_KEY;
+        this.HitAudioKey = Level5.HIT_AUDIO_KEY;
+        this.mobDyingAudioKey = Level5.MOB_DEATH_AUDIO_KEY;
 
-        this.kernelSpriteKey = Level2.KERNEL_SPRITE_KEY;
-        this.popcornSpriteKey = Level2.POPCORN_SPRITE_KEY;
+        this.kernelSpriteKey = Level5.KERNEL_SPRITE_KEY;
+        this.popcornSpriteKey = Level5.POPCORN_SPRITE_KEY;
 
-        this.ratSpriteKey = Level2.RAT_SPRITE_KEY;
+        this.ratSpriteKey = Level5.RAT_SPRITE_KEY;
         this.ratPositions = [
 
         ]
-        this.birdSpriteKey = Level2.BIRD_SPRITE_KEY;
+        this.birdSpriteKey = Level5.BIRD_SPRITE_KEY;
         this.birdPositions = [
 
         ]
@@ -119,8 +119,8 @@ export default class Level2 extends Level {
         this.parallaxBackground = false;
 
         // Level End
-        this.levelEndPosition = new Vec2(11328, this.levelybound/2)//Vec2(11328, 528)
-        this.levelEndHalfSize = new Vec2(96, this.levelybound)//Vec2(96, 96)
+        this.levelEndPosition = new Vec2(this.levelxbound/2, 240)//Vec2(11328, 528)
+        this.levelEndHalfSize = new Vec2(this.levelxbound/4, 96)//Vec2(96, 96)
 
         // check to show labels or not
         this.isLevel2 = false;
@@ -131,28 +131,28 @@ export default class Level2 extends Level {
      * Load in resources for level 2.
      */
     public loadScene(): void {
-        this.load.tilemap(this.tilemapKey, Level2.TILEMAP_PATH);
-        this.load.spritesheet(this.playerSpriteKey, Level2.PLAYER_SPRITE_PATH);
+        this.load.tilemap(this.tilemapKey, Level5.TILEMAP_PATH);
+        this.load.spritesheet(this.playerSpriteKey, Level5.PLAYER_SPRITE_PATH);
 
-        this.load.image(Level2.LEVEL2_BACKGROUND_KEY, Level2.LEVEL2_BACKGROUND_PATH);
-        this.load.image(Level2.KERNEL_SPRITE_KEY, Level2.KERNEL_SPRITE_PATH)
-        this.load.image(Level2.POPCORN_SPRITE_KEY, Level2.POPCORN_SPRITE_PATH)
+        this.load.image(Level5.LEVEL2_BACKGROUND_KEY, Level5.LEVEL2_BACKGROUND_PATH);
+        this.load.image(Level5.KERNEL_SPRITE_KEY, Level5.KERNEL_SPRITE_PATH)
+        this.load.image(Level5.POPCORN_SPRITE_KEY, Level5.POPCORN_SPRITE_PATH)
 
-        this.load.spritesheet(Level2.RAT_SPRITE_KEY, Level2.RAT_SPRITE_PATH);
-        this.load.spritesheet(Level2.BIRD_SPRITE_KEY, Level2.BIRD_SPRITE_PATH);
+        this.load.spritesheet(Level5.RAT_SPRITE_KEY, Level5.RAT_SPRITE_PATH);
+        this.load.spritesheet(Level5.BIRD_SPRITE_KEY, Level5.BIRD_SPRITE_PATH);
 
         // loads Audio
-        this.load.audio(this.levelMusicKey, Level2.LEVEL_MUSIC_PATH);
-        this.load.audio(this.playerDamageAudioKey, Level2.PLAYER_DAMAGE_AUDIO_PATH);
-        this.load.audio(this.playerDeathAudioKey, Level2.PLAYER_DEATH_AUDIO_PATH);
-        this.load.audio(this.playerGrappleAudioKey, Level2.PLAYER_GRAPPLE_AUDIO_PATH);
-        this.load.audio(this.playerJumpAudioKey, Level2.PLAYER_JUMP_AUDIO_PATH);
-        this.load.audio(this.playerRifleAudioKey, Level2.PLAYER_Rifle_AUDIO_PATH);
-        this.load.audio(this.playerShotgunAudioKey, Level2.PLAYER_SHOTGUN_AUDIO_PATH);
-        this.load.audio(this.playerWalkAudioKey, Level2.PLAYER_WALK_AUDIO_PATH);
+        this.load.audio(this.levelMusicKey, Level5.LEVEL_MUSIC_PATH);
+        this.load.audio(this.playerDamageAudioKey, Level5.PLAYER_DAMAGE_AUDIO_PATH);
+        this.load.audio(this.playerDeathAudioKey, Level5.PLAYER_DEATH_AUDIO_PATH);
+        this.load.audio(this.playerGrappleAudioKey, Level5.PLAYER_GRAPPLE_AUDIO_PATH);
+        this.load.audio(this.playerJumpAudioKey, Level5.PLAYER_JUMP_AUDIO_PATH);
+        this.load.audio(this.playerRifleAudioKey, Level5.PLAYER_Rifle_AUDIO_PATH);
+        this.load.audio(this.playerShotgunAudioKey, Level5.PLAYER_SHOTGUN_AUDIO_PATH);
+        this.load.audio(this.playerWalkAudioKey, Level5.PLAYER_WALK_AUDIO_PATH);
 
-        this.load.audio(this.HitAudioKey, Level2.HIT_AUDIO_PATH);
-        this.load.audio(this.mobDyingAudioKey, Level2.MOB_DEATH_AUDIO_PATH);
+        this.load.audio(this.HitAudioKey, Level5.HIT_AUDIO_PATH);
+        this.load.audio(this.mobDyingAudioKey, Level5.MOB_DEATH_AUDIO_PATH);
     }
 
     public unloadScene(): void {
