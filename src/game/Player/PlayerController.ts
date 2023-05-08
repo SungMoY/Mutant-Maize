@@ -107,6 +107,8 @@ export default class PlayerController extends StateMachineAI {
         this.speed = 400;
         this.velocity = Vec2.ZERO;
 
+        // for normal lvls, 50 too little, 100 too much
+        // also, bosses should do more damage i feel like
         this.health = 75;
         this.maxHealth = 75;
 
