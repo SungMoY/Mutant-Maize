@@ -23,6 +23,8 @@ export default class MainMenu extends Scene {
     public static readonly LOGO_KEY = "LOGO";
     public static readonly LOGO_PATH = "game_assets/images/logo.png";
 
+    public static IS_GAME_PLAYING = false;
+
     public loadScene(): void {
         this.load.image(MainMenu.BACKGROUND_KEY, MainMenu.BACKGROUND_PATH);
         this.load.image(MainMenu.LOGO_KEY, MainMenu.LOGO_PATH);

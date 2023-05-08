@@ -35,5 +35,9 @@ export const GameEvents = {
     START_BOSS_FIGHT: "START_BOSS_FIGHT",
 
     BOSS_DEAD: "BOSS_DEAD",
+
+    PAUSE: "PAUSE",
+    RESUME: "RESUME",
+    CONTROLS: "CONTROLS",
     
 } as const;

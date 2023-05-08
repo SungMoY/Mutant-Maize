@@ -24,6 +24,9 @@ import SplashScreen from "./game/Scenes/SplashScreen";
             {name: GameControls.RIFLE, keys: ["t"]}, // and left click
             {name: GameControls.SHOTGUN, keys: ["f"]},
             {name: GameControls.GRAPPLE, keys: ["shift"]},
+
+            {name: GameControls.PAUSE, keys: ["escape", "p"]},
+
             {name: GameControls.CHEAT_ONE, keys: ["1"]},
             {name: GameControls.CHEAT_TWO, keys: ["2"]},
             {name: GameControls.CHEAT_THREE, keys: ["3"]},
