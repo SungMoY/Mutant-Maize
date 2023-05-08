@@ -35,19 +35,22 @@ import ChickenAI from "../NPC/Chicken/ChickenAI";
 import Egg from "../NPC/Chicken/Egg";
 import Bite from "../NPC/Dog/Bite";
 import DogAI from "../NPC/Dog/DogAI";
-
+import ParticleSystemManager from "../../Wolfie2D/Rendering/Animations/ParticleSystemManager";
 
 /**
  * A const object for the layer names
  */
 export const LevelLayers = {
+    // The background layer
     BACKGROUND: "BACKGROUND",
     // The primary layer
     PRIMARY: "PRIMARY",
     // The UI layer
     UI: "UI",
-    // The background layer
-
+    // The Pause layer
+    PAUSE: "PAUSE",
+    // Control layer
+    CONTROL: "CONTROL",
 } as const;
 
 // The layers as a type
@@ -205,6 +208,7 @@ export default abstract class Level extends Scene {
         this.initializeTilemap();
         this.initializeWeaponSystem();
         this.initializeUI();
+        //this.initializePause();
         this.initializePlayer(this.playerSpriteKey);
         this.initializeViewport();
         this.initializeNPCs();
@@ -245,6 +249,11 @@ export default abstract class Level extends Scene {
         if (Input.isJustPressed(GameControls.CHEAT_TWO)) {
             this.emitter.fireEvent(GameEvents.LEVEL_END, {});
         }
+
+        if (Input.isPressed(GameControls.PAUSE)) {
+            console.log("Pausing");
+        }
+
         if (this.bossViewport && this.viewport.getOrigin().x >= this.bossViewport[0]) {
             console.log("CHANGING TO BOSS SCENE")
             this.emitter.fireEvent(GameEvents.START_BOSS_FIGHT, {});
@@ -376,6 +385,9 @@ export default abstract class Level extends Scene {
         this.addUILayer(LevelLayers.UI);
         // Add a layer for players and enemies
         this.addLayer(LevelLayers.PRIMARY);
+        
+        this.addUILayer(LevelLayers.PAUSE);
+        this.addUILayer(LevelLayers.CONTROL);
     }
 
     protected initializeBackground(): void {
@@ -725,7 +737,47 @@ export default abstract class Level extends Scene {
             dog.setTrigger(GamePhysicsGroups.SHOTGUN, GameEvents.SHOTGUN_HIT, null);
             dog.setTrigger(GamePhysicsGroups.GRAPPLE, GameEvents.GRAPPLE_HIT, null);
             dog.setTrigger(GamePhysicsGroups.PLAYER, GameEvents.PLAYER_HIT, null);
+        }   
+    }
+
+    protected initializePause(): void {
+        let size = this.viewport.getHalfSize();
+        let yPos = size.y + 100;
+        let pauseMenu = <Rect>this.add.graphic(GraphicType.RECT, LevelLayers.PAUSE, { position: new Vec2(size.x, yPos - 100), size: new Vec2(60, 80) });
+        pauseMenu.color = Color.BLACK;
+        let resumeBtn = <Button>this.add.uiElement(UIElementType.BUTTON, LevelLayers.PAUSE, {position: new Vec2(size.x, yPos - 120), text: "Resume"});      
+        resumeBtn.backgroundColor = Color.TRANSPARENT;
+        resumeBtn.borderColor = Color.WHITE;
+        resumeBtn.borderRadius = 0;
+        resumeBtn.setPadding(new Vec2(50, 10));
+        resumeBtn.font = "Verdana";
+        resumeBtn.scale = new Vec2(0.25,0.25);
+
+        let controlsBtn = <Button>this.add.uiElement(UIElementType.BUTTON, LevelLayers.PAUSE, {position: new Vec2(size.x, yPos - 100), text: "Controls"});
+        controlsBtn.backgroundColor = Color.TRANSPARENT;
+        controlsBtn.borderColor = Color.WHITE;
+        controlsBtn.borderRadius = 0;
+        controlsBtn.setPadding(new Vec2(50, 10));
+        controlsBtn.font = "Verdana";
+        controlsBtn.scale = new Vec2(0.25,0.25);
+
+        let quitBtn = <Button>this.add.uiElement(UIElementType.BUTTON, LevelLayers.PAUSE, {position: new Vec2(size.x, yPos - 80), text: "Main Menu"});
+        quitBtn.backgroundColor = Color.TRANSPARENT;
+        quitBtn.borderColor = Color.WHITE;
+        quitBtn.borderRadius = 0;
+        quitBtn.setPadding(new Vec2(50, 10));
+        quitBtn.font = "Verdana";
+        quitBtn.scale = new Vec2(0.25,0.25);
+
+        resumeBtn.onClick = () => { this.emitter.fireEvent(GameEvents.RESUME); }
+        controlsBtn.onClick = () => { this.emitter.fireEvent(GameEvents.CONTROLS); }
+        quitBtn.onClick = () => {
+            MainMenu.IS_GAME_PLAYING = false;
+            ParticleSystemManager.getInstance().clearParticleSystems();
+            this.emitter.fireEvent(GameEventType.PLAY_MUSIC, {key: MainMenu.MUSIC_KEY, loop: true, holdReference: true});
+            this.sceneManager.changeToScene(MainMenu);
         }
+
     }
 
     // Gets the key of the player hurt audio
