@@ -109,8 +109,8 @@ export default class Level6 extends Level {
         this.parallaxBackground = false;
 
         // Level End
-        this.levelEndPosition = new Vec2(2808, 432)
-        this.levelEndHalfSize = new Vec2(144, this.levelybound)
+        this.levelEndPosition = new Vec2(2808, 768-48-48-48-48-48-24)
+        this.levelEndHalfSize = new Vec2(144, 144)
 
         // check to show labels or not
         this.isLevel1 = false;

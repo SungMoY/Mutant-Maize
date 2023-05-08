@@ -252,7 +252,9 @@ export default abstract class Level extends Scene {
             this.invincible = !this.invincible;
         }
         if (Input.isJustPressed(GameControls.CHEAT_TWO)) {
-            this.emitter.fireEvent(GameEvents.LEVEL_END, {});
+            //this.emitter.fireEvent(GameEvents.LEVEL_END, {});
+            this.player.position.copy(new Vec2(9912, 624));
+            console.log("MOVING")
         }
 
         if (Input.isPressed(GameControls.PAUSE)) {
@@ -710,7 +712,8 @@ export default abstract class Level extends Scene {
         this.levelEndArea.addPhysics(undefined, undefined, false, true);
         this.levelEndArea.setGroup(GamePhysicsGroups.GROUND)
         this.levelEndArea.setTrigger(GamePhysicsGroups.PLAYER, GameEvents.PLAYER_ENTERED_LEVEL_END, null);
-        this.levelEndArea.color = new Color(0,0,0,0.1);
+        this.levelEndArea.color = new Color(255,255,0,0.5);
+        this.levelEndArea.borderColor = Color.WHITE;
     }
 
     protected initializeNPCs(): void {
