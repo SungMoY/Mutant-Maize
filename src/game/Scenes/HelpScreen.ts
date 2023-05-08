@@ -30,8 +30,8 @@ export default class HelpScreen extends Scene {
 
         let background = this.add.sprite(HelpScreen.BACKGROUND_KEY, "MAIN");
         background.position = this.getViewport().getHalfSize();
-        background.scale = new Vec2(0.5, 0.67);
-
+        background.scale = new Vec2(0.25, 0.25);
+        
         // Create a label named "Cheats"
         let cheatsLabel = <Label>this.add.uiElement(UIElementType.LABEL, "MAIN", {position: new Vec2(size.x, size.y - 275), text: "CHEATS"});
         cheatsLabel.textColor = Color.WHITE;

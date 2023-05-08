@@ -4,6 +4,7 @@ import MainMenu from "./MainMenu";
 import Viewport from "../../Wolfie2D/SceneGraph/Viewport";
 import RenderingManager from "../../Wolfie2D/Rendering/RenderingManager";
 import SceneManager from "../../Wolfie2D/Scene/SceneManager";
+import Level3 from "./Level3";
 
 export default class Level2 extends Level {
 
@@ -161,7 +162,7 @@ export default class Level2 extends Level {
 
     public startScene(): void {
         super.startScene();
-        this.nextLevel = MainMenu;
+        this.nextLevel = Level3;
     }
 
     protected initializeViewport(): void {

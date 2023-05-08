@@ -31,8 +31,8 @@ export default class CreditsScreen extends Scene {
 
         let background = this.add.sprite(CreditsScreen.BACKGROUND_KEY, "MAIN");
         background.position = this.getViewport().getHalfSize();
-        background.scale = new Vec2(0.5, 0.67);
-
+        background.scale = new Vec2(0.25, 0.25);
+        
         // Create a label named "CREDITS"
         let controlsLabel = <Label>this.add.uiElement(UIElementType.LABEL, "MAIN", {position: new Vec2(size.x, size.y - 275), text: "CREDITS"});
         controlsLabel.textColor = Color.WHITE;
