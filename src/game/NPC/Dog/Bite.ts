@@ -54,9 +54,10 @@ export default class Bite extends ParticleSystem {
         particle.setGroup(GamePhysicsGroups.ENTITY);
         particle.setTrigger(GamePhysicsGroups.PLAYER, GameEvents.PLAYER_HIT, null);
 
-        particle.color = Color.TRANSPARENT;
+        //particle.color = Color.TRANSPARENT;
+        particle.color = new Color(255, 0, 0, 0.5)
         particle.size = new Vec2(100, 200);
-        particle.collisionShape = new AABB(Vec2.ZERO, new Vec2(50, 100));
+        particle.collisionShape = new AABB(Vec2.ZERO, new Vec2(50, 50));
 
         particle.tweens.add("active", {
             startDelay: 0,

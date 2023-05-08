@@ -6,11 +6,14 @@ import Timer from "../../../Wolfie2D/Timing/Timer";
 import Color from "../../../Wolfie2D/Utils/Color";
 import { GameEvents } from "../../GameEvents";
 import HW3AnimatedSprite from "../../Nodes/HW3AnimatedSprite";
+
 import ChickenIdle from "./ChickenIdle";
 import ChickenCharge from "./ChickenCharge";
 import ChickenEgg from "./ChickenEgg";
 import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
 import Egg from "./Egg";
+
+import MathUtils from "../../../Wolfie2D/Utils/MathUtils";
 
 export default class ChickenAI extends StateMachineAI {
     
@@ -19,7 +22,9 @@ export default class ChickenAI extends StateMachineAI {
 
     protected owner: HW3AnimatedSprite;
     protected _velocity: Vec2;
+
     protected _health: number;
+    protected _maxHealth: number;
 
     protected _goLeft: boolean
 
@@ -34,7 +39,10 @@ export default class ChickenAI extends StateMachineAI {
     public initializeAI(owner: HW3AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;
         this._velocity = new Vec2(0, 0)
-        this._health = 500;
+
+        this.health = 500;
+        this.maxHealth = 500;
+
         this.goLeft = true;
         this.eggSystem = options.eggSystem;
 
@@ -130,7 +138,7 @@ export default class ChickenAI extends StateMachineAI {
         let particle = particles.find(particle => particle.id === particleId);
         if (this.owner.collisionShape.getBoundingRect().overlaps(particle.collisionShape.getBoundingRect())) {
             //console.log("RIFLE HIT CHICKEN")
-            this._health -= 10;
+            this.health -= 10;
             particle.position = Vec2.ZERO;
             particle.color = Color.TRANSPARENT;
             //particle.collisionShape = new AABB(Vec2.ZERO, Vec2.ZERO);
@@ -145,7 +153,7 @@ export default class ChickenAI extends StateMachineAI {
         let particle = particles.find(particle => particle.id === particleId);
         if (this.owner.collisionShape.getBoundingRect().overlaps(particle.collisionShape.getBoundingRect())) {
             //console.log("SHOTGUN HIT CHICKEN")
-            this._health -= 5;
+            this.health -= 1.5;
             particle.position = Vec2.ZERO;
             particle.color = Color.TRANSPARENT;
             //.collisionShape = new AABB(Vec2.ZERO, Vec2.ZERO);
@@ -167,16 +175,26 @@ export default class ChickenAI extends StateMachineAI {
     public set velocity(velocity: Vec2) {
         this._velocity = velocity;
     }
-    public get health(): number {
-        return this._health;
-    }
-    public set health(health: number) {
-        this._health = health;
-    }
+    
     public get goLeft(): boolean {
         return this._goLeft;
     }
     public set goLeft(goLeft: boolean) {
         this._goLeft = goLeft;
+    }
+
+    public get health(): number {
+        return this._health;
+    }
+    public set health(health: number) {
+        this._health = MathUtils.clamp(health, 0, this.maxHealth);
+        this.emitter.fireEvent(GameEvents.BOSS_HEALTH_CHANGE, {curhpBoss: this.health, maxhpBoss: this.maxHealth});
+    }
+
+    public get maxHealth(): number { return this._maxHealth; }
+    public set maxHealth(maxHealth: number) { 
+        this._maxHealth = maxHealth; 
+        // When the health changes, fire an event up to the scene.
+        this.emitter.fireEvent(GameEvents.BOSS_HEALTH_CHANGE, {curhpBoss: this.health, maxhpBoss: this.maxHealth});
     }
 }   

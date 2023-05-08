@@ -8,10 +8,13 @@ import Timer from "../../../Wolfie2D/Timing/Timer";
 import Color from "../../../Wolfie2D/Utils/Color";
 import { GameEvents } from "../../GameEvents";
 import HW3AnimatedSprite from "../../Nodes/HW3AnimatedSprite";
+
 import Bite from "./Bite";
 import DogBite from "./DogBite";
 import DogCharge from "./DogCharge";
 import DogIdle from "./DogIdle";
+
+import MathUtils from "../../../Wolfie2D/Utils/MathUtils";
 
 export default class DogAI extends StateMachineAI {
 
@@ -20,7 +23,9 @@ export default class DogAI extends StateMachineAI {
 
     protected owner: HW3AnimatedSprite;
     protected _velocity: Vec2;
+
     protected _health: number;
+    protected _maxHealth: number;
 
     protected _goLeft: boolean
     protected _biteLeft: boolean;
@@ -39,7 +44,10 @@ export default class DogAI extends StateMachineAI {
     public initializeAI(owner: HW3AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;
         this._velocity = new Vec2(0, 0)
-        this._health = 500;
+
+        this.health = 500;
+        this.maxHealth = 500;
+
         this.goLeft = true;
         this.biteSystem = options.biteSystem;
         this.viewport = options.viewport;
@@ -233,7 +241,7 @@ export default class DogAI extends StateMachineAI {
         let particle = particles.find(particle => particle.id === particleId);
         if (this.owner.collisionShape.getBoundingRect().overlaps(particle.collisionShape.getBoundingRect())) {
             //console.log("SHOTGUN HIT DOG")
-            this._health -= 5;
+            this._health -= 1.5;
             particle.position = Vec2.ZERO;
             particle.color = Color.TRANSPARENT;
             //.collisionShape = new AABB(Vec2.ZERO, Vec2.ZERO);
@@ -255,12 +263,6 @@ export default class DogAI extends StateMachineAI {
     public set velocity(velocity: Vec2) {
         this._velocity = velocity;
     }
-    public get health(): number {
-        return this._health;
-    }
-    public set health(health: number) {
-        this._health = health;
-    }
     public get goLeft(): boolean {
         return this._goLeft;
     }
@@ -272,5 +274,20 @@ export default class DogAI extends StateMachineAI {
     }
     public set biteLeft(biteLeft: boolean) {
         this._biteLeft = biteLeft;
+    }
+
+    public get health(): number {
+        return this._health;
+    }
+    public set health(health: number) {
+        this._health = MathUtils.clamp(health, 0, this.maxHealth);
+        this.emitter.fireEvent(GameEvents.BOSS_HEALTH_CHANGE, {curhpBoss: this.health, maxhpBoss: this.maxHealth});
+    }
+
+    public get maxHealth(): number { return this._maxHealth; }
+    public set maxHealth(maxHealth: number) { 
+        this._maxHealth = maxHealth; 
+        // When the health changes, fire an event up to the scene.
+        this.emitter.fireEvent(GameEvents.BOSS_HEALTH_CHANGE, {curhpBoss: this.health, maxhpBoss: this.maxHealth});
     }
 }   
