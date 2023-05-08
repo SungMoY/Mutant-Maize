@@ -104,13 +104,13 @@ export default class AboutScreen extends Scene {
 
         // When the play button is clicked, go to the next scene
         backBtn.onClick = () => {
-            //this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: MainMenu.MUSIC_KEY, holdReference: false});
             this.sceneManager.changeToScene(MainMenu);
         }
 
     }
 
     public unloadScene(): void {
+        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: MainMenu.MUSIC_KEY, holdReference: false});
         this.load.keepImage(AboutScreen.LOGO_KEY);
         this.load.keepImage(AboutScreen.BACKGROUND_KEY);
         this.load.keepAudio(AboutScreen.MUSIC_KEY);

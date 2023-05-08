@@ -72,13 +72,13 @@ export default class HelpScreen extends Scene {
 
         // When the play button is clicked, go to the next scene
         backBtn.onClick = () => {
-            //this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: MainMenu.MUSIC_KEY, holdReference: false});
             this.sceneManager.changeToScene(MainMenu);
         }
 
     }
 
     public unloadScene(): void {
+        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: MainMenu.MUSIC_KEY, holdReference: false});
         this.load.keepImage(HelpScreen.LOGO_KEY);
         this.load.keepImage(HelpScreen.BACKGROUND_KEY);
         this.load.keepAudio(HelpScreen.MUSIC_KEY);
