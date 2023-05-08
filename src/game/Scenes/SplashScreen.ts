@@ -55,7 +55,6 @@ export default class SplashScreen extends Scene {
     }
 
     public unloadScene(): void {
-        this.emitter.fireEvent(GameEventType.PLAY_MUSIC, {key: MainMenu.MUSIC_KEY, loop: true, holdReference: true})
         this.load.keepImage(SplashScreen.LOGO_KEY);
         this.load.keepImage(SplashScreen.BACKGROUND_KEY);
         this.load.keepAudio(SplashScreen.MUSIC_KEY);
