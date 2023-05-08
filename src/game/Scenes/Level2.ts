@@ -102,11 +102,22 @@ export default class Level2 extends Level {
 
         this.ratSpriteKey = Level2.RAT_SPRITE_KEY;
         this.ratPositions = [
-
+            new Vec2(1104, 5280),
+            new Vec2(720, 4704),
+            new Vec2(816, 3840),
+            new Vec2(624, 3312),
+            new Vec2(144, 2592),
+            new Vec2(816, 1776),
+            new Vec2(1296, 1776),
+            new Vec2(576, 624),
+            new Vec2(912, 192)
         ]
         this.birdSpriteKey = Level2.BIRD_SPRITE_KEY;
         this.birdPositions = [
-
+            new Vec2(432, 1920),
+            new Vec2(1392, 2928),
+            new Vec2(720, 3840),
+            new Vec2(864, 4512)
         ]
         // map length in tiles * tile dimension in pixels * tilemap scale
         // 120 * 16 * 3
@@ -120,8 +131,8 @@ export default class Level2 extends Level {
         this.parallaxBackground = false;
 
         // Level End
-        this.levelEndPosition = new Vec2(11328, this.levelybound/2)//Vec2(11328, 528)
-        this.levelEndHalfSize = new Vec2(96, this.levelybound)//Vec2(96, 96)
+        this.levelEndPosition = new Vec2(1464, 216)//Vec2(11328, 528)
+        this.levelEndHalfSize = new Vec2(144, 144)//Vec2(96, 96)
 
         // check to show labels or not
         this.isLevel2 = false;

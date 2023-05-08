@@ -102,6 +102,7 @@ export default class Level4 extends Level {
 
         this.ratSpriteKey = Level4.RAT_SPRITE_KEY;
         this.ratPositions = [
+            //above ground
             new Vec2(528, 816),
             new Vec2(2352, 768),
             new Vec2(3264, 864),
@@ -114,13 +115,13 @@ export default class Level4 extends Level {
             new Vec2(6624, 864),
             new Vec2(7392, 816),
             new Vec2(7776, 816),
-            new Vec2(8496, 816),
+            //new Vec2(8496, 816),
             new Vec2(9504, 528),
             new Vec2(9600, 816),
             new Vec2(10080, 816),
             new Vec2(10080, 528),
             new Vec2(11040, 816),
-
+            //tunnel
             new Vec2(144, 1392),
             new Vec2(1056, 1008),
             new Vec2(1440, 960),
@@ -134,8 +135,8 @@ export default class Level4 extends Level {
             new Vec2(3840, 960),
             new Vec2(4320, 1104),
             new Vec2(4896, 1248),
-            new Vec2(5664, 1104),
-            new Vec2(6144, 1392),
+            new Vec2(5760, 1104),
+            //new Vec2(6144, 1392),
             new Vec2(6480, 1440),
             new Vec2(6864, 1392),
             new Vec2(6960, 1104),
