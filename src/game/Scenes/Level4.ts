@@ -4,8 +4,6 @@ import RenderingManager from "../../Wolfie2D/Rendering/RenderingManager";
 import SceneManager from "../../Wolfie2D/Scene/SceneManager";
 import Viewport from "../../Wolfie2D/SceneGraph/Viewport";
 import MainMenu from "./MainMenu";
-import Level2 from "./Level2";
-import Level5 from "./Level5";
 
 
 export default class Level4 extends Level {
@@ -72,7 +70,7 @@ export default class Level4 extends Level {
     // Mob Audio
     public static readonly MOB_DEATH_AUDIO_KEY = "MOB_DEATH";
     public static readonly MOB_DEATH_AUDIO_PATH = "game_assets/sounds/General/Mob_Dying.wav";
-
+    
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
         super(viewport, sceneManager, renderingManager, options);
         
@@ -214,6 +212,7 @@ export default class Level4 extends Level {
 
         this.load.audio(this.HitAudioKey, Level4.HIT_AUDIO_PATH);
         this.load.audio(this.mobDyingAudioKey, Level4.MOB_DEATH_AUDIO_PATH);
+
     }
 
     public unloadScene(): void {
