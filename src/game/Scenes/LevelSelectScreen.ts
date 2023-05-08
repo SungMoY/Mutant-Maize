@@ -27,9 +27,8 @@ export default class LevelSelectScreen extends Scene {
 
 
     public loadScene(): void {
-        this.load.audio(LevelSelectScreen.MUSIC_KEY, LevelSelectScreen.MUSIC_PATH);
-        this.load.image(LevelSelectScreen.BACKGROUND_KEY, LevelSelectScreen.BACKGROUND_PATH);
-        this.load.image(LevelSelectScreen.LOGO_KEY, LevelSelectScreen.LOGO_PATH);
+        this.load.getImage(LevelSelectScreen.BACKGROUND_KEY);
+        this.load.getImage(LevelSelectScreen.LOGO_KEY);
     }
 
     public addLevel(text: string, level: any, position: Vec2): void {
@@ -104,14 +103,16 @@ export default class LevelSelectScreen extends Scene {
 
         // When the play button is clicked, go to the next scene
         backBtn.onClick = () => {
-            this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: MainMenu.MUSIC_KEY, holdReference: false});
+            //this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: MainMenu.MUSIC_KEY, holdReference: false});
             this.sceneManager.changeToScene(MainMenu);
         }
         
     }
 
     public unloadScene(): void {
-
+        this.load.keepImage(LevelSelectScreen.LOGO_KEY);
+        this.load.keepImage(LevelSelectScreen.BACKGROUND_KEY);
+        this.load.keepAudio(LevelSelectScreen.MUSIC_KEY);
     }
 }
 

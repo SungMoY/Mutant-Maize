@@ -28,7 +28,8 @@ import SplashScreen from "./game/Scenes/SplashScreen";
             {name: GameControls.PAUSE, keys: ["escape", "p"]},
 
             {name: GameControls.CHEAT_ONE, keys: ["1"]},
-            {name: GameControls.CHEAT_TWO, keys: ["2"]}
+            {name: GameControls.CHEAT_TWO, keys: ["2"]},
+            {name: GameControls.CHEAT_THREE, keys: ["3"]}
         ],
         useWebGL: false,                        // Tell the game we want to use webgl
         showDebug: false                       // Whether to show debug messages. You can change this to true if you want

@@ -15,9 +15,12 @@ export default class HelpScreen extends Scene {
     public static readonly LOGO_KEY = "LOGO";
     public static readonly LOGO_PATH = "game_assets/images/logo.png";
 
+    public static readonly MUSIC_KEY = "MAIN_MENU_MUSIC";
+    public static readonly MUSIC_PATH = "game_assets/music/BGM/LobbyBGM.mp3";
+
     public loadScene(): void {
-        this.load.image(HelpScreen.BACKGROUND_KEY, HelpScreen.BACKGROUND_PATH);
-        this.load.image(HelpScreen.LOGO_KEY, HelpScreen.LOGO_PATH);
+        this.load.getImage(HelpScreen.BACKGROUND_KEY);
+        this.load.getImage(HelpScreen.LOGO_KEY);
     }
 
     public startScene(): void {
@@ -69,13 +72,16 @@ export default class HelpScreen extends Scene {
 
         // When the play button is clicked, go to the next scene
         backBtn.onClick = () => {
-            this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: MainMenu.MUSIC_KEY, holdReference: false});
+            //this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: MainMenu.MUSIC_KEY, holdReference: false});
             this.sceneManager.changeToScene(MainMenu);
         }
 
     }
 
     public unloadScene(): void {
+        this.load.keepImage(HelpScreen.LOGO_KEY);
+        this.load.keepImage(HelpScreen.BACKGROUND_KEY);
+        this.load.keepAudio(HelpScreen.MUSIC_KEY);
     }
 }
 
