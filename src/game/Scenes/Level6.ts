@@ -31,7 +31,7 @@ export default class Level6 extends Level {
     public static readonly DYING_AUDIO_PATH = "game_assets/music/dying.mp3";
 
     public static readonly LEVEL_MUSIC_KEY = "LEVEL_MUSIC";
-    public static readonly LEVEL_MUSIC_PATH = "game_assets/music/BGM/MainBGM.mp3";
+    public static readonly LEVEL_MUSIC_PATH = "game_assets/music/BGM/level6_music.mp3";
 
     public static readonly HIT_AUDIO_KEY = "HIT";
     public static readonly HIT_AUDIO_PATH = "game_assets/sounds/General/Hit_Sound.wav";
@@ -60,7 +60,7 @@ export default class Level6 extends Level {
 
     // Boss Content
     public static readonly BOSS_MUSIC_KEY = "BOSS_MUSIC";
-    public static readonly BOSS_MUSIC_PATH = "game_assets/music/BGM/BossBGM.mp3";
+    public static readonly BOSS_MUSIC_PATH = "game_assets/music/BGM/level6_music.mp3";
 
     public static readonly DOG_SPRITE_KEY = "DOG_SPRITE_KEY";
     public static readonly DOG_SPRITE_PATH = "game_assets/spritesheets/dog.json";

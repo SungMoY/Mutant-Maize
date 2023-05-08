@@ -41,7 +41,7 @@ export default class Level4 extends Level {
     public static readonly DYING_AUDIO_PATH = "game_assets/music/dying.mp3";
     
     public static readonly LEVEL_MUSIC_KEY = "LEVEL_MUSIC";
-    public static readonly LEVEL_MUSIC_PATH = "game_assets/music/BGM/MainBGM.mp3";
+    public static readonly LEVEL_MUSIC_PATH = "game_assets/music/BGM/level4_music.mp3";
 
     public static readonly HIT_AUDIO_KEY = "HIT";
     public static readonly HIT_AUDIO_PATH = "game_assets/sounds/General/Hit_Sound.wav";

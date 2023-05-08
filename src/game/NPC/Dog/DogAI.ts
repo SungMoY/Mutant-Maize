@@ -185,6 +185,7 @@ export default class DogAI extends StateMachineAI {
             this.owner.visible = false;
             this.owner.isCollidable = false;
             this.owner.collisionShape = new AABB(Vec2.ZERO, Vec2.ZERO);
+            this.biteSystem.stopSystem();
         }
         this.owner.move(this.velocity.scaled(deltaT));
 

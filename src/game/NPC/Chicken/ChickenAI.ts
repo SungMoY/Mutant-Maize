@@ -99,6 +99,7 @@ export default class ChickenAI extends StateMachineAI {
             this.chargeTimer.pause();
             this.eggTimer.pause();
             this.owner.destroy();
+            this.eggSystem.stopSystem();
             }
         
     }
