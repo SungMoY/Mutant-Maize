@@ -76,8 +76,7 @@ export default class MainMenu extends Scene {
             text.textColor = Color.WHITE;
             text.backgroundColor = Color.TRANSPARENT
         }
-
-        //this.emitter.fireEvent(GameEventType.PLAY_MUSIC, {key: MainMenu.MUSIC_KEY, loop: true, holdReference: true})
+        this.emitter.fireEvent(GameEventType.PLAY_MUSIC, {key: MainMenu.MUSIC_KEY, loop: true, holdReference: true})
 
     }
 

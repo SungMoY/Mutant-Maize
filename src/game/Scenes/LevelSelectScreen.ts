@@ -103,13 +103,13 @@ export default class LevelSelectScreen extends Scene {
 
         // When the play button is clicked, go to the next scene
         backBtn.onClick = () => {
-            //this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: MainMenu.MUSIC_KEY, holdReference: false});
             this.sceneManager.changeToScene(MainMenu);
         }
         
     }
 
     public unloadScene(): void {
+        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: MainMenu.MUSIC_KEY, holdReference: false});
         this.load.keepImage(LevelSelectScreen.LOGO_KEY);
         this.load.keepImage(LevelSelectScreen.BACKGROUND_KEY);
         this.load.keepAudio(LevelSelectScreen.MUSIC_KEY);
