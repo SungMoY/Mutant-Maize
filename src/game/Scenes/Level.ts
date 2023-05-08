@@ -35,8 +35,6 @@ import ChickenAI from "../NPC/Chicken/ChickenAI";
 import Egg from "../NPC/Chicken/Egg";
 import Bite from "../NPC/Dog/Bite";
 import DogAI from "../NPC/Dog/DogAI";
-import ParticleSystemManager from "../../Wolfie2D/Rendering/Animations/ParticleSystemManager";
-import Game from "../../Wolfie2D/Loop/Game";
 
 /**
  * A const object for the layer names
@@ -48,8 +46,6 @@ export const LevelLayers = {
     PRIMARY: "PRIMARY",
     // The UI layer
     UI: "UI",
-    // The Pause layer
-    PAUSE: "PAUSE",
     // Control layer
     CONTROL: "CONTROL",
 } as const;
@@ -216,10 +212,6 @@ export default abstract class Level extends Scene {
         this.subscribeToEvents();
         this.initializeLevelEnds();
 
-        this.initializePause();
-        this.getLayer(LevelLayers.PAUSE).disable();
-        this.isPaused = false;
-
         this.levelTransitionTimer = new Timer(500, null, false);
         this.levelTransitionTimer.start();
         this.levelEndTimer = new Timer(500, () => {
@@ -256,16 +248,6 @@ export default abstract class Level extends Scene {
         }
         if (Input.isJustPressed(GameControls.CHEAT_THREE)) {
             this.emitter.fireEvent(GameEvents.LEVEL_END, {});
-        }
-
-        if (Input.isPressed(GameControls.PAUSE)) {
-            console.log("Pausing???");
-            if (!this.isPaused) {
-                this.getLayer(LevelLayers.PAUSE).enable();
-            }
-            else {
-                this.getLayer(LevelLayers.PAUSE).disable();
-            }
         }
 
         if (this.bossViewport && this.viewport.getOrigin().x >= this.bossViewport[0]) {
@@ -400,8 +382,6 @@ export default abstract class Level extends Scene {
         this.addUILayer(LevelLayers.UI);
         // Add a layer for players and enemies
         this.addLayer(LevelLayers.PRIMARY);
-        
-        this.addUILayer(LevelLayers.PAUSE);
         this.addUILayer(LevelLayers.CONTROL);
     }
 
@@ -756,59 +736,6 @@ export default abstract class Level extends Scene {
             dog.setTrigger(GamePhysicsGroups.GRAPPLE, GameEvents.GRAPPLE_HIT, null);
             dog.setTrigger(GamePhysicsGroups.PLAYER, GameEvents.PLAYER_HIT, null);
         }   
-    }
-
-    protected initializePause(): void {
-        let size = this.viewport.getHalfSize();
-        let yPos = size.y + 100;
-        //let pauseMenu = <Rect>this.add.graphic(GraphicType.RECT, LevelLayers.PAUSE, { position: new Vec2(size.x, yPos - 100), size: new Vec2(300, 350) });
-        //let pauseMenu = <Rect>this.add.graphic(GraphicType.RECT, LevelLayers.PAUSE, { position: new Vec2(size.x, yPos - 100), size: new Vec2(300, 200) });
-        let pauseMenu = <Rect>this.add.graphic(GraphicType.RECT, LevelLayers.PAUSE, { position: new Vec2(size.x, yPos - 100), size: new Vec2(300, 100) });
-        pauseMenu.color = new Color(255, 255, 0, 0.75);
-
-        //let resumeBtn = <Button>this.add.uiElement(UIElementType.BUTTON, LevelLayers.PAUSE, {position: new Vec2(size.x, yPos - 200), text: "Resume"});
-        /*
-        let resumeBtn = <Button>this.add.uiElement(UIElementType.BUTTON, LevelLayers.PAUSE, {position: new Vec2(size.x, yPos - 150), text: "Resume"});
-        resumeBtn.backgroundColor = Color.TRANSPARENT;
-        resumeBtn.borderColor = Color.BLACK;
-        resumeBtn.borderRadius = 0;
-        resumeBtn.setPadding(new Vec2(50, 10));
-        resumeBtn.font = "Verdana";
-        resumeBtn.textColor = Color.BLACK;
-        resumeBtn.scale = new Vec2(0.25,0.25);
-        */
-
-        /*
-        let controlsBtn = <Button>this.add.uiElement(UIElementType.BUTTON, LevelLayers.PAUSE, {position: new Vec2(size.x, yPos - 100), text: "Controls"});
-        controlsBtn.backgroundColor = Color.TRANSPARENT;
-        controlsBtn.borderColor = Color.WHITE;
-        controlsBtn.borderRadius = 0;
-        controlsBtn.setPadding(new Vec2(50, 10));
-        controlsBtn.font = "Verdana";
-        controlsBtn.textColor = Color.BLACK;
-        controlsBtn.scale = new Vec2(0.25,0.25);
-        */
-
-        //let quitBtn = <Button>this.add.uiElement(UIElementType.BUTTON, LevelLayers.PAUSE, {position: new Vec2(size.x, yPos - 0), text: "Main Menu"});
-        //let quitBtn = <Button>this.add.uiElement(UIElementType.BUTTON, LevelLayers.PAUSE, {position: new Vec2(size.x, yPos - 50), text: "Main Menu"});
-        let quitBtn = <Button>this.add.uiElement(UIElementType.BUTTON, LevelLayers.PAUSE, {position: new Vec2(size.x, yPos - 100), text: "Main Menu"});
-        quitBtn.backgroundColor = Color.TRANSPARENT;
-        quitBtn.borderColor = Color.BLACK;
-        quitBtn.borderRadius = 0;
-        quitBtn.setPadding(new Vec2(50, 10));
-        quitBtn.font = "Verdana";
-        quitBtn.textColor = Color.BLACK;
-        quitBtn.scale = new Vec2(1,1);
-
-        //resumeBtn.onClick = () => { this.emitter.fireEvent(GameEvents.RESUME); }
-        //controlsBtn.onClick = () => { this.emitter.fireEvent(GameEvents.CONTROLS); }
-        quitBtn.onClick = () => {
-            MainMenu.IS_GAME_PLAYING = false;
-            ParticleSystemManager.getInstance().clearParticleSystems();
-            this.emitter.fireEvent(GameEventType.PLAY_MUSIC, {key: MainMenu.MUSIC_KEY, loop: true, holdReference: true});
-            this.sceneManager.changeToScene(MainMenu);
-        }
-
     }
 
     // Gets the key of the player hurt audio
