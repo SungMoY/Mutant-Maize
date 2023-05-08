@@ -48,8 +48,8 @@ export default class DogAI extends StateMachineAI {
         this.owner = owner;
         this._velocity = new Vec2(0, 0)
 
-        this.health = 500;
-        this.maxHealth = 500;
+        this.health = 1000;
+        this.maxHealth = 1000;
 
         this.goLeft = true;
         this.biteSystem = options.biteSystem;
@@ -66,11 +66,12 @@ export default class DogAI extends StateMachineAI {
 
         let scene = this.owner.getScene();
 
+        // hp bar
         this.healthBar = <Label>scene.add.uiElement(UIElementType.LABEL, LevelLayers.UI, {position: bossHPPos, text: ""});
         this.healthBar.size = bossHPSize;
-        this.healthBar.backgroundColor = Color.RED;
+        this.healthBar.backgroundColor = Color.TRANSPARENT;
         this.healthBar.borderColor = Color.BLACK;
-        this.healthBar.borderRadius = 0;
+        this.healthBar.borderRadius = 1;
         this.healthBar.visible = false;
 
         // boss HP
@@ -78,7 +79,7 @@ export default class DogAI extends StateMachineAI {
 		this.healthBarHealth.size = bossHPSize;
         this.healthBarHealth.backgroundColor = new Color(213, 81, 30);
         this.healthBar.borderColor = Color.BLACK;
-        this.healthBarHealth.borderRadius = 0;
+        this.healthBarHealth.borderRadius = 1;
         this.healthBarHealth.visible = false;
 
         // i want to loop the following

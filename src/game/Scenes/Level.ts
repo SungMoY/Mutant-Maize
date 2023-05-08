@@ -177,6 +177,8 @@ export default abstract class Level extends Scene {
     protected invincible: boolean;
     protected invincibleLabel: Label;
 
+    protected isPaused: boolean;
+
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
         super(viewport, sceneManager, renderingManager, {...options, physics: {
             groupNames: [
@@ -208,12 +210,15 @@ export default abstract class Level extends Scene {
         this.initializeTilemap();
         this.initializeWeaponSystem();
         this.initializeUI();
-        //this.initializePause();
         this.initializePlayer(this.playerSpriteKey);
         this.initializeViewport();
         this.initializeNPCs();
         this.subscribeToEvents();
         this.initializeLevelEnds();
+
+        this.initializePause();
+        this.getLayer(LevelLayers.PAUSE).disable();
+        this.isPaused = false;
 
         this.levelTransitionTimer = new Timer(500, null, false);
         this.levelTransitionTimer.start();
@@ -230,7 +235,6 @@ export default abstract class Level extends Scene {
         
         // Start playing the level music
         this.emitter.fireEvent(GameEventType.PLAY_MUSIC, {key: this.levelMusicKey, loop: true, holdReference: true});
-
     }
 
     /* Update method for the scene */
@@ -255,7 +259,13 @@ export default abstract class Level extends Scene {
         }
 
         if (Input.isPressed(GameControls.PAUSE)) {
-            console.log("Pausing");
+            console.log("Pausing???");
+            if (!this.isPaused) {
+                this.getLayer(LevelLayers.PAUSE).enable();
+            }
+            else {
+                this.getLayer(LevelLayers.PAUSE).disable();
+            }
         }
 
         if (this.bossViewport && this.viewport.getOrigin().x >= this.bossViewport[0]) {
@@ -751,34 +761,47 @@ export default abstract class Level extends Scene {
     protected initializePause(): void {
         let size = this.viewport.getHalfSize();
         let yPos = size.y + 100;
-        let pauseMenu = <Rect>this.add.graphic(GraphicType.RECT, LevelLayers.PAUSE, { position: new Vec2(size.x, yPos - 100), size: new Vec2(600, 800) });
-        pauseMenu.color = Color.BLACK;
-        let resumeBtn = <Button>this.add.uiElement(UIElementType.BUTTON, LevelLayers.PAUSE, {position: new Vec2(size.x, yPos - 120), text: "Resume"});      
+        //let pauseMenu = <Rect>this.add.graphic(GraphicType.RECT, LevelLayers.PAUSE, { position: new Vec2(size.x, yPos - 100), size: new Vec2(300, 350) });
+        //let pauseMenu = <Rect>this.add.graphic(GraphicType.RECT, LevelLayers.PAUSE, { position: new Vec2(size.x, yPos - 100), size: new Vec2(300, 200) });
+        let pauseMenu = <Rect>this.add.graphic(GraphicType.RECT, LevelLayers.PAUSE, { position: new Vec2(size.x, yPos - 100), size: new Vec2(300, 100) });
+        pauseMenu.color = new Color(255, 255, 0, 0.75);
+
+        //let resumeBtn = <Button>this.add.uiElement(UIElementType.BUTTON, LevelLayers.PAUSE, {position: new Vec2(size.x, yPos - 200), text: "Resume"});
+        /*
+        let resumeBtn = <Button>this.add.uiElement(UIElementType.BUTTON, LevelLayers.PAUSE, {position: new Vec2(size.x, yPos - 150), text: "Resume"});
         resumeBtn.backgroundColor = Color.TRANSPARENT;
-        resumeBtn.borderColor = Color.WHITE;
+        resumeBtn.borderColor = Color.BLACK;
         resumeBtn.borderRadius = 0;
         resumeBtn.setPadding(new Vec2(50, 10));
         resumeBtn.font = "Verdana";
+        resumeBtn.textColor = Color.BLACK;
         resumeBtn.scale = new Vec2(0.25,0.25);
+        */
 
+        /*
         let controlsBtn = <Button>this.add.uiElement(UIElementType.BUTTON, LevelLayers.PAUSE, {position: new Vec2(size.x, yPos - 100), text: "Controls"});
         controlsBtn.backgroundColor = Color.TRANSPARENT;
         controlsBtn.borderColor = Color.WHITE;
         controlsBtn.borderRadius = 0;
         controlsBtn.setPadding(new Vec2(50, 10));
         controlsBtn.font = "Verdana";
+        controlsBtn.textColor = Color.BLACK;
         controlsBtn.scale = new Vec2(0.25,0.25);
+        */
 
-        let quitBtn = <Button>this.add.uiElement(UIElementType.BUTTON, LevelLayers.PAUSE, {position: new Vec2(size.x, yPos - 80), text: "Main Menu"});
+        //let quitBtn = <Button>this.add.uiElement(UIElementType.BUTTON, LevelLayers.PAUSE, {position: new Vec2(size.x, yPos - 0), text: "Main Menu"});
+        //let quitBtn = <Button>this.add.uiElement(UIElementType.BUTTON, LevelLayers.PAUSE, {position: new Vec2(size.x, yPos - 50), text: "Main Menu"});
+        let quitBtn = <Button>this.add.uiElement(UIElementType.BUTTON, LevelLayers.PAUSE, {position: new Vec2(size.x, yPos - 100), text: "Main Menu"});
         quitBtn.backgroundColor = Color.TRANSPARENT;
-        quitBtn.borderColor = Color.WHITE;
+        quitBtn.borderColor = Color.BLACK;
         quitBtn.borderRadius = 0;
         quitBtn.setPadding(new Vec2(50, 10));
         quitBtn.font = "Verdana";
-        quitBtn.scale = new Vec2(0.25,0.25);
+        quitBtn.textColor = Color.BLACK;
+        quitBtn.scale = new Vec2(1,1);
 
-        resumeBtn.onClick = () => { this.emitter.fireEvent(GameEvents.RESUME); }
-        controlsBtn.onClick = () => { this.emitter.fireEvent(GameEvents.CONTROLS); }
+        //resumeBtn.onClick = () => { this.emitter.fireEvent(GameEvents.RESUME); }
+        //controlsBtn.onClick = () => { this.emitter.fireEvent(GameEvents.CONTROLS); }
         quitBtn.onClick = () => {
             MainMenu.IS_GAME_PLAYING = false;
             ParticleSystemManager.getInstance().clearParticleSystems();

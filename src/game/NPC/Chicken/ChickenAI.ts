@@ -46,8 +46,8 @@ export default class ChickenAI extends StateMachineAI {
         this.owner = owner;
         this._velocity = new Vec2(0, 0)
 
-        this.health = 500;
-        this.maxHealth = 500;
+        this.health = 1000;
+        this.maxHealth = 1000;
 
         this.goLeft = true;
         this.eggSystem = options.eggSystem;
@@ -61,20 +61,19 @@ export default class ChickenAI extends StateMachineAI {
         let bossHPPos = new Vec2(480, 670) 
 
         let scene = this.owner.getScene();
-
+        // HP bar
         this.healthBar = <Label>scene.add.uiElement(UIElementType.LABEL, LevelLayers.UI, {position: bossHPPos, text: ""});
         this.healthBar.size = bossHPSize;
-        this.healthBar.backgroundColor = Color.RED;
+        this.healthBar.backgroundColor = Color.TRANSPARENT;
         this.healthBar.borderColor = Color.BLACK;
-        this.healthBar.borderRadius = 0;
+        this.healthBar.borderRadius = 1;
         this.healthBar.visible = false;
-
         // boss HP
 		this.healthBarHealth = <Label>scene.add.uiElement(UIElementType.LABEL, LevelLayers.UI, {position: bossHPPos, text: ""});
 		this.healthBarHealth.size = bossHPSize;
         this.healthBarHealth.backgroundColor = Color.YELLOW;
         this.healthBar.borderColor = Color.BLACK;
-        this.healthBarHealth.borderRadius = 0;
+        this.healthBarHealth.borderRadius = 1;
         this.healthBarHealth.visible = false;
 
         this.idleTimer = new Timer(1500, () => {
