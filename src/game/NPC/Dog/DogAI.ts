@@ -3,7 +3,6 @@ import AABB from "../../../Wolfie2D/DataTypes/Shapes/AABB";
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import GameEvent from "../../../Wolfie2D/Events/GameEvent";
 import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
-import Viewport from "../../../Wolfie2D/SceneGraph/Viewport";
 import Timer from "../../../Wolfie2D/Timing/Timer";
 import Color from "../../../Wolfie2D/Utils/Color";
 import { GameEvents } from "../../GameEvents";
@@ -15,6 +14,9 @@ import DogCharge from "./DogCharge";
 import DogIdle from "./DogIdle";
 
 import MathUtils from "../../../Wolfie2D/Utils/MathUtils";
+import Label from "../../../Wolfie2D/Nodes/UIElements/Label";
+import { UIElementType } from "../../../Wolfie2D/Nodes/UIElements/UIElementTypes";
+import { LevelLayers } from "../../Scenes/Level";
 
 export default class DogAI extends StateMachineAI {
 
@@ -39,7 +41,8 @@ export default class DogAI extends StateMachineAI {
 
     protected biteSystem: Bite;
 
-    protected viewport: Array<number>;
+    protected healthBar: Label;
+    protected healthBarHealth: Label;
 
     public initializeAI(owner: HW3AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;
@@ -50,7 +53,6 @@ export default class DogAI extends StateMachineAI {
 
         this.goLeft = true;
         this.biteSystem = options.biteSystem;
-        this.viewport = options.viewport;
         this.biteLeft = true;
         this.dirTracker = 0;
 
@@ -58,6 +60,26 @@ export default class DogAI extends StateMachineAI {
         this.addState("CHARGE", new DogCharge(this, this.owner));
         this.addState("BITE", new DogBite(this, this.owner));
         this.initialize("IDLE");
+
+        let bossHPSize = new Vec2(900, 40)
+        let bossHPPos = new Vec2(480, 670) 
+
+        let scene = this.owner.getScene();
+
+        this.healthBar = <Label>scene.add.uiElement(UIElementType.LABEL, LevelLayers.UI, {position: bossHPPos, text: ""});
+        this.healthBar.size = bossHPSize;
+        this.healthBar.backgroundColor = Color.RED;
+        this.healthBar.borderColor = Color.BLACK;
+        this.healthBar.borderRadius = 0;
+        this.healthBar.visible = false;
+
+        // boss HP
+		this.healthBarHealth = <Label>scene.add.uiElement(UIElementType.LABEL, LevelLayers.UI, {position: bossHPPos, text: ""});
+		this.healthBarHealth.size = bossHPSize;
+        this.healthBarHealth.backgroundColor = new Color(213, 81, 30);
+        this.healthBar.borderColor = Color.BLACK;
+        this.healthBarHealth.borderRadius = 0;
+        this.healthBarHealth.visible = false;
 
         // i want to loop the following
         // bite left        0
@@ -72,16 +94,8 @@ export default class DogAI extends StateMachineAI {
         // go to right      9
         // repeat           0
 
-        // if (this.goLeft) {
-        //     this.velocity.x = -this.MAX_SPEED;
-        //     this.goLeft = false;
-        // } else {
-        //     this.velocity.x = this.MAX_SPEED;
-        //     this.goLeft = true;
-        // }
-
         // lord forgive me for what i am about to do
-        this.idleTimer = new Timer(1500, () => {
+        this.idleTimer = new Timer(1000, () => {
             if (this.dirTracker > 9) {
                 this.dirTracker = 0;
             }
@@ -141,8 +155,9 @@ export default class DogAI extends StateMachineAI {
             this.idleTimer.start();
         }, false);
 
-        this.biteTimer = new Timer(1000, () => {
+        this.biteTimer = new Timer(500, () => {
             // finished bite, go to idle
+            this.biteSystem.stopSystem();
             this.dirTracker++;
             this.biteLeft = !this.biteLeft;
             this.changeState("IDLE");
@@ -194,6 +209,8 @@ export default class DogAI extends StateMachineAI {
             this.owner.isCollidable = false;
             this.owner.collisionShape = new AABB(Vec2.ZERO, Vec2.ZERO);
             this.biteSystem.stopSystem();
+            this.healthBar.visible = false;
+            this.healthBarHealth.visible = false;
         }
         this.owner.move(this.velocity.scaled(deltaT));
 
@@ -218,6 +235,15 @@ export default class DogAI extends StateMachineAI {
 
     protected handleStartBossFight(): void {
         this.idleTimer.start();
+        this.healthBar.visible = true;
+        this.healthBarHealth.visible = true;
+    }
+
+    protected handleBossHealthChange(currentHealth: number, maxHealth: number): void {
+        let ratio = this.healthBar.size.x / maxHealth;
+
+        this.healthBarHealth.size = new Vec2(currentHealth * ratio, this.healthBar.size.y)
+        this.healthBarHealth.position = new Vec2(this.healthBar.position.x - this.healthBar.size.x / 2 + this.healthBarHealth.size.x / 2, this.healthBarHealth.position.y);
     }
 
 
@@ -227,6 +253,7 @@ export default class DogAI extends StateMachineAI {
         if (this.owner.collisionShape.getBoundingRect().overlaps(particle.collisionShape.getBoundingRect())) {
             //console.log("RIFLE HIT DOG")
             this._health -= 10;
+            this.handleBossHealthChange(this.health, this.maxHealth);
             particle.position = Vec2.ZERO;
             particle.color = Color.TRANSPARENT;
             //particle.collisionShape = new AABB(Vec2.ZERO, Vec2.ZERO);
@@ -242,6 +269,7 @@ export default class DogAI extends StateMachineAI {
         if (this.owner.collisionShape.getBoundingRect().overlaps(particle.collisionShape.getBoundingRect())) {
             //console.log("SHOTGUN HIT DOG")
             this._health -= 1.5;
+            this.handleBossHealthChange(this.health, this.maxHealth);
             particle.position = Vec2.ZERO;
             particle.color = Color.TRANSPARENT;
             //.collisionShape = new AABB(Vec2.ZERO, Vec2.ZERO);
@@ -281,13 +309,10 @@ export default class DogAI extends StateMachineAI {
     }
     public set health(health: number) {
         this._health = MathUtils.clamp(health, 0, this.maxHealth);
-        this.emitter.fireEvent(GameEvents.BOSS_HEALTH_CHANGE, {curhpBoss: this.health, maxhpBoss: this.maxHealth});
     }
 
     public get maxHealth(): number { return this._maxHealth; }
     public set maxHealth(maxHealth: number) { 
         this._maxHealth = maxHealth; 
-        // When the health changes, fire an event up to the scene.
-        this.emitter.fireEvent(GameEvents.BOSS_HEALTH_CHANGE, {curhpBoss: this.health, maxhpBoss: this.maxHealth});
     }
 }   

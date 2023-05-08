@@ -14,6 +14,9 @@ import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
 import Egg from "./Egg";
 
 import MathUtils from "../../../Wolfie2D/Utils/MathUtils";
+import Label from "../../../Wolfie2D/Nodes/UIElements/Label";
+import { UIElementType } from "../../../Wolfie2D/Nodes/UIElements/UIElementTypes";
+import { LevelLayers } from "../../Scenes/Level";
 
 export default class ChickenAI extends StateMachineAI {
     
@@ -36,6 +39,9 @@ export default class ChickenAI extends StateMachineAI {
 
     protected eggSystem: Egg;
 
+    protected healthBar: Label;
+    protected healthBarHealth: Label;
+
     public initializeAI(owner: HW3AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;
         this._velocity = new Vec2(0, 0)
@@ -50,6 +56,26 @@ export default class ChickenAI extends StateMachineAI {
         this.addState("CHARGE", new ChickenCharge(this, this.owner));
         this.addState("EGG", new ChickenEgg(this, this.owner));
         this.initialize("IDLE");
+
+        let bossHPSize = new Vec2(900, 40)
+        let bossHPPos = new Vec2(480, 670) 
+
+        let scene = this.owner.getScene();
+
+        this.healthBar = <Label>scene.add.uiElement(UIElementType.LABEL, LevelLayers.UI, {position: bossHPPos, text: ""});
+        this.healthBar.size = bossHPSize;
+        this.healthBar.backgroundColor = Color.RED;
+        this.healthBar.borderColor = Color.BLACK;
+        this.healthBar.borderRadius = 0;
+        this.healthBar.visible = false;
+
+        // boss HP
+		this.healthBarHealth = <Label>scene.add.uiElement(UIElementType.LABEL, LevelLayers.UI, {position: bossHPPos, text: ""});
+		this.healthBarHealth.size = bossHPSize;
+        this.healthBarHealth.backgroundColor = Color.YELLOW;
+        this.healthBar.borderColor = Color.BLACK;
+        this.healthBarHealth.borderRadius = 0;
+        this.healthBarHealth.visible = false;
 
         this.idleTimer = new Timer(1500, () => {
             let random = Math.random();
@@ -108,6 +134,8 @@ export default class ChickenAI extends StateMachineAI {
             this.eggTimer.pause();
             this.owner.destroy();
             this.eggSystem.stopSystem();
+            this.healthBar.visible = false;
+            this.healthBarHealth.visible = false;
             }
         
     }
@@ -131,6 +159,15 @@ export default class ChickenAI extends StateMachineAI {
 
     protected handleStartBossFight(): void {
         this.idleTimer.start();
+        this.healthBar.visible = true;
+        this.healthBarHealth.visible = true;
+    }
+
+    protected handleBossHealthChange(currentHealth: number, maxHealth: number): void {
+        let ratio = this.healthBar.size.x / maxHealth;
+
+        this.healthBarHealth.size = new Vec2(currentHealth * ratio, this.healthBar.size.y)
+        this.healthBarHealth.position = new Vec2(this.healthBar.position.x - this.healthBar.size.x / 2 + this.healthBarHealth.size.x / 2, this.healthBarHealth.position.y);
     }
 
     protected handleRifleHit(particleId: number): void {
@@ -139,6 +176,7 @@ export default class ChickenAI extends StateMachineAI {
         if (this.owner.collisionShape.getBoundingRect().overlaps(particle.collisionShape.getBoundingRect())) {
             //console.log("RIFLE HIT CHICKEN")
             this.health -= 10;
+            this.handleBossHealthChange(this.health, this.maxHealth);
             particle.position = Vec2.ZERO;
             particle.color = Color.TRANSPARENT;
             //particle.collisionShape = new AABB(Vec2.ZERO, Vec2.ZERO);
@@ -154,6 +192,7 @@ export default class ChickenAI extends StateMachineAI {
         if (this.owner.collisionShape.getBoundingRect().overlaps(particle.collisionShape.getBoundingRect())) {
             //console.log("SHOTGUN HIT CHICKEN")
             this.health -= 1.5;
+            this.handleBossHealthChange(this.health, this.maxHealth);
             particle.position = Vec2.ZERO;
             particle.color = Color.TRANSPARENT;
             //.collisionShape = new AABB(Vec2.ZERO, Vec2.ZERO);
@@ -188,13 +227,11 @@ export default class ChickenAI extends StateMachineAI {
     }
     public set health(health: number) {
         this._health = MathUtils.clamp(health, 0, this.maxHealth);
-        this.emitter.fireEvent(GameEvents.BOSS_HEALTH_CHANGE, {curhpBoss: this.health, maxhpBoss: this.maxHealth});
     }
 
     public get maxHealth(): number { return this._maxHealth; }
-    public set maxHealth(maxHealth: number) { 
-        this._maxHealth = maxHealth; 
-        // When the health changes, fire an event up to the scene.
-        this.emitter.fireEvent(GameEvents.BOSS_HEALTH_CHANGE, {curhpBoss: this.health, maxhpBoss: this.maxHealth});
+
+    public set maxHealth(maxHealth: number) {
+        this._maxHealth = maxHealth;
     }
 }   

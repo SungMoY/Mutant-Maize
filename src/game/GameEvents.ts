@@ -40,6 +40,5 @@ export const GameEvents = {
     RESUME: "RESUME",
     CONTROLS: "CONTROLS",
 
-    BOSS_HEALTH_CHANGE: "BOSS_HEALTH_CHANGE",
     
 } as const;
