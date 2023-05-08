@@ -30,7 +30,6 @@ import Grapple from "../Player/Grapple";
 import Queue from "../../Wolfie2D/DataTypes/Queue";
 import RatAI from "../NPC/Rat/RatAI";
 import { GameControls } from "../GameControls";
-import Level1 from "./Level1";
 import BirdAI from "../NPC/Bird/BirdAI";
 import ChickenAI from "../NPC/Chicken/ChickenAI";
 import Egg from "../NPC/Chicken/Egg";
@@ -172,6 +171,9 @@ export default abstract class Level extends Scene {
     protected isLevel1: boolean;
     protected isLevel2: boolean;
 
+    protected invincible: boolean;
+    protected invincibleLabel: Label;
+
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
         super(viewport, sceneManager, renderingManager, {...options, physics: {
             groupNames: [
@@ -237,19 +239,12 @@ export default abstract class Level extends Scene {
 
         this.lockPlayer(this.player, this.viewport.getCenter(), this.viewport.getHalfSize());
 
-        if (Input.isPressed(GameControls.CHEAT_ONE)) {
-            this.sceneManager.changeToScene(Level1);
+        if (Input.isJustPressed(GameControls.CHEAT_ONE)) {
+            this.invincible = !this.invincible;
         }
-        if (Input.isPressed(GameControls.CHEAT_TWO)) {
-            this.player.position.copy(new Vec2(9912, 624));
+        if (Input.isJustPressed(GameControls.CHEAT_TWO)) {
+            this.emitter.fireEvent(GameEvents.LEVEL_END, {});
         }
-        if (Input.isPressed(GameControls.CHEAT_THREE)) {
-            console.log(this.viewport.getOrigin().x);
-        }
-        if (Input.isPressed(GameControls.CHEAT_FOUR)) {
-            this.player.position.copy(this.playerSpawn);
-        }
-
         if (this.bossViewport && this.viewport.getOrigin().x >= this.bossViewport[0]) {
             console.log("CHANGING TO BOSS SCENE")
             this.emitter.fireEvent(GameEvents.START_BOSS_FIGHT, {});
@@ -258,7 +253,13 @@ export default abstract class Level extends Scene {
             this.player.position.copy(this.playerSpawn);
         }
 
-
+        if (!this.invincible) {
+            this.invincibleLabel.textColor = Color.TRANSPARENT;
+            this.invincibleLabel.backgroundColor = Color.TRANSPARENT;
+        } else {
+            this.invincibleLabel.textColor = Color.YELLOW;
+            this.invincibleLabel.backgroundColor = new Color(0, 0, 0, 0.9)
+        }
     }
 
     /**
@@ -454,6 +455,13 @@ export default abstract class Level extends Scene {
         this.levelTransitionScreen.color = new Color(34, 32, 52);
         this.levelTransitionScreen.alpha = 1;
 
+        // invincible label
+        this.invincibleLabel = <Label>this.add.uiElement(UIElementType.LABEL, LevelLayers.UI, {position: new Vec2(500, 48), text: "INVINCIBLE"});
+        this.invincibleLabel.backgroundColor = new Color(0, 0, 0, 0.9)
+        this.invincibleLabel.textColor = Color.YELLOW;
+        this.invincibleLabel.fontSize = 24;
+        this.invincibleLabel.setPadding(new Vec2(10, 10));
+
         this.levelTransitionScreen.tweens.add("fadeIn", {
             startDelay: 0,
             duration: 1000,
@@ -579,6 +587,7 @@ export default abstract class Level extends Scene {
         this.player.scale.set(2, 3);
         this.player.position.copy(this.playerSpawn);
 
+        this.invincible = false;
         
         // Give the player physics
         //this.player.addPhysics(new AABB(this.player.position.clone(), this.player.boundary.getHalfSize().clone()));
@@ -798,5 +807,9 @@ export default abstract class Level extends Scene {
 
     public getDogWalkingAudioKey() {
         return this.dogWalkAudioKey;
+    }
+
+    public getInvincibile() {
+        return this.invincible;
     }
 }

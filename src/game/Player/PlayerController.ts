@@ -257,7 +257,9 @@ export default class PlayerController extends StateMachineAI {
 
     protected handlePlayerHit() {
         if (this.invincibleTimer.isStopped()) {
-            this.health -= 5;
+            if (!this.owner.getScene().getInvincibile()) {
+                this.health -= 5;
+            }
             this.owner.animation.stop();
             this.owner.animation.playIfNotAlready(PlayerAnimations.TAKING_DAMAGE, false);
             this.owner.animation.queue(PlayerAnimations.IDLE, true);
