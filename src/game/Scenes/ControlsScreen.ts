@@ -12,8 +12,15 @@ export default class ControlsScreen extends Scene {
     public static readonly BACKGROUND_KEY = "BACKGROUND";
     public static readonly BACKGROUND_PATH = "game_assets/images/background.png";
 
+    public static readonly LOGO_KEY = "LOGO";
+    public static readonly LOGO_PATH = "game_assets/images/logo.png";
+
+    public static readonly MUSIC_KEY = "MAIN_MENU_MUSIC";
+    public static readonly MUSIC_PATH = "game_assets/music/BGM/LobbyBGM.mp3";
+
     public loadScene(): void {
-        this.load.image(ControlsScreen.BACKGROUND_KEY, ControlsScreen.BACKGROUND_PATH);
+        this.load.getImage(ControlsScreen.BACKGROUND_KEY);
+        this.load.getImage(ControlsScreen.LOGO_KEY);
     }
 
     public startScene(): void {
@@ -95,14 +102,16 @@ export default class ControlsScreen extends Scene {
 
         // When the play button is clicked, go to the next scene
         backBtn.onClick = () => {
-            this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: MainMenu.MUSIC_KEY, holdReference: false});
+            //this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: MainMenu.MUSIC_KEY, holdReference: false});
             this.sceneManager.changeToScene(MainMenu);
         }
 
     }
 
     public unloadScene(): void {
-
+        this.load.keepImage(ControlsScreen.LOGO_KEY);
+        this.load.keepImage(ControlsScreen.BACKGROUND_KEY);
+        this.load.keepAudio(ControlsScreen.MUSIC_KEY);
     }
 }
 

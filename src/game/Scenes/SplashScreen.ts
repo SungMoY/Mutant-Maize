@@ -17,9 +17,14 @@ export default class SplashScreen extends Scene {
     public static readonly LOGO_KEY = "LOGO";
     public static readonly LOGO_PATH = "game_assets/images/logo.png";
 
+    public static readonly MUSIC_KEY = "MAIN_MENU_MUSIC";
+    public static readonly MUSIC_PATH = "game_assets/music/BGM/LobbyBGM.mp3";
+
     public loadScene(): void {
         this.load.image(SplashScreen.LOGO_KEY, SplashScreen.LOGO_PATH);
         this.load.image(SplashScreen.BACKGROUND_KEY, SplashScreen.BACKGROUND_PATH);
+        this.load.audio(SplashScreen.MUSIC_KEY, SplashScreen.MUSIC_PATH)
+
     }
 
     public startScene(): void {
@@ -40,6 +45,7 @@ export default class SplashScreen extends Scene {
         playButton.fontSize = 56;
         playButton.textColor = Color.WHITE;
         playButton.setPadding(new Vec2(50, 5));
+
     }
 
     public updateScene(deltaT: number): void {
@@ -49,7 +55,10 @@ export default class SplashScreen extends Scene {
     }
 
     public unloadScene(): void {
-
+        this.emitter.fireEvent(GameEventType.PLAY_MUSIC, {key: MainMenu.MUSIC_KEY, loop: true, holdReference: true})
+        this.load.keepImage(SplashScreen.LOGO_KEY);
+        this.load.keepImage(SplashScreen.BACKGROUND_KEY);
+        this.load.keepAudio(SplashScreen.MUSIC_KEY);
     }
 }
 

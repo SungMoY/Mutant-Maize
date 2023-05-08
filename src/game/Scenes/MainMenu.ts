@@ -26,9 +26,12 @@ export default class MainMenu extends Scene {
     public static IS_GAME_PLAYING = false;
 
     public loadScene(): void {
-        this.load.image(MainMenu.BACKGROUND_KEY, MainMenu.BACKGROUND_PATH);
-        this.load.image(MainMenu.LOGO_KEY, MainMenu.LOGO_PATH);
-        this.load.audio(MainMenu.MUSIC_KEY, MainMenu.MUSIC_PATH);
+        // this.load.image(MainMenu.BACKGROUND_KEY, MainMenu.BACKGROUND_PATH);
+        // this.load.image(MainMenu.LOGO_KEY, MainMenu.LOGO_PATH);
+        // this.load.audio(MainMenu.MUSIC_KEY, MainMenu.MUSIC_PATH);
+        this.load.getImage(MainMenu.BACKGROUND_KEY);
+        this.load.getImage(MainMenu.LOGO_KEY);
+        this.load.getAudio(MainMenu.MUSIC_KEY);
     }
 
     public startScene(): void {
@@ -74,12 +77,14 @@ export default class MainMenu extends Scene {
             text.backgroundColor = Color.TRANSPARENT
         }
 
-        this.emitter.fireEvent(GameEventType.PLAY_MUSIC, {key: MainMenu.MUSIC_KEY, loop: true, holdReference: true})
+        //this.emitter.fireEvent(GameEventType.PLAY_MUSIC, {key: MainMenu.MUSIC_KEY, loop: true, holdReference: true})
 
     }
 
     public unloadScene(): void {
-        
+        this.load.keepImage(MainMenu.LOGO_KEY);
+        this.load.keepImage(MainMenu.BACKGROUND_KEY);
+        this.load.keepAudio(MainMenu.MUSIC_KEY);
     }
 }
 

@@ -15,9 +15,12 @@ export default class AboutScreen extends Scene {
     public static readonly LOGO_KEY = "LOGO";
     public static readonly LOGO_PATH = "game_assets/images/logo.png";
 
+    public static readonly MUSIC_KEY = "MAIN_MENU_MUSIC";
+    public static readonly MUSIC_PATH = "game_assets/music/BGM/LobbyBGM.mp3";
+
     public loadScene(): void {
-        this.load.image(AboutScreen.BACKGROUND_KEY, AboutScreen.BACKGROUND_PATH);
-        this.load.image(AboutScreen.LOGO_KEY, AboutScreen.LOGO_PATH);
+        this.load.getImage(AboutScreen.BACKGROUND_KEY);
+        this.load.getImage(AboutScreen.LOGO_KEY);
     }
 
     public startScene(): void {
@@ -101,13 +104,16 @@ export default class AboutScreen extends Scene {
 
         // When the play button is clicked, go to the next scene
         backBtn.onClick = () => {
-            this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: MainMenu.MUSIC_KEY, holdReference: false});
+            //this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: MainMenu.MUSIC_KEY, holdReference: false});
             this.sceneManager.changeToScene(MainMenu);
         }
 
     }
 
     public unloadScene(): void {
+        this.load.keepImage(AboutScreen.LOGO_KEY);
+        this.load.keepImage(AboutScreen.BACKGROUND_KEY);
+        this.load.keepAudio(AboutScreen.MUSIC_KEY);
     }
 }
 

@@ -12,5 +12,6 @@ export const GameControls = {
     PAUSE: "PAUSE",
 
     CHEAT_ONE: "CHEAT_ONE",
-    CHEAT_TWO: "CHEAT_TWO"
+    CHEAT_TWO: "CHEAT_TWO",
+    CHEAT_THREE: "CHEAT_THREE"
 } as const;
