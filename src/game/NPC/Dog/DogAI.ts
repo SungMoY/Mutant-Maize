@@ -8,6 +8,7 @@ import Timer from "../../../Wolfie2D/Timing/Timer";
 import Color from "../../../Wolfie2D/Utils/Color";
 import { GameEvents } from "../../GameEvents";
 import HW3AnimatedSprite from "../../Nodes/HW3AnimatedSprite";
+
 import Bite from "./Bite";
 import DogBite from "./DogBite";
 import DogCharge from "./DogCharge";
@@ -240,7 +241,7 @@ export default class DogAI extends StateMachineAI {
         let particle = particles.find(particle => particle.id === particleId);
         if (this.owner.collisionShape.getBoundingRect().overlaps(particle.collisionShape.getBoundingRect())) {
             //console.log("SHOTGUN HIT DOG")
-            this._health -= 5;
+            this._health -= 1.5;
             particle.position = Vec2.ZERO;
             particle.color = Color.TRANSPARENT;
             //.collisionShape = new AABB(Vec2.ZERO, Vec2.ZERO);

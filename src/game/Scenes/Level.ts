@@ -486,7 +486,7 @@ export default abstract class Level extends Scene {
         // HealthBarMissing
 		this.healthBarMissing = <Label>this.add.uiElement(UIElementType.LABEL, LevelLayers.UI, {position: new Vec2(200, 48), text: ""});
 		this.healthBarMissing.size = new Vec2(300, 20);
-		this.healthBarMissing.backgroundColor = Color.RED;
+		this.healthBarMissing.backgroundColor = Color.GREEN;
         this.healthBarMissing.borderRadius = 0;
 
         // level transition
@@ -711,7 +711,6 @@ export default abstract class Level extends Scene {
         this.levelEndArea.setGroup(GamePhysicsGroups.GROUND)
         this.levelEndArea.setTrigger(GamePhysicsGroups.PLAYER, GameEvents.PLAYER_ENTERED_LEVEL_END, null);
         this.levelEndArea.color = new Color(0,0,0,0.1);
-        
     }
 
     protected initializeNPCs(): void {

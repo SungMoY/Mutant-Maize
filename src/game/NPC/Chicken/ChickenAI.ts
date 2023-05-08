@@ -6,6 +6,7 @@ import Timer from "../../../Wolfie2D/Timing/Timer";
 import Color from "../../../Wolfie2D/Utils/Color";
 import { GameEvents } from "../../GameEvents";
 import HW3AnimatedSprite from "../../Nodes/HW3AnimatedSprite";
+
 import ChickenIdle from "./ChickenIdle";
 import ChickenCharge from "./ChickenCharge";
 import ChickenEgg from "./ChickenEgg";
@@ -152,7 +153,7 @@ export default class ChickenAI extends StateMachineAI {
         let particle = particles.find(particle => particle.id === particleId);
         if (this.owner.collisionShape.getBoundingRect().overlaps(particle.collisionShape.getBoundingRect())) {
             //console.log("SHOTGUN HIT CHICKEN")
-            this.health -= 1;
+            this.health -= 1.5;
             particle.position = Vec2.ZERO;
             particle.color = Color.TRANSPARENT;
             //.collisionShape = new AABB(Vec2.ZERO, Vec2.ZERO);
