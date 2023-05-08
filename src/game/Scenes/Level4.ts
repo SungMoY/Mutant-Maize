@@ -70,9 +70,7 @@ export default class Level4 extends Level {
     // Mob Audio
     public static readonly MOB_DEATH_AUDIO_KEY = "MOB_DEATH";
     public static readonly MOB_DEATH_AUDIO_PATH = "game_assets/sounds/General/Mob_Dying.wav";
-
-    // Boss Content
-
+    
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
         super(viewport, sceneManager, renderingManager, options);
         
@@ -103,33 +101,72 @@ export default class Level4 extends Level {
 
         this.ratSpriteKey = Level4.RAT_SPRITE_KEY;
         this.ratPositions = [
-            new Vec2(900, 624),
-            new Vec2(800, 432),
-            new Vec2(2064, 180),
-            new Vec2(3684, 630),
-            new Vec2(4740, 630),
-            new Vec2(6000, 630),
-            new Vec2(7000, 630),
-            new Vec2(7578, 270),
-            new Vec2(5950, 290),
-            new Vec2(6960, 290)
+            new Vec2(528, 816),
+            new Vec2(2352, 768),
+            new Vec2(3264, 864),
+            new Vec2(4032, 768),
+            new Vec2(4272, 624),
+            new Vec2(4464, 816),
+            new Vec2(4944, 864),
+            new Vec2(5616, 864),
+            new Vec2(6144, 864),
+            new Vec2(6624, 864),
+            new Vec2(7392, 816),
+            new Vec2(7776, 816),
+            new Vec2(8496, 816),
+            new Vec2(9504, 528),
+            new Vec2(9600, 816),
+            new Vec2(10080, 816),
+            new Vec2(10080, 528),
+            new Vec2(11040, 816),
+
+            new Vec2(144, 1392),
+            new Vec2(1056, 1008),
+            new Vec2(1440, 960),
+            new Vec2(960, 1392),
+            new Vec2(1440, 1392),
+            new Vec2(1584, 1200),
+            new Vec2(2400, 1392),
+            new Vec2(2880, 1200),
+            new Vec2(3360, 1392),
+            new Vec2(3840, 1392),
+            new Vec2(3840, 960),
+            new Vec2(4320, 1104),
+            new Vec2(4896, 1248),
+            new Vec2(5664, 1104),
+            new Vec2(6144, 1392),
+            new Vec2(6480, 1440),
+            new Vec2(6864, 1392),
+            new Vec2(6960, 1104),
+            new Vec2(6720, 960),
+            new Vec2(8160, 960),
+            new Vec2(8160, 1392),
+            new Vec2(8880, 1392),
+            new Vec2(9120, 960),
+            new Vec2(9600, 960),
+            new Vec2(10080, 960),
+            new Vec2(10080, 1392)
         ]
         this.birdSpriteKey = Level4.BIRD_SPRITE_KEY;
         this.birdPositions = [
-            new Vec2(100, 300),
-            new Vec2(1260, 172),
-            new Vec2(3100, 350),
-            new Vec2(4704, 141),
-            new Vec2(5616, 480),
-            new Vec2(7059, 285),
-            new Vec2(5950, 290),
+            new Vec2(576, 720),
+            new Vec2(1440, 576),
+            new Vec2(2400, 672),
+            new Vec2(3312, 720),
+            new Vec2(4416, 576),
+            new Vec2(6432, 672),
+            new Vec2(7536, 720),
+            new Vec2(8592, 720),
+            new Vec2(9504, 576),
+            new Vec2(10368, 480),
+            new Vec2(11040, 432)
         ]
 
         // map length in tiles * tile dimension in pixels * tilemap scale
         // 240 * 16 * 3 = 11520
-        this.levelxbound = 115200
-        // 16 * 16 * 3 = 768
-        this.levelybound = 7680
+        this.levelxbound = 11520
+        // 32 * 16 * 3 = 1536
+        this.levelybound = 1536
         // due to parallax of the background image, levelxbound does not equal viewport size
         // therefore, background image position and viewport bounds must be set differently
         // i think its length of image / 2
@@ -144,7 +181,7 @@ export default class Level4 extends Level {
         this.parallaxBackground = true;
 
         // Level End
-        this.levelEndPosition = new Vec2(11328, this.levelybound/2)//Vec2(11328, 528)
+        this.levelEndPosition = new Vec2(11424, this.levelybound/2)//Vec2(11328, 528)
         this.levelEndHalfSize = new Vec2(96, this.levelybound)//Vec2(96, 96)
 
         // check to show labels or not
@@ -176,25 +213,15 @@ export default class Level4 extends Level {
         this.load.audio(this.HitAudioKey, Level4.HIT_AUDIO_PATH);
         this.load.audio(this.mobDyingAudioKey, Level4.MOB_DEATH_AUDIO_PATH);
 
-        // Boss Content
     }
 
     public unloadScene(): void {
-        // By default, resouceManager unloads everything, so just keep what is same for all levels
-        this.load.keepAudio(this.levelMusicKey);
-        this.load.keepAudio(this.playerDamageAudioKey);
-        this.load.keepAudio(this.playerDeathAudioKey);
-        this.load.keepAudio(this.playerGrappleAudioKey);
-        this.load.keepAudio(this.playerJumpAudioKey);
-        this.load.keepAudio(this.playerRifleAudioKey);
-        this.load.keepAudio(this.playerShotgunAudioKey);
-        this.load.keepAudio(this.playerWalkAudioKey);
-        this.load.keepAudio(this.HitAudioKey);
+        // Resource manager by default culls everything
     }
 
     public startScene(): void {
         super.startScene();
-        this.nextLevel = MainMenu;
+        this.nextLevel = Level5;
     }
 
     protected initializeViewport(): void {

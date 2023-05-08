@@ -156,8 +156,6 @@ export default class Level2 extends Level {
     }
 
     public unloadScene(): void {
-        // TODO decide which resources to keep/cull 
-        // This can left blank as level 2 is the last level.
         // Resource manager by default culls everything
     }
 

@@ -4,6 +4,7 @@ import MainMenu from "./MainMenu";
 import Viewport from "../../Wolfie2D/SceneGraph/Viewport";
 import RenderingManager from "../../Wolfie2D/Rendering/RenderingManager";
 import SceneManager from "../../Wolfie2D/Scene/SceneManager";
+import Level6 from "./Level6";
 
 export default class Level5 extends Level {
 
@@ -101,11 +102,29 @@ export default class Level5 extends Level {
 
         this.ratSpriteKey = Level5.RAT_SPRITE_KEY;
         this.ratPositions = [
-
+            new Vec2(1344, 5376),
+            new Vec2(192,  4896),
+            new Vec2(1344, 4704),
+            new Vec2(1056, 3840),
+            new Vec2(768, 3024),
+            new Vec2(1008, 3024),
+            new Vec2(480, 2016),
+            new Vec2(133, 1344),
+            new Vec2(384, 1008),
+            new Vec2(96, 768)
         ]
         this.birdSpriteKey = Level5.BIRD_SPRITE_KEY;
         this.birdPositions = [
-
+            new Vec2(1056, 5136),
+            new Vec2(480, 4896),
+            new Vec2(960, 4704),
+            new Vec2(960, 4272),
+            new Vec2(480, 3984),
+            new Vec2(768, 3264),
+            new Vec2(1248, 2640),
+            new Vec2(1056, 1872),
+            new Vec2(768, 1488),
+            new Vec2(768, 480)
         ]
         // map length in tiles * tile dimension in pixels * tilemap scale
         // 120 * 16 * 3
@@ -119,8 +138,8 @@ export default class Level5 extends Level {
         this.parallaxBackground = false;
 
         // Level End
-        this.levelEndPosition = new Vec2(this.levelxbound/2, 240)//Vec2(11328, 528)
-        this.levelEndHalfSize = new Vec2(this.levelxbound/4, 96)//Vec2(96, 96)
+        this.levelEndPosition = new Vec2(this.levelxbound/2, 144)
+        this.levelEndHalfSize = new Vec2(this.levelxbound/4, 288)
 
         // check to show labels or not
         this.isLevel2 = false;
@@ -156,14 +175,12 @@ export default class Level5 extends Level {
     }
 
     public unloadScene(): void {
-        // TODO decide which resources to keep/cull 
-        // This can left blank as level 2 is the last level.
         // Resource manager by default culls everything
     }
 
     public startScene(): void {
         super.startScene();
-        this.nextLevel = MainMenu;
+        this.nextLevel = Level6;
     }
 
     protected initializeViewport(): void {

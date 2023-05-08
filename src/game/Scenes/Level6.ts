@@ -159,7 +159,8 @@ export default class Level6 extends Level {
     }
 
     public unloadScene(): void {
-
+        // Resource manager by default culls everything
+        // Last Level
     }
     
     public startScene(): void {

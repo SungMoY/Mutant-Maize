@@ -50,7 +50,7 @@ export default class Egg extends ParticleSystem {
      */
     public setParticleAnimation(particle: Particle) {
 
-        particle.vel = new Vec2(this.faceDir.x, 0);
+        particle.vel = new Vec2(this.faceDir.x * 1.5, 0);
 
         // set each particle's group to physics group
         particle.setGroup(GamePhysicsGroups.ENTITY);
