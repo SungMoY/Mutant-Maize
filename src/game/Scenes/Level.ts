@@ -477,7 +477,8 @@ export default abstract class Level extends Scene {
 
         // level transition
         this.levelTransitionScreen = <Rect>this.add.graphic(GraphicType.RECT, LevelLayers.UI, { position: new Vec2(480, 360), size: new Vec2(960, 720) });
-        this.levelTransitionScreen.color = new Color(34, 32, 52);
+        //this.levelTransitionScreen.color = new Color(34, 32, 52);
+        this.levelTransitionScreen.color = Color.BLACK;
         this.levelTransitionScreen.alpha = 1;
 
 
