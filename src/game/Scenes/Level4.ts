@@ -4,6 +4,7 @@ import RenderingManager from "../../Wolfie2D/Rendering/RenderingManager";
 import SceneManager from "../../Wolfie2D/Scene/SceneManager";
 import Viewport from "../../Wolfie2D/SceneGraph/Viewport";
 import MainMenu from "./MainMenu";
+import Level5 from "./Level5";
 
 
 export default class Level4 extends Level {
