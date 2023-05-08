@@ -53,7 +53,8 @@ export default class HelpScreen extends Scene {
         //cheats text per line
         let cheatsTextLine = [
             "1: Toggle invincibility",
-            "2: Skip to next level",
+            "2: Warp closer to end",
+            "3: Skip to next level"
 
         ]
         for (let i = 0; i < cheatsTextLine.length; i++) {

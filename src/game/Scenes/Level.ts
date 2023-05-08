@@ -247,10 +247,11 @@ export default abstract class Level extends Scene {
             this.invincible = !this.invincible;
         }
         if (Input.isJustPressed(GameControls.CHEAT_TWO)) {
-            this.emitter.fireEvent(GameEvents.LEVEL_END, {});
+            this.player.position.copy(new Vec2(9912, 624));
+
         }
         if (Input.isJustPressed(GameControls.CHEAT_THREE)) {
-            this.player.position.copy(new Vec2(9912, 624));
+            this.emitter.fireEvent(GameEvents.LEVEL_END, {});
         }
 
         if (Input.isPressed(GameControls.PAUSE)) {
