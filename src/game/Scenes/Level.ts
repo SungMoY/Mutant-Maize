@@ -468,17 +468,18 @@ export default abstract class Level extends Scene {
 		this.healthBarMissing.backgroundColor = Color.RED;
         this.healthBarMissing.borderRadius = 0;
 
-        // level transition
-        this.levelTransitionScreen = <Rect>this.add.graphic(GraphicType.RECT, LevelLayers.UI, { position: new Vec2(480, 360), size: new Vec2(960, 720) });
-        this.levelTransitionScreen.color = new Color(34, 32, 52);
-        this.levelTransitionScreen.alpha = 1;
-
         // invincible label
         this.invincibleLabel = <Label>this.add.uiElement(UIElementType.LABEL, LevelLayers.UI, {position: new Vec2(500, 48), text: "INVINCIBLE"});
         this.invincibleLabel.backgroundColor = new Color(0, 0, 0, 0.9)
         this.invincibleLabel.textColor = Color.YELLOW;
         this.invincibleLabel.fontSize = 24;
         this.invincibleLabel.setPadding(new Vec2(10, 10));
+
+        // level transition
+        this.levelTransitionScreen = <Rect>this.add.graphic(GraphicType.RECT, LevelLayers.UI, { position: new Vec2(480, 360), size: new Vec2(960, 720) });
+        this.levelTransitionScreen.color = new Color(34, 32, 52);
+        this.levelTransitionScreen.alpha = 1;
+
 
         this.levelTransitionScreen.tweens.add("fadeIn", {
             startDelay: 0,
