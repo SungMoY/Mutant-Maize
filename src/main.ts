@@ -28,11 +28,7 @@ import SplashScreen from "./game/Scenes/SplashScreen";
             {name: GameControls.PAUSE, keys: ["escape", "p"]},
 
             {name: GameControls.CHEAT_ONE, keys: ["1"]},
-            {name: GameControls.CHEAT_TWO, keys: ["2"]},
-            {name: GameControls.CHEAT_THREE, keys: ["3"]},
-            {name: GameControls.CHEAT_FOUR, keys: ["4"]},
-            {name: GameControls.CHEAT_FIVE, keys: ["5"]},
-            {name: GameControls.CHEAT_SIX, keys: ["6"]}
+            {name: GameControls.CHEAT_TWO, keys: ["2"]}
         ],
         useWebGL: false,                        // Tell the game we want to use webgl
         showDebug: false                       // Whether to show debug messages. You can change this to true if you want
@@ -42,5 +38,5 @@ import SplashScreen from "./game/Scenes/SplashScreen";
     const game = new Game(options);
 
     // Start our game
-    game.start(LevelSelectScreen, {});
+    game.start(SplashScreen, {});
 })();

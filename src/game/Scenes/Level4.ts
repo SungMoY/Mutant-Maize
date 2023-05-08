@@ -4,6 +4,7 @@ import RenderingManager from "../../Wolfie2D/Rendering/RenderingManager";
 import SceneManager from "../../Wolfie2D/Scene/SceneManager";
 import Viewport from "../../Wolfie2D/SceneGraph/Viewport";
 import MainMenu from "./MainMenu";
+import Level5 from "./Level5";
 
 
 export default class Level4 extends Level {
@@ -16,8 +17,8 @@ export default class Level4 extends Level {
     public static readonly WALLS_LAYER_KEY = "Main";
     public static readonly HAZARD_LAYER_KEY = "Hazard"
 
-    public static readonly LEVEL1_BACKGROUND_KEY = "LEVEL1_BACKGROUND";
-    public static readonly LEVEL1_BACKGROUND_PATH = "game_assets/images/level1_background.png";
+    public static readonly LEVEL1_BACKGROUND_KEY = "LEVEL4_BACKGROUND";
+    public static readonly LEVEL1_BACKGROUND_PATH = "game_assets/images/level4_background.png";
 
     // Sprites
     public static readonly KERNEL_SPRITE_KEY = "KERNEL_SPRITE_KEY";
@@ -40,7 +41,7 @@ export default class Level4 extends Level {
     public static readonly DYING_AUDIO_PATH = "game_assets/music/dying.mp3";
     
     public static readonly LEVEL_MUSIC_KEY = "LEVEL_MUSIC";
-    public static readonly LEVEL_MUSIC_PATH = "game_assets/music/BGM/MainBGM.mp3";
+    public static readonly LEVEL_MUSIC_PATH = "game_assets/music/BGM/level4_music.mp3";
 
     public static readonly HIT_AUDIO_KEY = "HIT";
     public static readonly HIT_AUDIO_PATH = "game_assets/sounds/General/Hit_Sound.wav";

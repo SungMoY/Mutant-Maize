@@ -30,8 +30,8 @@ export default class HelpScreen extends Scene {
 
         let background = this.add.sprite(HelpScreen.BACKGROUND_KEY, "MAIN");
         background.position = this.getViewport().getHalfSize();
-        background.scale = new Vec2(0.5, 0.67);
-
+        background.scale = new Vec2(0.25, 0.25);
+        
         // Create a label named "Cheats"
         let cheatsLabel = <Label>this.add.uiElement(UIElementType.LABEL, "MAIN", {position: new Vec2(size.x, size.y - 275), text: "CHEATS"});
         cheatsLabel.textColor = Color.WHITE;
@@ -49,9 +49,8 @@ export default class HelpScreen extends Scene {
         cheatsText.setPadding(new Vec2(450, 93));
         //cheats text per line
         let cheatsTextLine = [
-            "1: Load Level 1",
-            "2: Skip to Level 1 Boss",
-            "3: Print Viewport's origin x-coord"
+            "1: Toggle invincibility",
+            "2: Skip to next level",
 
         ]
         for (let i = 0; i < cheatsTextLine.length; i++) {

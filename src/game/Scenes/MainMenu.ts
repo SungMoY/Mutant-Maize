@@ -41,8 +41,8 @@ export default class MainMenu extends Scene {
 
         let background = this.add.sprite(MainMenu.BACKGROUND_KEY, "MAIN");
         background.position = this.getViewport().getHalfSize();
-        background.scale = new Vec2(0.5, 0.67);
-
+        background.scale = new Vec2(0.25, 0.25);
+        
         let logo = this.add.sprite(MainMenu.LOGO_KEY, "MAIN");
         logo.position = new Vec2(this.getViewport().getHalfSize().x, this.getViewport().getHalfSize().y - 200);
         logo.scale = new Vec2(0.45, 0.45);

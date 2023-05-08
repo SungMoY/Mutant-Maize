@@ -27,8 +27,8 @@ export default class SplashScreen extends Scene {
 
         let background = this.add.sprite(SplashScreen.BACKGROUND_KEY, "MAIN");
         background.position = this.getViewport().getHalfSize();
-        background.scale = new Vec2(0.5, 0.67);
-
+        background.scale = new Vec2(0.25, 0.25);
+        
         let logo = this.add.sprite(SplashScreen.LOGO_KEY, "MAIN");
         logo.position = new Vec2(this.getViewport().getHalfSize().x, this.getViewport().getHalfSize().y - 50);
         logo.scale = new Vec2(0.67, 0.67);
