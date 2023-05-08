@@ -686,12 +686,12 @@ export default abstract class Level extends Scene {
             console.log("SPAWNING DOG BOSS")
             let dog = this.add.animatedSprite(this.dogSpriteKey, LevelLayers.PRIMARY);
             dog.position.set(this.dogPosition.x, this.dogPosition.y);
-            dog.scale.set(8, 8);
+            dog.scale.set(6, 6);
 
             let center = new Vec2(dog.position.x, dog.position.y);
 
             // i hate that these values are hard coded but it seems to work
-            let halfSize = new Vec2(dog.boundary.getHalfSize().x-20, 90);
+            let halfSize = new Vec2(dog.boundary.getHalfSize().x-20, 60);
             dog.addPhysics(new AABB(center, halfSize), undefined, false, false);
             dog.colliderOffset.set(0, 37);
 
