@@ -177,11 +177,6 @@ export default abstract class Level extends Scene {
     protected invincible: boolean;
     protected invincibleLabel: Label;
 
-    //boss hp attempt
-    private bossHealthBar: Label;
-	private bossHealthBarHealth: Label;
-	private bossHealthBarMissing: Label;
-
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
         super(viewport, sceneManager, renderingManager, {...options, physics: {
             groupNames: [
@@ -319,10 +314,6 @@ export default abstract class Level extends Scene {
                 this.handleBossDead();
                 break;
             }
-            case GameEvents.BOSS_HEALTH_CHANGE: {
-                this.handleBossHealthChange(event.data.get("curhpBoss"), event.data.get("maxhpBoss"));
-                break;
-            }
             // Default: Throw an error! No unhandled events allowed.
             default: {
                 throw new Error(`Unhandled event caught in scene with type ${event.type}`)
@@ -343,10 +334,6 @@ export default abstract class Level extends Scene {
         this.viewport.setFocus(new Vec2(this.bossViewport[1], this.bossViewport[2]));
         this.viewport.follow(null);
         this.bossViewport = null;
-
-        this.bossHealthBar.visible = true;
-        this.bossHealthBarHealth.visible = true;
-        this.bossHealthBarMissing.visible = true;
     }
 
     protected handleBossDead(): void {
@@ -378,17 +365,6 @@ export default abstract class Level extends Scene {
         this.healthBarMissing.size = new Vec2((maxHealth - currentHealth) * unit, this.healthBarMissing.size.y);
         this.healthBarMissing.position = new Vec2(this.healthBarHealth.position.x + this.healthBarHealth.size.x / 2 + this.healthBarMissing.size.x / 2, this.healthBarMissing.position.y);
     
-    }
-
-    ////
-    protected handleBossHealthChange(currentHealth: number, maxHealth: number): void {
-        let ratio = this.bossHealthBar.size.x / maxHealth;
-
-        this.bossHealthBarHealth.size = new Vec2(currentHealth * ratio, this.bossHealthBar.size.y)
-        this.bossHealthBarHealth.position = new Vec2(this.bossHealthBar.position.x - this.bossHealthBar.size.x / 2 + this.bossHealthBarHealth.size.x / 2, this.bossHealthBarHealth.position.y);
-        
-        this.bossHealthBarMissing.size = new Vec2((maxHealth - currentHealth) * ratio, this.bossHealthBarMissing.size.y);
-        this.bossHealthBarMissing.position = new Vec2(this.bossHealthBarHealth.position.x + this.bossHealthBarHealth.size.x / 2 + this.bossHealthBarMissing.size.x / 2, this.bossHealthBarMissing.position.y);
     }
 
     protected lockPlayer(player: AnimatedSprite, viewportCenter: Vec2, viewportHalfSize: Vec2): void {
@@ -465,7 +441,6 @@ export default abstract class Level extends Scene {
         this.receiver.subscribe(GameEvents.PLAYER_DEAD);
         this.receiver.subscribe(GameEvents.START_BOSS_FIGHT);
         this.receiver.subscribe(GameEvents.BOSS_DEAD);
-        this.receiver.subscribe(GameEvents.BOSS_HEALTH_CHANGE);
     }
     /**
      * Adds in any necessary UI to the game
@@ -482,13 +457,13 @@ export default abstract class Level extends Scene {
         // HealthBarHealth
 		this.healthBarHealth = <Label>this.add.uiElement(UIElementType.LABEL, LevelLayers.UI, {position: new Vec2(200, 48), text: ""});
 		this.healthBarHealth.size = new Vec2(300, 20);
-        this.healthBarHealth.backgroundColor = Color.BLUE;
+        this.healthBarHealth.backgroundColor = Color.GREEN;
         this.healthBarHealth.borderRadius = 0;
 
         // HealthBarMissing
 		this.healthBarMissing = <Label>this.add.uiElement(UIElementType.LABEL, LevelLayers.UI, {position: new Vec2(200, 48), text: ""});
 		this.healthBarMissing.size = new Vec2(300, 20);
-		this.healthBarMissing.backgroundColor = Color.GREEN;
+		this.healthBarMissing.backgroundColor = Color.RED;
         this.healthBarMissing.borderRadius = 0;
 
         // level transition
@@ -502,32 +477,6 @@ export default abstract class Level extends Scene {
         this.invincibleLabel.textColor = Color.YELLOW;
         this.invincibleLabel.fontSize = 24;
         this.invincibleLabel.setPadding(new Vec2(10, 10));
-
-        
-        ////
-        let bossHPSize = new Vec2(900, 40)
-        let bossHPPos = new Vec2(480, 670)
-        // boss HP Background
-        this.bossHealthBar = <Label>this.add.uiElement(UIElementType.LABEL, LevelLayers.UI, {position: bossHPPos, text: ""});
-        this.bossHealthBar.size = bossHPSize;
-        this.bossHealthBar.backgroundColor = Color.TRANSPARENT;
-        this.bossHealthBar.borderColor = Color.BLACK;
-        this.bossHealthBar.borderRadius = 1;
-        this.bossHealthBar.visible = false;
-
-        // boss HP
-		this.bossHealthBarHealth = <Label>this.add.uiElement(UIElementType.LABEL, LevelLayers.UI, {position: bossHPPos, text: ""});
-		this.bossHealthBarHealth.size = bossHPSize;
-        this.bossHealthBarHealth.backgroundColor = Color.RED;
-        this.bossHealthBarHealth.borderRadius = 0;
-        this.bossHealthBarHealth.visible = false;
-
-        // boss Missing
-		this.bossHealthBarMissing = <Label>this.add.uiElement(UIElementType.LABEL, LevelLayers.UI, {position: bossHPPos, text: ""});
-		this.bossHealthBarMissing.size = bossHPSize;
-		this.bossHealthBarMissing.backgroundColor = Color.YELLOW;
-        this.bossHealthBarMissing.borderRadius = 0;
-        this.bossHealthBarMissing.visible = false;
 
         this.levelTransitionScreen.tweens.add("fadeIn", {
             startDelay: 0,
