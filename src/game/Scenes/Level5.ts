@@ -17,7 +17,7 @@ export default class Level5 extends Level {
     public static readonly HAZARD_LAYER_KEY = "Hazard"
 
     public static readonly LEVEL2_BACKGROUND_KEY = "LEVEL2_BACKGROUND";
-    public static readonly LEVEL2_BACKGROUND_PATH = "game_assets/images/level2_background.png";
+    public static readonly LEVEL2_BACKGROUND_PATH = "game_assets/images/level5_background.png";
 
     // Sprites
     public static readonly KERNEL_SPRITE_KEY = "KERNEL_SPRITE_KEY";
